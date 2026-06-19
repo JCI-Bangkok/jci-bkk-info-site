@@ -32,21 +32,26 @@ const boardYearMetadataTh: Record<string, { theme: string; summary: string }> = 
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'board-members',
-    limit: 150,
-  })
-  
-  const years = Array.from(new Set(result.docs.map((member) => member.year)))
-  const params: { locale: string; year: string }[] = []
-  
-  for (const locale of ['en', 'th']) {
-    for (const year of years) {
-      params.push({ locale, year: year.toString() })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const result = await payload.find({
+      collection: 'board-members',
+      limit: 150,
+    })
+    
+    const years = Array.from(new Set(result.docs.map((member) => member.year)))
+    const params: { locale: string; year: string }[] = []
+    
+    for (const locale of ['en', 'th']) {
+      for (const year of years) {
+        params.push({ locale, year: year.toString() })
+      }
     }
+    return params;
+  } catch (error) {
+    console.error("Error generating static params for board [year]:", error)
+    return []
   }
-  return params;
 }
 
 export async function generateMetadata({ params }: BoardYearPageProps) {

@@ -323,7 +323,7 @@ async function run() {
 
   // 4. Seed Projects
   console.log('Seeding Projects...')
-  const createdProjects: Record<string, any> = {}
+  const createdProjects: Record<string, { id: string | number }> = {}
   for (const project of seedProjects) {
     const categoryMap: Record<string, string> = {
       'Youth Development': 'youth',

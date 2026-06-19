@@ -57,19 +57,24 @@ function formatDate(dateStr: string, locale: string) {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'events',
-    limit: 100,
-  })
-  
-  const params: { locale: string; slug: string }[] = []
-  for (const locale of ['en', 'th']) {
-    for (const event of result.docs) {
-      params.push({ locale, slug: event.slug })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const result = await payload.find({
+      collection: 'events',
+      limit: 100,
+    })
+    
+    const params: { locale: string; slug: string }[] = []
+    for (const locale of ['en', 'th']) {
+      for (const event of result.docs) {
+        params.push({ locale, slug: event.slug })
+      }
     }
+    return params;
+  } catch (error) {
+    console.error("Error generating static params for events [slug]:", error)
+    return []
   }
-  return params;
 }
 
 export async function generateMetadata({ params }: EventDetailPageProps) {

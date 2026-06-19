@@ -44,19 +44,24 @@ function formatDate(dateStr: string, locale: string) {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'articles',
-    limit: 100,
-  })
-  
-  const params: { locale: string; slug: string }[] = []
-  for (const locale of ['en', 'th']) {
-    for (const article of result.docs) {
-      params.push({ locale, slug: article.slug })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const result = await payload.find({
+      collection: 'articles',
+      limit: 100,
+    })
+    
+    const params: { locale: string; slug: string }[] = []
+    for (const locale of ['en', 'th']) {
+      for (const article of result.docs) {
+        params.push({ locale, slug: article.slug })
+      }
     }
+    return params;
+  } catch (error) {
+    console.error("Error generating static params for news [slug]:", error)
+    return []
   }
-  return params;
 }
 
 export async function generateMetadata({ params }: ArticleDetailPageProps) {

@@ -26,19 +26,24 @@ const categoryLabelsEn: Record<string, string> = {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'projects',
-    limit: 100,
-  })
-  
-  const params: { locale: string; slug: string }[] = []
-  for (const locale of ['en', 'th']) {
-    for (const project of result.docs) {
-      params.push({ locale, slug: project.slug })
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const result = await payload.find({
+      collection: 'projects',
+      limit: 100,
+    })
+    
+    const params: { locale: string; slug: string }[] = []
+    for (const locale of ['en', 'th']) {
+      for (const project of result.docs) {
+        params.push({ locale, slug: project.slug })
+      }
     }
+    return params;
+  } catch (error) {
+    console.error("Error generating static params for projects [slug]:", error)
+    return []
   }
-  return params;
 }
 
 export async function generateMetadata({ params }: ProjectDetailPageProps) {
