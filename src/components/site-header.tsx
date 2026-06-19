@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React from "react";
 
 import { BrandMark } from "@/components/brand-mark";
 import { navigation } from "@/lib/site-data";
@@ -15,9 +15,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
         <div className="flex items-center justify-between gap-4">
           <BrandMark locale={locale} />
           <div className="flex items-center gap-2 lg:hidden">
-            <Suspense fallback={null}>
-              <LanguageSelector currentLocale={locale} />
-            </Suspense>
+            <LanguageSelector currentLocale={locale} />
             <Link
               href={`/${locale}/membership`}
               className="inline-flex rounded-full bg-[var(--jci-blue)] px-4 py-2 text-[0.8125rem] font-semibold text-white transition hover:bg-[var(--jci-navy)]"
@@ -43,9 +41,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
           })}
         </nav>
         <div className="hidden items-center gap-4 lg:inline-flex">
-          <Suspense fallback={null}>
-            <LanguageSelector currentLocale={locale} />
-          </Suspense>
+          <LanguageSelector currentLocale={locale} />
           <Link
             href={`/${locale}/membership`}
             className="rounded-full bg-[var(--jci-blue)] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[var(--jci-navy)]"

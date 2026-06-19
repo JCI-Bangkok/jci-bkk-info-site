@@ -1,11 +1,10 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { Locale } from '@/lib/i18n'
 
 export function LanguageSelector({ currentLocale }: { currentLocale: Locale }) {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const pathname = usePathname() || '/'
 
   const handleLocaleChange = (newLocale: Locale) => {
     if (newLocale === currentLocale) return
@@ -25,8 +24,8 @@ export function LanguageSelector({ currentLocale }: { currentLocale: Locale }) {
     }
 
     const newPathname = segments.join('/')
-    const queryStr = searchParams.toString()
-    const targetUrl = queryStr ? `${newPathname}?${queryStr}` : newPathname
+    const queryStr = typeof window !== 'undefined' ? window.location.search : ''
+    const targetUrl = `${newPathname}${queryStr}`
 
     // Navigate to target URL with a full page reload to ensure document lang and layouts refresh correctly
     window.location.href = targetUrl
