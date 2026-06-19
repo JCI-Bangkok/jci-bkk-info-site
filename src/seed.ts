@@ -155,20 +155,6 @@ function toRichText(text: string) {
   }
 }
 
-function t(text: string): { en: string; th: string } {
-  return {
-    en: text,
-    th: TRANSLATIONS[text] || text,
-  }
-}
-
-function toRichTextLocalized(text: string) {
-  return {
-    en: toRichText(text),
-    th: toRichText(TRANSLATIONS[text] || text),
-  }
-}
-
 function parseDate(dateStr: string): string {
   try {
     const d = new Date(dateStr)
@@ -187,6 +173,16 @@ async function run() {
   const configModule = await import('./payload.config')
   const configPromise = configModule.default
   const payload = await getPayload({ config: configPromise })
+
+  // Clean existing data to allow fresh seed
+  console.log('Cleaning existing data (except users)...')
+  await payload.delete({ collection: 'events', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'projects', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'articles', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'board-members', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'member-stories', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'partners', where: { id: { exists: true } } })
+  await payload.delete({ collection: 'media', where: { id: { exists: true } } })
 
   // 1. Create Admin User
   console.log('Seeding Admin User...')
@@ -232,39 +228,25 @@ async function run() {
   const mediaDocs: Record<string, SeedMedia> = {}
 
   for (const name of imageNames) {
-    const existingMedia = await payload.find({
-      collection: 'media',
-      where: {
-        filename: {
-          equals: name,
+    const filePath = path.resolve(dirname, '../public/images/home', name)
+    if (fs.existsSync(filePath)) {
+      const fileBuffer = fs.readFileSync(filePath)
+      const mediaDoc = await payload.create({
+        collection: 'media',
+        data: {
+          alt: name.replace('-', ' ').replace('.png', ''),
         },
-      },
-    })
-
-    if (existingMedia.docs.length === 0) {
-      const filePath = path.resolve(dirname, '../public/images/home', name)
-      if (fs.existsSync(filePath)) {
-        const fileBuffer = fs.readFileSync(filePath)
-        const mediaDoc = await payload.create({
-          collection: 'media',
-          data: {
-            alt: name.replace('-', ' ').replace('.png', ''),
-          },
-          file: {
-            data: fileBuffer,
-            name,
-            mimetype: 'image/png',
-            size: fileBuffer.length,
-          },
-        })
-        mediaDocs[name] = mediaDoc as unknown as SeedMedia
-        console.log(`Uploaded media image: ${name}`)
-      } else {
-        console.warn(`File not found: ${filePath}`)
-      }
+        file: {
+          data: fileBuffer,
+          name,
+          mimetype: 'image/png',
+          size: fileBuffer.length,
+        },
+      })
+      mediaDocs[name] = mediaDoc as unknown as SeedMedia
+      console.log(`Uploaded media image: ${name}`)
     } else {
-      mediaDocs[name] = existingMedia.docs[0] as unknown as SeedMedia
-      console.log(`Media image ${name} already exists.`)
+      console.warn(`File not found: ${filePath}`)
     }
   }
 
@@ -281,284 +263,307 @@ async function run() {
   }
   const createdEvents: Record<string, SeedEvent> = {}
   for (const event of seedEvents) {
-    const existing = await payload.find({
+    let coverImageId = getFallbackMediaId()
+    if (event.slug === 'bangkok-leadership-lab' && mediaDocs['leadership-workshop.png']) {
+      coverImageId = mediaDocs['leadership-workshop.png'].id
+    } else if (event.slug === 'community-action-day' && mediaDocs['community-project.png']) {
+      coverImageId = mediaDocs['community-project.png'].id
+    } else if (mediaDocs['hero-community.png']) {
+      coverImageId = mediaDocs['hero-community.png'].id
+    }
+
+    const eventTypeMap: Record<string, string> = {
+      'Training': 'training',
+      'Networking': 'networking',
+      'Community Project': 'community',
+      'General Meeting': 'general',
+      'International Event': 'international',
+      'Partner Event': 'partner',
+    }
+
+    const statusMap: Record<string, string> = {
+      'Upcoming': 'upcoming',
+      'Completed': 'completed',
+    }
+
+    // A. Create in English
+    const doc = await payload.create({
       collection: 'events',
-      where: {
-        slug: {
-          equals: event.slug,
-        },
+      locale: 'en',
+      data: {
+        title: event.title,
+        slug: event.slug,
+        eventDate: parseDate(event.date),
+        venue: event.venue,
+        eventType: eventTypeMap[event.type] || 'training',
+        shortDescription: event.summary,
+        fullDescription: toRichText(event.highlight),
+        coverImage: coverImageId,
+        status: statusMap[event.status] || 'upcoming',
+        featured: event.slug === 'bangkok-leadership-lab',
       },
     })
 
-    if (existing.docs.length === 0) {
-      // Determine cover image
-      let coverImageId = getFallbackMediaId()
-      if (event.slug === 'bangkok-leadership-lab' && mediaDocs['leadership-workshop.png']) {
-        coverImageId = mediaDocs['leadership-workshop.png'].id
-      } else if (event.slug === 'community-action-day' && mediaDocs['community-project.png']) {
-        coverImageId = mediaDocs['community-project.png'].id
-      } else if (mediaDocs['hero-community.png']) {
-        coverImageId = mediaDocs['hero-community.png'].id
-      }
+    // B. Update in Thai
+    await payload.update({
+      collection: 'events',
+      id: doc.id,
+      locale: 'th',
+      data: {
+        title: TRANSLATIONS[event.title] || event.title,
+        venue: TRANSLATIONS[event.venue] || event.venue,
+        shortDescription: TRANSLATIONS[event.summary] || event.summary,
+        fullDescription: toRichText(TRANSLATIONS[event.highlight] || event.highlight),
+      },
+    })
 
-      const eventTypeMap: Record<string, string> = {
-        'Training': 'training',
-        'Networking': 'networking',
-        'Community Project': 'community',
-        'General Meeting': 'general',
-        'International Event': 'international',
-        'Partner Event': 'partner',
-      }
-
-      const statusMap: Record<string, string> = {
-        'Upcoming': 'upcoming',
-        'Completed': 'completed',
-      }
-
-      const doc = await payload.create({
-        collection: 'events',
-        locale: 'all',
-        data: {
-          title: t(event.title),
-          slug: event.slug,
-          eventDate: parseDate(event.date),
-          venue: t(event.venue),
-          eventType: eventTypeMap[event.type] || 'training',
-          shortDescription: t(event.summary),
-          fullDescription: toRichTextLocalized(event.highlight),
-          coverImage: coverImageId,
-          status: statusMap[event.status] || 'upcoming',
-          featured: event.slug === 'bangkok-leadership-lab',
-        },
-      })
-      createdEvents[event.slug] = doc as unknown as SeedEvent
-      console.log(`Created Event: ${event.title}`)
-    } else {
-      createdEvents[event.slug] = existing.docs[0] as unknown as SeedEvent
-      console.log(`Event already exists: ${event.title}`)
-    }
+    createdEvents[event.slug] = doc as unknown as SeedEvent
+    console.log(`Created Event: ${event.title}`)
   }
 
   // 4. Seed Projects
   console.log('Seeding Projects...')
+  const createdProjects: Record<string, any> = {}
   for (const project of seedProjects) {
-    const existing = await payload.find({
+    const categoryMap: Record<string, string> = {
+      'Youth Development': 'youth',
+      'Sustainability': 'sustainability',
+      'Entrepreneurship': 'entrepreneurship',
+      'Community Impact': 'community',
+      'International Cooperation': 'international',
+    }
+
+    // A. Create in English
+    const doc = await payload.create({
       collection: 'projects',
-      where: {
-        slug: {
-          equals: project.slug,
-        },
+      locale: 'en',
+      data: {
+        title: project.title,
+        slug: project.slug,
+        year: parseInt(project.year) || 2026,
+        category: categoryMap[project.category] || 'community',
+        problemStatement: project.summary,
+        targetBeneficiaries: project.beneficiaries,
+        activities: toRichText(project.impact),
+        outcomes: toRichText('Successful execution with target objectives met.'),
+        impactNumbers: [
+          { value: '100+', label: 'Participants' },
+          { value: '5+', label: 'Partner Organizations' },
+        ],
+        sdgTags: ['sdg-4', 'sdg-8', 'sdg-17'],
       },
     })
 
-    if (existing.docs.length === 0) {
-      const categoryMap: Record<string, string> = {
-        'Youth Development': 'youth',
-        'Sustainability': 'sustainability',
-        'Entrepreneurship': 'entrepreneurship',
-        'Community Impact': 'community',
-        'International Cooperation': 'international',
-      }
+    // B. Update in Thai
+    await payload.update({
+      collection: 'projects',
+      id: doc.id,
+      locale: 'th',
+      data: {
+        title: TRANSLATIONS[project.title] || project.title,
+        problemStatement: TRANSLATIONS[project.summary] || project.summary,
+        targetBeneficiaries: TRANSLATIONS[project.beneficiaries] || project.beneficiaries,
+        activities: toRichText(TRANSLATIONS[project.impact] || project.impact),
+        outcomes: toRichText(TRANSLATIONS['Successful execution with target objectives met.'] || 'Successful execution with target objectives met.'),
+        impactNumbers: [
+          { value: '100+', label: TRANSLATIONS['Participants'] || 'Participants' },
+          { value: '5+', label: TRANSLATIONS['Partner Organizations'] || 'Partner Organizations' },
+        ],
+      },
+    })
 
-      await payload.create({
-        collection: 'projects',
-        locale: 'all',
-        data: {
-          title: t(project.title),
-          slug: project.slug,
-          year: parseInt(project.year) || 2026,
-          category: categoryMap[project.category] || 'community',
-          problemStatement: t(project.summary),
-          targetBeneficiaries: t(project.beneficiaries),
-          activities: toRichTextLocalized(project.impact),
-          outcomes: toRichTextLocalized('Successful execution with target objectives met.'),
-          impactNumbers: [
-            { value: '100+', label: t('Participants') },
-            { value: '5+', label: t('Partner Organizations') },
-          ],
-          sdgTags: ['sdg-4', 'sdg-8', 'sdg-17'],
-        },
-      })
-      console.log(`Created Project: ${project.title}`)
-    } else {
-      console.log(`Project already exists: ${project.title}`)
-    }
+    createdProjects[project.slug] = doc
+    console.log(`Created Project: ${project.title}`)
   }
 
-  // 5. Seed Articles (News)
+  // 5. Seed Articles
   console.log('Seeding Articles...')
   for (const article of seedArticles) {
-    const existing = await payload.find({
+    let coverImageId = getFallbackMediaId()
+    if (article.slug === 'inside-community-action-day' && mediaDocs['community-project.png']) {
+      coverImageId = mediaDocs['community-project.png'].id
+    } else if (mediaDocs['hero-community.png']) {
+      coverImageId = mediaDocs['hero-community.png'].id
+    }
+
+    const categoryMap: Record<string, string> = {
+      'Knowledge Article': 'knowledge',
+      'Event Recap': 'event-recap',
+      'President Message': 'president-message',
+      'News': 'news',
+    }
+
+    // Link to related event/project if applicable
+    let relatedEvent
+    if (article.slug === 'inside-community-action-day' && createdEvents['community-action-day']) {
+      relatedEvent = createdEvents['community-action-day'].id
+    }
+
+    // A. Create in English
+    const doc = await payload.create({
       collection: 'articles',
-      where: {
-        slug: {
-          equals: article.slug,
-        },
+      locale: 'en',
+      data: {
+        title: article.title,
+        slug: article.slug,
+        author: adminUser.id,
+        category: categoryMap[article.category] || 'news',
+        coverImage: coverImageId,
+        summary: article.summary,
+        body: toRichText(article.summary),
+        publishDate: parseDate(article.publishedAt),
+        relatedEvent,
       },
     })
 
-    if (existing.docs.length === 0) {
-      // Determine cover image
-      let coverImageId = getFallbackMediaId()
-      if (article.slug === 'inside-community-action-day' && mediaDocs['community-project.png']) {
-        coverImageId = mediaDocs['community-project.png'].id
-      } else if (mediaDocs['hero-community.png']) {
-        coverImageId = mediaDocs['hero-community.png'].id
-      }
+    // B. Update in Thai
+    await payload.update({
+      collection: 'articles',
+      id: doc.id,
+      locale: 'th',
+      data: {
+        title: TRANSLATIONS[article.title] || article.title,
+        summary: TRANSLATIONS[article.summary] || article.summary,
+        body: toRichText(TRANSLATIONS[article.summary] || article.summary),
+      },
+    })
 
-      const categoryMap: Record<string, string> = {
-        'Knowledge Article': 'knowledge',
-        'Event Recap': 'event-recap',
-        'President Message': 'president-message',
-        'News': 'news',
-      }
-
-      // Link to related event/project if applicable
-      let relatedEvent
-      if (article.slug === 'inside-community-action-day' && createdEvents['community-action-day']) {
-        relatedEvent = createdEvents['community-action-day'].id
-      }
-
-      await payload.create({
-        collection: 'articles',
-        locale: 'all',
-        data: {
-          title: t(article.title),
-          slug: article.slug,
-          author: adminUser.id,
-          category: categoryMap[article.category] || 'news',
-          coverImage: coverImageId,
-          summary: t(article.summary),
-          body: toRichTextLocalized(article.summary),
-          publishDate: parseDate(article.publishedAt),
-          relatedEvent,
-        },
-      })
-      console.log(`Created Article: ${article.title}`)
-    } else {
-      console.log(`Article already exists: ${article.title}`)
-    }
+    console.log(`Created Article: ${article.title}`)
   }
 
   // 6. Seed Board Members
   console.log('Seeding Board Members...')
   for (const yearEntry of seedBoardYears) {
     for (const member of yearEntry.members) {
-      const existing = await payload.find({
+      // Use member story image as fallback
+      const photoId = mediaDocs['member-story.png']
+        ? mediaDocs['member-story.png'].id
+        : getFallbackMediaId()
+
+      // A. Create in English
+      const doc = await payload.create({
         collection: 'board-members',
+        locale: 'en',
+        data: {
+          name: member.name,
+          position: member.role,
+          year: parseInt(yearEntry.year),
+          photo: photoId,
+          bio: toRichText(member.bio),
+          companyRole: member.company,
+          displayOrder: member.role.includes('President') ? 1 : 10,
+        },
       })
 
-      // Check if this specific name is already in the list
-      const memberExists = existing.docs.some(doc => {
-        const docName = typeof doc.name === 'object' ? doc.name.en : doc.name
-        return docName === member.name
+      // B. Update in Thai
+      await payload.update({
+        collection: 'board-members',
+        id: doc.id,
+        locale: 'th',
+        data: {
+          name: TRANSLATIONS[member.name] || member.name,
+          position: TRANSLATIONS[member.role] || member.role,
+          bio: toRichText(TRANSLATIONS[member.bio] || member.bio),
+          companyRole: TRANSLATIONS[member.company] || member.company,
+        },
       })
 
-      if (!memberExists) {
-        // Use member story image as fallback
-        const photoId = mediaDocs['member-story.png']
-          ? mediaDocs['member-story.png'].id
-          : getFallbackMediaId()
-
-        await payload.create({
-          collection: 'board-members',
-          locale: 'all',
-          data: {
-            name: t(member.name),
-            position: t(member.role),
-            year: parseInt(yearEntry.year),
-            photo: photoId,
-            bio: toRichTextLocalized(member.bio),
-            companyRole: t(member.company),
-            displayOrder: member.role.includes('President') ? 1 : 10,
-          },
-        })
-        console.log(`Created Board Member: ${member.name} for ${yearEntry.year}`)
-      } else {
-        console.log(`Board Member ${member.name} already exists for ${yearEntry.year}`)
-      }
+      console.log(`Created Board Member: ${member.name} for ${yearEntry.year}`)
     }
   }
 
   // 7. Seed Member Stories
   console.log('Seeding Member Stories...')
   for (const story of seedStories) {
-    const existing = await payload.find({
+    const photoId = mediaDocs['member-story.png']
+      ? mediaDocs['member-story.png'].id
+      : getFallbackMediaId()
+
+    // A. Create in English
+    const doc = await payload.create({
       collection: 'member-stories',
+      locale: 'en',
+      data: {
+        memberName: story.name,
+        yearJoined: parseInt(story.yearJoined) || 2024,
+        chapterRole: story.role,
+        storyTitle: story.highlight,
+        quote: story.quote,
+        fullStory: toRichText(story.quote),
+        photo: photoId,
+      },
     })
 
-    const storyExists = existing.docs.some(doc => {
-      const docName = typeof doc.memberName === 'object' ? doc.memberName.en : doc.memberName
-      return docName === story.name
+    // B. Update in Thai
+    await payload.update({
+      collection: 'member-stories',
+      id: doc.id,
+      locale: 'th',
+      data: {
+        memberName: TRANSLATIONS[story.name] || story.name,
+        chapterRole: TRANSLATIONS[story.role] || story.role,
+        storyTitle: TRANSLATIONS[story.highlight] || story.highlight,
+        quote: TRANSLATIONS[story.quote] || story.quote,
+        fullStory: toRichText(TRANSLATIONS[story.quote] || story.quote),
+      },
     })
 
-    if (!storyExists) {
-      const photoId = mediaDocs['member-story.png']
-        ? mediaDocs['member-story.png'].id
-        : getFallbackMediaId()
-
-      await payload.create({
-        collection: 'member-stories',
-        locale: 'all',
-        data: {
-          memberName: t(story.name),
-          yearJoined: parseInt(story.yearJoined) || 2024,
-          chapterRole: t(story.role),
-          storyTitle: t(story.highlight),
-          quote: t(story.quote),
-          fullStory: toRichTextLocalized(story.quote),
-          photo: photoId,
-        },
-      })
-      console.log(`Created Member Story for: ${story.name}`)
-    } else {
-      console.log(`Member Story already exists for: ${story.name}`)
-    }
+    console.log(`Created Member Story for: ${story.name}`)
   }
 
   // 8. Seed Partners
   console.log('Seeding Partners...')
   for (const partnerName of seedPartners) {
-    const existing = await payload.find({
+    const logoId = mediaDocs['ux-concept.png']
+      ? mediaDocs['ux-concept.png'].id
+      : getFallbackMediaId()
+
+    // A. Create in English
+    const doc = await payload.create({
       collection: 'partners',
+      locale: 'en',
+      data: {
+        organizationName: partnerName,
+        logo: logoId,
+        partnerType: partnerName.includes('Sponsor') ? 'sponsor' : 'partner',
+        partnershipYear: 2026,
+        description: `Seeded partner: ${partnerName}`,
+      },
     })
 
-    const partnerExists = existing.docs.some(doc => {
-      const docOrgName = typeof doc.organizationName === 'object' ? doc.organizationName.en : doc.organizationName
-      return docOrgName === partnerName
+    // B. Update in Thai
+    await payload.update({
+      collection: 'partners',
+      id: doc.id,
+      locale: 'th',
+      data: {
+        organizationName: TRANSLATIONS[partnerName] || partnerName,
+        description: TRANSLATIONS[`Seeded partner: ${partnerName}`] || `Seeded partner: ${partnerName}`,
+      },
     })
 
-    if (!partnerExists) {
-      const logoId = mediaDocs['ux-concept.png']
-        ? mediaDocs['ux-concept.png'].id
-        : getFallbackMediaId()
-
-      await payload.create({
-        collection: 'partners',
-        locale: 'all',
-        data: {
-          organizationName: t(partnerName),
-          logo: logoId,
-          partnerType: partnerName.includes('Sponsor') ? 'sponsor' : 'partner',
-          partnershipYear: 2026,
-          description: t(`Seeded partner: ${partnerName}`),
-        },
-      })
-      console.log(`Created Partner: ${partnerName}`)
-    } else {
-      console.log(`Partner already exists: ${partnerName}`)
-    }
+    console.log(`Created Partner: ${partnerName}`)
   }
 
   // 9. Global Site Settings
   console.log('Updating Global Site Settings...')
   await payload.updateGlobal({
     slug: 'site-settings',
-    locale: 'all',
+    locale: 'en',
     data: {
-      siteName: t('JCI Bangkok'),
-      currentYearTheme: t(seedBoardYears[0]?.theme || 'Lead forward, build local trust.'),
-      footerText: t('© 2026 JCI Bangkok. All Rights Reserved.'),
+      siteName: 'JCI Bangkok',
+      currentYearTheme: seedBoardYears[0]?.theme || 'Lead forward, build local trust.',
+      footerText: '© 2026 JCI Bangkok. All Rights Reserved.',
+    },
+  })
+
+  await payload.updateGlobal({
+    slug: 'site-settings',
+    locale: 'th',
+    data: {
+      siteName: TRANSLATIONS['JCI Bangkok'] || 'JCI Bangkok',
+      currentYearTheme: TRANSLATIONS[seedBoardYears[0]?.theme || 'Lead forward, build local trust.'] || (seedBoardYears[0]?.theme || 'Lead forward, build local trust.'),
+      footerText: TRANSLATIONS['© 2026 JCI Bangkok. All Rights Reserved.'] || '© 2026 JCI Bangkok. All Rights Reserved.',
     },
   })
   console.log('Global Site Settings updated.')
