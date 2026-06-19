@@ -11,6 +11,7 @@ export const Pages: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
@@ -36,6 +37,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'content',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'seo',
@@ -44,10 +46,12 @@ export const Pages: CollectionConfig = {
         {
           name: 'title',
           type: 'text',
+          localized: true,
         },
         {
           name: 'description',
           type: 'textarea',
+          localized: true,
         },
       ],
     },

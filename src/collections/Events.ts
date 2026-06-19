@@ -11,6 +11,7 @@ export const Events: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
@@ -34,6 +35,7 @@ export const Events: CollectionConfig = {
       name: 'venue',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'googleMapsLink',
@@ -64,10 +66,12 @@ export const Events: CollectionConfig = {
       name: 'shortDescription',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'fullDescription',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'coverImage',

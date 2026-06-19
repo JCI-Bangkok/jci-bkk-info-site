@@ -11,6 +11,7 @@ export const Projects: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
@@ -42,18 +43,22 @@ export const Projects: CollectionConfig = {
       name: 'problemStatement',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'targetBeneficiaries',
       type: 'text',
+      localized: true,
     },
     {
       name: 'activities',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'outcomes',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'impactNumbers',
@@ -68,6 +73,7 @@ export const Projects: CollectionConfig = {
           name: 'label',
           type: 'text',
           required: true,
+          localized: true,
         },
       ],
     },
@@ -101,6 +107,7 @@ export const Projects: CollectionConfig = {
     {
       name: 'partners',
       type: 'text',
+      localized: true,
     },
     {
       name: 'gallery',
@@ -121,6 +128,7 @@ export const Projects: CollectionConfig = {
     {
       name: 'cta',
       type: 'text',
+      localized: true,
     },
   ],
 }

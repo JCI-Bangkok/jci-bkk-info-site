@@ -11,11 +11,13 @@ export const BoardMembers: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'position',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'year',
@@ -31,10 +33,12 @@ export const BoardMembers: CollectionConfig = {
     {
       name: 'bio',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'companyRole',
       type: 'text',
+      localized: true,
     },
     {
       name: 'linkedin',

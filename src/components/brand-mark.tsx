@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Locale } from "@/lib/i18n";
 
-export function BrandMark() {
+export function BrandMark({ locale = 'en' }: { locale?: Locale }) {
   return (
     <Link
-      href="/"
+      href={`/${locale}`}
       className="inline-flex flex-col items-start gap-2"
       aria-label="JCI Bangkok home"
     >

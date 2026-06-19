@@ -76,6 +76,14 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+  localization: {
+    locales: [
+      { label: 'English (US)', code: 'en' },
+      { label: 'Thai', code: 'th' },
+    ],
+    defaultLocale: 'en',
+    fallback: true,
+  },
   plugins,
   sharp,
 })

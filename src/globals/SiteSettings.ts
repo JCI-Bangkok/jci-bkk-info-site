@@ -8,6 +8,7 @@ export const SiteSettings: GlobalConfig = {
       type: 'text',
       required: true,
       defaultValue: 'JCI Bangkok',
+      localized: true,
     },
     {
       name: 'logo',
@@ -39,11 +40,13 @@ export const SiteSettings: GlobalConfig = {
     {
       name: 'footerText',
       type: 'text',
+      localized: true,
     },
     {
       name: 'currentYearTheme',
       type: 'text',
       label: 'Current Year Theme',
+      localized: true,
     },
     {
       name: 'membershipFormLink',

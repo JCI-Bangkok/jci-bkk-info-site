@@ -11,6 +11,7 @@ export const Articles: CollectionConfig = {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
@@ -47,6 +48,7 @@ export const Articles: CollectionConfig = {
         {
           name: 'tag',
           type: 'text',
+          localized: true,
         },
       ],
     },
@@ -60,11 +62,13 @@ export const Articles: CollectionConfig = {
       name: 'summary',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'body',
       type: 'richText',
       required: true,
+      localized: true,
     },
     {
       name: 'publishDate',
@@ -77,10 +81,12 @@ export const Articles: CollectionConfig = {
     {
       name: 'seoTitle',
       type: 'text',
+      localized: true,
     },
     {
       name: 'seoDescription',
       type: 'textarea',
+      localized: true,
     },
     {
       name: 'relatedEvent',

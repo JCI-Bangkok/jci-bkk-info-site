@@ -11,6 +11,7 @@ export const Partners: CollectionConfig = {
       name: 'organizationName',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'logo',
@@ -42,6 +43,7 @@ export const Partners: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
+      localized: true,
     },
     {
       name: 'relatedProjects',

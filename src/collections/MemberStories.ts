@@ -11,6 +11,7 @@ export const MemberStories: CollectionConfig = {
       name: 'memberName',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'yearJoined',
@@ -20,24 +21,29 @@ export const MemberStories: CollectionConfig = {
     {
       name: 'chapterRole',
       type: 'text',
+      localized: true,
     },
     {
       name: 'profession',
       type: 'text',
+      localized: true,
     },
     {
       name: 'storyTitle',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'quote',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'fullStory',
       type: 'richText',
+      localized: true,
     },
     {
       name: 'photo',
