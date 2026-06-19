@@ -1,0 +1,8 @@
+.next
+node_modules
+coverage
+dist
+.DS_Store
+*.log
+.playwright-mcp
+home-*.png
