@@ -1,11 +1,10 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { Locale } from '@/lib/i18n'
 
 export function LanguageSelector({ currentLocale }: { currentLocale: Locale }) {
   const pathname = usePathname()
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   const handleLocaleChange = (newLocale: Locale) => {
@@ -29,9 +28,8 @@ export function LanguageSelector({ currentLocale }: { currentLocale: Locale }) {
     const queryStr = searchParams.toString()
     const targetUrl = queryStr ? `${newPathname}?${queryStr}` : newPathname
 
-    // Navigate to target URL
-    router.push(targetUrl)
-    router.refresh()
+    // Navigate to target URL with a full page reload to ensure document lang and layouts refresh correctly
+    window.location.href = targetUrl
   }
 
   return (
