@@ -1,10 +1,15 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateBoardMember, revalidateDeleteBoardMember } from './hooks/revalidate'
 
 export const BoardMembers: CollectionConfig = {
   slug: 'board-members',
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'position', 'year', 'displayOrder'],
+  },
+  hooks: {
+    afterChange: [revalidateBoardMember],
+    afterDelete: [revalidateDeleteBoardMember],
   },
   fields: [
     {

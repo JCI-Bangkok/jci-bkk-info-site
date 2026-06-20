@@ -1,10 +1,15 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateEvent, revalidateDeleteEvent } from './hooks/revalidate'
 
 export const Events: CollectionConfig = {
   slug: 'events',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'eventDate', 'eventType', 'status'],
+  },
+  hooks: {
+    afterChange: [revalidateEvent],
+    afterDelete: [revalidateDeleteEvent],
   },
   fields: [
     {

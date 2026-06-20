@@ -1,10 +1,15 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateArticle, revalidateDeleteArticle } from './hooks/revalidate'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', 'publishDate'],
+  },
+  hooks: {
+    afterChange: [revalidateArticle],
+    afterDelete: [revalidateDeleteArticle],
   },
   fields: [
     {
