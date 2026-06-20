@@ -20,7 +20,6 @@ export function BrandMark({ locale = 'en' }: { locale?: Locale }) {
         />
       </span>
       <span className="pl-2 text-[0.98rem] font-bold leading-none text-[var(--jci-blue)]">
-        Bangkok
       </span>
     </Link>
   );
