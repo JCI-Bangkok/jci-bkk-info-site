@@ -1,6 +1,8 @@
 import { PageIntro } from "@/components/page-intro";
 import { ContactForm } from "./contact-form";
 import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
 import { Locale } from "@/lib/i18n";
 
 export async function generateMetadata({
@@ -21,6 +23,19 @@ interface PageProps {
 export default async function ContactPage({ params }: PageProps) {
   const { locale } = await params
 
+  let settings: any = null
+  try {
+    const payload = await getPayload({ config: configPromise })
+    settings = await payload.findGlobal({
+      slug: 'site-settings',
+      locale,
+    })
+  } catch (error) {
+    console.error('Error fetching site settings on contact page:', error)
+  }
+
+  const contactEmail = settings?.contactEmail || 'hello@jcibangkok.org'
+
   return (
     <>
       <PageIntro
@@ -33,7 +48,12 @@ export default async function ContactPage({ params }: PageProps) {
             {locale === 'th' ? 'ช่องทางการติดต่อสมาคม' : 'How to reach the chapter'}
           </h2>
           <div className="mt-6 space-y-4 text-base leading-7 text-[var(--muted)]">
-            <p>{locale === 'th' ? 'อีเมลทั่วไป: hello@jcibangkok.org' : 'General email: hello@jcibangkok.org'}</p>
+            <p>
+              {locale === 'th' ? 'อีเมลทั่วไป: ' : 'General email: '}
+              <a href={`mailto:${contactEmail}`} className="hover:underline transition text-[var(--jci-blue)] font-semibold">
+                {contactEmail}
+              </a>
+            </p>
             <p>{locale === 'th' ? 'พื้นที่ดำเนินงาน: กรุงเทพมหานคร ประเทศไทย' : 'Location focus: Bangkok, Thailand'}</p>
             <p>{locale === 'th' ? 'เรื่องที่ติดต่อ: สมัครสมาชิก, พันธมิตรโครงการ, กิจกรรมสมาคม, สื่อมวลชน' : 'Typical topics: membership, partnerships, events, media'}</p>
             <p>{locale === 'th' ? 'คำชี้แจงความเป็นส่วนตัว: เราจัดเก็บเฉพาะข้อมูลที่จำเป็นและอธิบายเหตุผลอย่างโปร่งใส' : 'Privacy note: collect only what is necessary and clearly explain why.'}</p>

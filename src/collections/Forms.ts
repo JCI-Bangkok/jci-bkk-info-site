@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { emailInquiryNotification } from './hooks/email'
 
 export const Forms: CollectionConfig = {
   slug: 'forms',
@@ -8,6 +9,9 @@ export const Forms: CollectionConfig = {
   },
   access: {
     create: () => true, // Anyone can submit a form
+  },
+  hooks: {
+    afterChange: [emailInquiryNotification],
   },
   fields: [
     {

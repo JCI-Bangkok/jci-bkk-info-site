@@ -1,3 +1,6 @@
+import { loadEnvConfig } from '@next/env'
+loadEnvConfig(process.cwd())
+
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'

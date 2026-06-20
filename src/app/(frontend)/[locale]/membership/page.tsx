@@ -2,6 +2,8 @@ import { CtaBanner } from "@/components/cta-banner";
 import { PageIntro } from "@/components/page-intro";
 import { MembershipForm } from "./membership-form";
 import React from 'react'
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
 import { Locale } from "@/lib/i18n";
 
 export async function generateMetadata({
@@ -70,6 +72,17 @@ export default async function MembershipPage({ params }: PageProps) {
   const benefits = locale === 'th' ? benefitsTh : benefitsEn
   const faq = locale === 'th' ? faqTh : faqEn
 
+  let settings: any = null
+  try {
+    const payload = await getPayload({ config: configPromise })
+    settings = await payload.findGlobal({
+      slug: 'site-settings',
+      locale,
+    })
+  } catch (error) {
+    console.error('Error fetching site settings on membership page:', error)
+  }
+
   return (
     <>
       <PageIntro
@@ -119,7 +132,31 @@ export default async function MembershipPage({ params }: PageProps) {
             <li>{locale === 'th' ? '4. ดำเนินการสมัครสมาชิกสมาคมอย่างเป็นทางการและชำระค่าบำรุงประจำปี' : '4. Continue with the formal chapter application flow.'}</li>
           </ol>
         </article>
-        <MembershipForm locale={locale as Locale} />
+        
+        {settings?.membershipFormLink ? (
+          <article className="paper-frame p-7 flex flex-col justify-between h-full bg-[var(--paper-soft)]">
+            <div>
+              <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
+                {locale === 'th' ? 'สมัครสมาชิกผ่านระบบภายนอก' : 'External Application'}
+              </h2>
+              <p className="mt-6 text-base leading-7 text-[var(--muted)]">
+                {locale === 'th'
+                  ? 'ขณะนี้สมาคมเปิดรับสมัครสมาชิกผ่านระบบภายนอกอย่างเป็นทางการ กรุณาคลิกปุ่มด้านล่างเพื่อกรอกใบสมัครของคุณ'
+                  : 'Our chapter is currently accepting formal membership applications through our external application portal.'}
+              </p>
+            </div>
+            <a
+              href={settings.membershipFormLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 rounded-full bg-[var(--jci-blue)] px-6 py-4 text-center text-sm font-semibold text-white hover:bg-[var(--jci-navy)] transition block"
+            >
+              {locale === 'th' ? 'เปิดใบสมัครสมาชิก →' : 'Open Membership Application →'}
+            </a>
+          </article>
+        ) : (
+          <MembershipForm locale={locale as Locale} />
+        )}
       </section>
 
       <section className="mx-auto w-full max-w-7xl px-5 pb-20 lg:px-8">

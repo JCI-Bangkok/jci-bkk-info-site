@@ -1,19 +1,34 @@
 import Link from "next/link";
 import React from "react";
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
 
 import { BrandMark } from "@/components/brand-mark";
 import { navigation } from "@/lib/site-data";
 import { getDictionary, Locale } from "@/lib/i18n";
 import { LanguageSelector } from "./language-selector";
 
-export function SiteHeader({ locale }: { locale: Locale }) {
+export async function SiteHeader({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
+
+  let settings: any = null
+  try {
+    const payload = await getPayload({ config: configPromise })
+    settings = await payload.findGlobal({
+      slug: 'site-settings',
+      locale,
+    })
+  } catch (error) {
+    console.error('Error fetching site settings in header:', error)
+  }
+
+  const logoUrl = (settings?.logo && typeof settings.logo === 'object') ? settings.logo.url : '/brand/jci-primary.svg'
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[color:rgba(255,255,255,0.92)] backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-5 py-3 lg:flex-row lg:items-center lg:justify-between lg:px-8">
         <div className="flex items-center justify-between gap-4">
-          <BrandMark locale={locale} />
+          <BrandMark locale={locale} logoUrl={logoUrl} />
           <div className="flex items-center gap-2 lg:hidden">
             <LanguageSelector currentLocale={locale} />
             <Link
