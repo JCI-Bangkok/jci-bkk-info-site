@@ -8,3 +8,13 @@ dist
 home-*.png
 .env*
 !.env.example
+
+# Generated Payload media uploads
+public/media/*
+!public/media/.gitkeep
+
+# Reference assets kept in git
+resources/*
+!resources/JCI Brand Guidelines.pdf
+!resources/JCI Logo.zip
+!resources/Typefaces.zip
