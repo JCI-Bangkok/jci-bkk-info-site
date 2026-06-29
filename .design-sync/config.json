@@ -1,0 +1,32 @@
+{
+  "projectId": "4b8a0fc7-4a86-4eec-9240-acd1fbb6aa75",
+  "pkg": "jci-bkk-info-site",
+  "shape": "package",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": ".design-sync/compiled.css",
+  "extraFonts": [".design-sync/preview-fonts.css"],
+  "componentSrcMap": {
+    "BrandMark": "src/components/brand-mark.tsx",
+    "CtaBanner": "src/components/cta-banner.tsx",
+    "PageIntro": "src/components/page-intro.tsx",
+    "RichText": "src/components/rich-text.tsx",
+    "SectionHeading": "src/components/section-heading.tsx",
+    "SiteHeader": null,
+    "SiteFooter": null,
+    "LanguageSelector": null
+  },
+  "dtsPropsFor": {
+    "BrandMark": "locale?: 'en' | 'th'; logoUrl?: string;",
+    "CtaBanner": "title: string; description: string; primaryHref: string; primaryLabel: string; secondaryHref?: string; secondaryLabel?: string;",
+    "PageIntro": "title: string; lead: string; aside?: React.ReactNode;",
+    "RichText": "content: { root?: { children?: Array<{ type: string; text?: string; format?: number; tag?: string; listType?: string; children?: any[] }> } } | null | undefined;",
+    "SectionHeading": "title: string; description: string; aside?: React.ReactNode;"
+  },
+  "overrides": {
+    "SectionHeading": { "cardMode": "column" }
+  },
+  "readmeHeader": ".design-sync/conventions.md",
+  "libOverrides": {
+    "bundle.mjs": "Next.js process.env.* refs undefined in browser (define all); next/link and next/image fail silently in preview (shim with plain a/img)"
+  }
+}

@@ -18,3 +18,11 @@ resources/*
 !resources/JCI Brand Guidelines.pdf
 !resources/JCI Logo.zip
 !resources/Typefaces.zip
+
+# Design sync — build output and runtime deps
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
+.design-sync/compiled.css
