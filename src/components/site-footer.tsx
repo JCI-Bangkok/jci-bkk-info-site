@@ -9,7 +9,15 @@ import { getDictionary, Locale } from "@/lib/i18n";
 export async function SiteFooter({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
 
-  let settings: any = null
+  let settings: {
+    contactEmail?: string
+    footerText?: string
+    socialLinks?: {
+      facebook?: string
+      instagram?: string
+      linkedin?: string
+    }
+  } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
