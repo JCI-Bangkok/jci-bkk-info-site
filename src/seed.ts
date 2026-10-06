@@ -1,4 +1,4 @@
-﻿import { loadEnvConfig } from '@next/env'
+import { loadEnvConfig } from '@next/env'
 loadEnvConfig(process.cwd())
 
 import { getPayload } from 'payload'
@@ -19,122 +19,122 @@ const dirname = path.dirname(filename)
 
 const TRANSLATIONS: Record<string, string> = {
   // Event Titles
-  "ENTREPRENEUR CLUB 7: YOUNG TO YAK": "ENTREPRENEUR CLUB à¸„à¸£à¸±à¹‰à¸‡à¸—à¸µà¹ˆ 7 - YOUNG TO YAK -",
+  "ENTREPRENEUR CLUB 7: YOUNG TO YAK": "ENTREPRENEUR CLUB ครั้งที่ 7 - YOUNG TO YAK -",
   "ENTREPRENEUR CLUB 8: LECTURE BAR": "ENTREPRENEUR CLUB 8 LECTURE BAR",
-  "JCI TOYP 2026: HUMAN ADVANTAGE IN THE AI ERA": "JCI TOYP 2026: à¸¨à¸±à¸à¸¢à¸ à¸²à¸žà¸‚à¸­à¸‡à¸¡à¸™à¸¸à¸©à¸¢à¹Œà¹ƒà¸™à¸¢à¸¸à¸„ AI",
-  "Bangkok Leadership Lab": "à¸«à¹‰à¸­à¸‡à¸›à¸à¸´à¸šà¸±à¸•à¸´à¸à¸²à¸£à¸„à¸§à¸²à¸¡à¹€à¸›à¹‡à¸™à¸œà¸¹à¹‰à¸™à¸³à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "Impact Mixer with Mission-Driven Founders": "à¸‡à¸²à¸™à¸žà¸šà¸›à¸°à¸ªà¸±à¸‡à¸ªà¸£à¸£à¸„à¹Œà¹à¸¥à¸°à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸„à¸§à¸²à¸¡à¸£à¸¹à¹‰à¸à¸±à¸šà¸œà¸¹à¹‰à¸à¹ˆà¸­à¸•à¸±à¹‰à¸‡à¸˜à¸¸à¸£à¸à¸´à¸ˆ",
-  "Community Action Day": "à¸§à¸±à¸™à¸šà¸³à¹€à¸žà¹‡à¸à¸›à¸£à¸°à¹‚à¸¢à¸Šà¸™à¹Œà¹€à¸žà¸·à¹ˆà¸­à¸Šà¸¸à¸¡à¸Šà¸™",
+  "JCI TOYP 2026: HUMAN ADVANTAGE IN THE AI ERA": "JCI TOYP 2026: ศักยภาพของมนุษย์ในยุค AI",
+  "Bangkok Leadership Lab": "ห้องปฏิบัติการความเป็นผู้นำกรุงเทพฯ",
+  "Impact Mixer with Mission-Driven Founders": "งานพบปะสังสรรค์และแลกเปลี่ยนความรู้กับผู้ก่อตั้งธุรกิจ",
+  "Community Action Day": "วันบำเพ็ญประโยชน์เพื่อชุมชน",
 
   // Event Venues
-  "Formosa Potetato (MRT Phetchaburi)": "Formosa Potetato (MRT à¹€à¸žà¸Šà¸£à¸šà¸¸à¸£à¸µ)",
+  "Formosa Potetato (MRT Phetchaburi)": "Formosa Potetato (MRT เพชรบุรี)",
   "YELLOW CLOUD CRAFT BEER & BOTTLE SHOP": "YELLOW CLOUD CRAFT BEER & BOTTLE SHOP",
-  "UTCC à¸­à¸²à¸„à¸²à¸£ 5 à¸Šà¸±à¹‰à¸™ 2 à¸«à¹‰à¸­à¸‡ 5201": "à¸¡à¸«à¸²à¸§à¸´à¸—à¸¢à¸²à¸¥à¸±à¸¢à¸«à¸­à¸à¸²à¸£à¸„à¹‰à¸²à¹„à¸—à¸¢ UTCC à¸­à¸²à¸„à¸²à¸£ 5 à¸Šà¸±à¹‰à¸™ 2 à¸«à¹‰à¸­à¸‡ 5201",
-  "Creative Hall, Sukhumvit": "à¸„à¸£à¸µà¹€à¸­à¸—à¸µà¸Ÿà¸®à¸­à¸¥à¸¥à¹Œ à¸ªà¸¸à¸‚à¸¸à¸¡à¸§à¸´à¸—",
-  "Riverside Commons, Bangkok": "à¸£à¸´à¹€à¸§à¸­à¸£à¹Œà¹„à¸‹à¸”à¹Œ à¸„à¸­à¸¡à¸¡à¸­à¸™à¸ªà¹Œ à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "Khlong Toei District": "à¹€à¸‚à¸•à¸„à¸¥à¸­à¸‡à¹€à¸•à¸¢",
+  "UTCC อาคาร 5 ชั้น 2 ห้อง 5201": "มหาวิทยาลัยหอการค้าไทย UTCC อาคาร 5 ชั้น 2 ห้อง 5201",
+  "Creative Hall, Sukhumvit": "ครีเอทีฟฮอลล์ สุขุมวิท",
+  "Riverside Commons, Bangkok": "ริเวอร์ไซด์ คอมมอนส์ กรุงเทพฯ",
+  "Khlong Toei District": "เขตคลองเตย",
 
   // Event Summaries & Highlights
-  "Hands-on Salepage workshop: Design and build your sales landing page with AI, including domain setup and Q&A.": "à¹€à¸§à¸´à¸£à¹Œà¸à¸Šà¸­à¸›à¸ªà¸£à¹‰à¸²à¸‡ Salepage à¸ˆà¸£à¸´à¸‡à¸”à¹‰à¸§à¸¢ AI à¹à¸šà¸š Hands-on à¸•à¸±à¹‰à¸‡à¹à¸•à¹ˆà¸­à¸­à¸à¹à¸šà¸šà¹„à¸›à¸ˆà¸™à¸–à¸¶à¸‡à¸•à¸±à¹‰à¸‡à¸„à¹ˆà¸² Domain à¸žà¸£à¹‰à¸­à¸¡ Q&A",
-  "Learn from Khun Poon Pakpoom, Construction Brain AI Agent Builder at Homitage Co.,Ltd. Includes lunch and roundtable session.": "à¹€à¸£à¸µà¸¢à¸™à¸£à¸¹à¹‰à¸ˆà¸²à¸à¸„à¸¸à¸“à¸›à¸¹à¸™ à¸ à¸²à¸„à¸ à¸¹à¸¡à¸´ Construction Brain AI Agent Builder à¸žà¸£à¹‰à¸­à¸¡à¸­à¸²à¸«à¸²à¸£à¸à¸¥à¸²à¸‡à¸§à¸±à¸™à¹à¸¥à¸° Roundtable Session",
-  "A unique lecture bar experience exploring unexpected business risks (Risk Management You Wish You Knew) with industry experts.": "à¸šà¸²à¸£à¹Œà¸§à¸´à¸Šà¸²à¸à¸²à¸£à¸™à¸±à¸à¸˜à¸¸à¸£à¸à¸´à¸ˆà¹€à¸ˆà¸²à¸°à¸¥à¸¶à¸à¸„à¸§à¸²à¸¡à¹€à¸ªà¸µà¹ˆà¸¢à¸‡à¸—à¸²à¸‡à¸˜à¸¸à¸£à¸à¸´à¸ˆà¸—à¸µà¹ˆà¸„à¸¸à¸“à¸­à¸²à¸ˆà¸„à¸²à¸”à¹„à¸¡à¹ˆà¸–à¸¶à¸‡ à¸à¸±à¸šà¸œà¸¹à¹‰à¹€à¸Šà¸µà¹ˆà¸¢à¸§à¸Šà¸²à¸à¹ƒà¸™à¸§à¸‡à¸à¸²à¸£",
-  "Featuring Khun Peemai and a panel of experts in a casual bar setting. Limited to 30 seats.": "à¸žà¸šà¸à¸±à¸šà¸„à¸¸à¸“à¸›à¸µà¹ƒà¸«à¸¡à¹ˆà¹à¸¥à¸°à¸„à¸“à¸°à¸§à¸´à¸—à¸¢à¸²à¸à¸£à¸œà¸¹à¹‰à¹€à¸Šà¸µà¹ˆà¸¢à¸§à¸Šà¸²à¸à¹ƒà¸™à¸šà¸£à¸£à¸¢à¸²à¸à¸²à¸¨à¸šà¸²à¸£à¹Œà¹à¸šà¸šà¹€à¸›à¹‡à¸™à¸à¸±à¸™à¹€à¸­à¸‡ à¸ˆà¸³à¸à¸±à¸”à¹€à¸žà¸µà¸¢à¸‡ 30 à¸—à¸µà¹ˆà¸™à¸±à¹ˆà¸‡à¹€à¸—à¹ˆà¸²à¸™à¸±à¹‰à¸™",
-  "Ten Outstanding Young Persons 2026 awards. Discover the Human Advantage in the AI Era: Intelligence, Resilience, Inclusion.": "à¹€à¸§à¸—à¸µà¹€à¸ªà¸§à¸™à¸²à¹à¸¥à¸°à¸¡à¸­à¸šà¸£à¸²à¸‡à¸§à¸±à¸¥ 10 à¸ªà¸¸à¸”à¸¢à¸­à¸”à¸œà¸¹à¹‰à¸™à¸³à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆ TOYP 2026 à¸£à¹ˆà¸§à¸¡à¸–à¸­à¸”à¸£à¸«à¸±à¸ª 3 à¸—à¸±à¸à¸©à¸°à¹à¸«à¹ˆà¸‡à¸­à¸™à¸²à¸„à¸•: Intelligence, Resilience, Inclusion",
-  "Meet the 10 outstanding young leaders of 2026 at the University of the Thai Chamber of Commerce.": "à¸žà¸šà¸à¸±à¸š 10 à¸ªà¸¸à¸”à¸¢à¸­à¸”à¸œà¸¹à¹‰à¸™à¸³à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆà¹à¸«à¹ˆà¸‡à¸›à¸µ 2026 à¸—à¸µà¹ˆà¸¡à¸«à¸²à¸§à¸´à¸—à¸¢à¸²à¸¥à¸±à¸¢à¸«à¸­à¸à¸²à¸£à¸„à¹‰à¸²à¹„à¸—à¸¢",
-  "A practical leadership intensive focused on facilitation, speaking, and leading across committees.": "à¸«à¸¥à¸±à¸à¸ªà¸¹à¸•à¸£à¹€à¸£à¹ˆà¸‡à¸£à¸±à¸”à¹€à¸žà¸·à¹ˆà¸­à¸à¸¶à¸à¸à¸™à¸ à¸²à¸§à¸°à¸œà¸¹à¹‰à¸™à¸³à¹€à¸Šà¸´à¸‡à¸›à¸à¸´à¸šà¸±à¸•à¸´ à¸¡à¸¸à¹ˆà¸‡à¹€à¸™à¹‰à¸™à¸à¸²à¸£à¸­à¸³à¸™à¸§à¸¢à¸„à¸§à¸²à¸¡à¸ªà¸°à¸”à¸§à¸ à¸à¸²à¸£à¸žà¸¹à¸”à¹ƒà¸™à¸—à¸µà¹ˆà¸ªà¸²à¸˜à¸²à¸£à¸“à¸° à¹à¸¥à¸°à¸à¸²à¸£à¸™à¸³à¸„à¸“à¸°à¸—à¸³à¸‡à¸²à¸™",
-  "Designed for first-time and emerging chapter leaders.": "à¸­à¸­à¸à¹à¸šà¸šà¸ªà¸³à¸«à¸£à¸±à¸šà¸œà¸¹à¹‰à¸™à¸³à¸ªà¸¡à¸²à¸„à¸¡à¸—à¸µà¹ˆà¹€à¸›à¹‡à¸™à¸„à¸£à¸±à¹‰à¸‡à¹à¸£à¸à¹à¸¥à¸°à¸œà¸¹à¹‰à¸™à¸³à¸—à¸µà¹ˆà¸à¸³à¸¥à¸±à¸‡à¹€à¸•à¸´à¸šà¹‚à¸•",
-  "An evening of founder stories, civic entrepreneurship, and cross-sector introductions for young professionals.": "à¸„à¹ˆà¸³à¸„à¸·à¸™à¹à¸«à¹ˆà¸‡à¸à¸²à¸£à¹à¸šà¹ˆà¸‡à¸›à¸±à¸™à¹€à¸£à¸·à¹ˆà¸­à¸‡à¸£à¸²à¸§à¸‚à¸­à¸‡à¸œà¸¹à¹‰à¸à¹ˆà¸­à¸•à¸±à¹‰à¸‡ à¸à¸²à¸£à¹€à¸›à¹‡à¸™à¸œà¸¹à¹‰à¸›à¸£à¸°à¸à¸­à¸šà¸à¸²à¸£à¹€à¸žà¸·à¹ˆà¸­à¸ªà¸±à¸‡à¸„à¸¡ à¹à¸¥à¸°à¸à¸²à¸£à¸ªà¸£à¹‰à¸²à¸‡à¹€à¸„à¸£à¸·à¸­à¸‚à¹ˆà¸²à¸¢à¸ªà¸³à¸«à¸£à¸±à¸šà¸„à¸™à¸—à¸³à¸‡à¸²à¸™à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆ",
-  "Blends networking with live case studies from Bangkok builders.": "à¸œà¸ªà¸¡à¸œà¸ªà¸²à¸™à¸à¸²à¸£à¸ªà¸£à¹‰à¸²à¸‡à¹€à¸„à¸£à¸·à¸­à¸‚à¹ˆà¸²à¸¢à¸à¸±à¸šà¸à¸²à¸£à¸¨à¸¶à¸à¸©à¸²à¸à¸£à¸“à¸µà¸¨à¸¶à¸à¸©à¸²à¸ˆà¸£à¸´à¸‡à¸ˆà¸²à¸à¸œà¸¹à¹‰à¸ªà¸£à¹‰à¸²à¸‡à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "A volunteer activation that paired local partners, members, and youth leaders around a targeted neighborhood initiative.": "à¸à¸²à¸£à¸—à¸³à¸à¸´à¸ˆà¸à¸£à¸£à¸¡à¸­à¸²à¸ªà¸²à¸ªà¸¡à¸±à¸„à¸£à¸—à¸µà¹ˆà¸£à¸§à¸¡à¸žà¸¥à¸±à¸‡à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™ à¸ªà¸¡à¸²à¸Šà¸´à¸ à¹à¸¥à¸°à¸œà¸¹à¹‰à¸™à¸³à¹€à¸¢à¸²à¸§à¸Šà¸™à¹€à¸žà¸·à¹ˆà¸­à¸žà¸±à¸’à¸™à¸²à¸Šà¸¸à¸¡à¸Šà¸™à¹ƒà¸™à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆà¹€à¸›à¹‰à¸²à¸«à¸¡à¸²à¸¢",
-  "Built to demonstrate visible local action, not abstract volunteering.": "à¸ˆà¸±à¸”à¸—à¸³à¸‚à¸¶à¹‰à¸™à¹€à¸žà¸·à¹ˆà¸­à¹à¸ªà¸”à¸‡à¸à¸²à¸£à¸¥à¸‡à¸¡à¸·à¸­à¸—à¸³à¸ˆà¸£à¸´à¸‡à¹ƒà¸™à¸£à¸°à¸”à¸±à¸šà¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™ à¹„à¸¡à¹ˆà¹ƒà¸Šà¹ˆà¸‡à¸²à¸™à¸­à¸²à¸ªà¸²à¸ªà¸¡à¸±à¸„à¸£à¸—à¸µà¹ˆà¹€à¸›à¹‡à¸™à¸™à¸²à¸¡à¸˜à¸£à¸£à¸¡",
+  "Hands-on Salepage workshop: Design and build your sales landing page with AI, including domain setup and Q&A.": "เวิร์กชอปสร้าง Salepage จริงด้วย AI แบบ Hands-on ตั้งแต่ออกแบบไปจนถึงตั้งค่า Domain พร้อม Q&A",
+  "Learn from Khun Poon Pakpoom, Construction Brain AI Agent Builder at Homitage Co.,Ltd. Includes lunch and roundtable session.": "เรียนรู้จากคุณปูน ภาคภูมิ Construction Brain AI Agent Builder พร้อมอาหารกลางวันและ Roundtable Session",
+  "A unique lecture bar experience exploring unexpected business risks (Risk Management You Wish You Knew) with industry experts.": "บาร์วิชาการนักธุรกิจเจาะลึกความเสี่ยงทางธุรกิจที่คุณอาจคาดไม่ถึง กับผู้เชี่ยวชาญในวงการ",
+  "Featuring Khun Peemai and a panel of experts in a casual bar setting. Limited to 30 seats.": "พบกับคุณปีใหม่และคณะวิทยากรผู้เชี่ยวชาญในบรรยากาศบาร์แบบเป็นกันเอง จำกัดเพียง 30 ที่นั่งเท่านั้น",
+  "Ten Outstanding Young Persons 2026 awards. Discover the Human Advantage in the AI Era: Intelligence, Resilience, Inclusion.": "เวทีเสวนาและมอบรางวัล 10 สุดยอดผู้นำรุ่นใหม่ TOYP 2026 ร่วมถอดรหัส 3 ทักษะแห่งอนาคต: Intelligence, Resilience, Inclusion",
+  "Meet the 10 outstanding young leaders of 2026 at the University of the Thai Chamber of Commerce.": "พบกับ 10 สุดยอดผู้นำรุ่นใหม่แห่งปี 2026 ที่มหาวิทยาลัยหอการค้าไทย",
+  "A practical leadership intensive focused on facilitation, speaking, and leading across committees.": "หลักสูตรเร่งรัดเพื่อฝึกฝนภาวะผู้นำเชิงปฏิบัติ มุ่งเน้นการอำนวยความสะดวก การพูดในที่สาธารณะ และการนำคณะทำงาน",
+  "Designed for first-time and emerging chapter leaders.": "ออกแบบสำหรับผู้นำสมาคมที่เป็นครั้งแรกและผู้นำที่กำลังเติบโต",
+  "An evening of founder stories, civic entrepreneurship, and cross-sector introductions for young professionals.": "ค่ำคืนแห่งการแบ่งปันเรื่องราวของผู้ก่อตั้ง การเป็นผู้ประกอบการเพื่อสังคม และการสร้างเครือข่ายสำหรับคนทำงานรุ่นใหม่",
+  "Blends networking with live case studies from Bangkok builders.": "ผสมผสานการสร้างเครือข่ายกับการศึกษากรณีศึกษาจริงจากผู้สร้างกรุงเทพฯ",
+  "A volunteer activation that paired local partners, members, and youth leaders around a targeted neighborhood initiative.": "การทำกิจกรรมอาสาสมัครที่รวมพลังพันธมิตรท้องถิ่น สมาชิก และผู้นำเยาวชนเพื่อพัฒนาชุมชนในพื้นที่เป้าหมาย",
+  "Built to demonstrate visible local action, not abstract volunteering.": "จัดทำขึ้นเพื่อแสดงการลงมือทำจริงในระดับท้องถิ่น ไม่ใช่งานอาสาสมัครที่เป็นนามธรรม",
 
   // Project Titles
-  "Future Skills for Bangkok Youth": "à¸—à¸±à¸à¸©à¸°à¹à¸«à¹ˆà¸‡à¸­à¸™à¸²à¸„à¸•à¸ªà¸³à¸«à¸£à¸±à¸šà¹€à¸¢à¸²à¸§à¸Šà¸™à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "Green District Challenge": "à¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¸—à¹‰à¸²à¸—à¸²à¸¢à¹€à¸‚à¸•à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆà¸ªà¸µà¹€à¸‚à¸µà¸¢à¸§",
-  "Bangkok Social Enterprise Exchange": "à¹à¸žà¸¥à¸•à¸Ÿà¸­à¸£à¹Œà¸¡à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸§à¸´à¸ªà¸²à¸«à¸à¸´à¸ˆà¹€à¸žà¸·à¹ˆà¸­à¸ªà¸±à¸‡à¸„à¸¡à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
+  "Future Skills for Bangkok Youth": "ทักษะแห่งอนาคตสำหรับเยาวชนกรุงเทพฯ",
+  "Green District Challenge": "โครงการท้าทายเขตพื้นที่สีเขียว",
+  "Bangkok Social Enterprise Exchange": "แพลตฟอร์มแลกเปลี่ยนวิสาหกิจเพื่อสังคมกรุงเทพฯ",
 
   // Project Summaries, Beneficiaries, Impacts
-  "A workshop series connecting communication, leadership, and career-readiness for young people entering the workforce.": "à¸Šà¸¸à¸”à¸à¸²à¸£à¸›à¸£à¸°à¸Šà¸¸à¸¡à¹€à¸Šà¸´à¸‡à¸›à¸à¸´à¸šà¸±à¸•à¸´à¸à¸²à¸£à¸—à¸µà¹ˆà¹€à¸Šà¸·à¹ˆà¸­à¸¡à¹‚à¸¢à¸‡à¸à¸²à¸£à¸ªà¸·à¹ˆà¸­à¸ªà¸²à¸£ à¸ à¸²à¸§à¸°à¸œà¸¹à¹‰à¸™à¸³ à¹à¸¥à¸°à¸„à¸§à¸²à¸¡à¸žà¸£à¹‰à¸­à¸¡à¹ƒà¸™à¸­à¸²à¸Šà¸µà¸žà¸ªà¸³à¸«à¸£à¸±à¸šà¸„à¸™à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆà¸—à¸µà¹ˆà¸à¸³à¸¥à¸±à¸‡à¸à¹‰à¸²à¸§à¹€à¸‚à¹‰à¸²à¸ªà¸¹à¹ˆà¸•à¸¥à¸²à¸”à¹à¸£à¸‡à¸‡à¸²à¸™",
-  "Upper secondary and university-aged participants": "à¸œà¸¹à¹‰à¹€à¸‚à¹‰à¸²à¸£à¹ˆà¸§à¸¡à¹ƒà¸™à¸£à¸°à¸”à¸±à¸šà¸¡à¸±à¸˜à¸¢à¸¡à¸¨à¸¶à¸à¸©à¸²à¸•à¸­à¸™à¸›à¸¥à¸²à¸¢à¹à¸¥à¸°à¸¡à¸«à¸²à¸§à¸´à¸—à¸¢à¸²à¸¥à¸±à¸¢",
-  "Training pathways with volunteer mentors and partner organizations.": "à¹€à¸ªà¹‰à¸™à¸—à¸²à¸‡à¸à¸²à¸£à¹€à¸£à¸µà¸¢à¸™à¸£à¸¹à¹‰à¸žà¸£à¹‰à¸­à¸¡à¹€à¸¡à¸™à¹€à¸—à¸­à¸£à¹Œà¸­à¸²à¸ªà¸²à¸ªà¸¡à¸±à¸„à¸£à¹à¸¥à¸°à¸­à¸‡à¸„à¹Œà¸à¸£à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£",
-  "A community initiative that turns environmental awareness into local action through public campaigns and partnerships.": "à¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¸£à¸´à¹€à¸£à¸´à¹ˆà¸¡à¸‚à¸­à¸‡à¸Šà¸¸à¸¡à¸Šà¸™à¸—à¸µà¹ˆà¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¸„à¸§à¸²à¸¡à¸•à¸£à¸°à¸«à¸™à¸±à¸à¸£à¸¹à¹‰à¸”à¹‰à¸²à¸™à¸ªà¸´à¹ˆà¸‡à¹à¸§à¸”à¸¥à¹‰à¸­à¸¡à¹€à¸›à¹‡à¸™à¸à¸²à¸£à¸›à¸à¸´à¸šà¸±à¸•à¸´à¹ƒà¸™à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™à¸œà¹ˆà¸²à¸™à¸à¸²à¸£à¸£à¸“à¸£à¸‡à¸„à¹Œà¹à¸¥à¸°à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£",
-  "Neighborhood communities and civic partners": "à¸Šà¸¸à¸¡à¸Šà¸™à¹à¸¥à¸°à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸ à¸²à¸„à¸›à¸£à¸°à¸Šà¸²à¸ªà¸±à¸‡à¸„à¸¡à¹ƒà¸™à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆ",
-  "Creates a visible route from participation to measurable city impact.": "à¸ªà¸£à¹‰à¸²à¸‡à¹€à¸ªà¹‰à¸™à¸—à¸²à¸‡à¸—à¸µà¹ˆà¸Šà¸±à¸”à¹€à¸ˆà¸™à¸ˆà¸²à¸à¸à¸²à¸£à¸¡à¸µà¸ªà¹ˆà¸§à¸™à¸£à¹ˆà¸§à¸¡à¹„à¸›à¸ªà¸¹à¹ˆà¸œà¸¥à¸¥à¸±à¸žà¸˜à¹Œà¸—à¸µà¹ˆà¸§à¸±à¸”à¸œà¸¥à¹„à¸”à¹‰à¸‚à¸­à¸‡à¹€à¸¡à¸·à¸­à¸‡",
-  "A collaborative platform for founders, members, and partner organizations to exchange ideas around responsible business growth.": "à¹à¸žà¸¥à¸•à¸Ÿà¸­à¸£à¹Œà¸¡à¸à¸²à¸£à¸—à¸³à¸‡à¸²à¸™à¸£à¹ˆà¸§à¸¡à¸à¸±à¸™à¸ªà¸³à¸«à¸£à¸±à¸šà¸œà¸¹à¹‰à¸à¹ˆà¸­à¸•à¸±à¹‰à¸‡ à¸ªà¸¡à¸²à¸Šà¸´à¸ à¹à¸¥à¸°à¸­à¸‡à¸„à¹Œà¸à¸£à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¹€à¸žà¸·à¹ˆà¸­à¹à¸¥à¸à¹€à¸›à¸¥à¸µà¹ˆà¸¢à¸™à¹à¸™à¸§à¸„à¸´à¸”à¸à¸²à¸£à¹€à¸•à¸´à¸šà¹‚à¸•à¸—à¸²à¸‡à¸˜à¸¸à¸£à¸à¸´à¸ˆà¸­à¸¢à¹ˆà¸²à¸‡à¸£à¸±à¸šà¸œà¸´à¸”à¸Šà¸­à¸š",
-  "Early-stage founders and young professionals": "à¸œà¸¹à¹‰à¸à¹ˆà¸­à¸•à¸±à¹‰à¸‡à¸˜à¸¸à¸£à¸à¸´à¸ˆà¸£à¸°à¸¢à¸°à¹€à¸£à¸´à¹ˆà¸¡à¸•à¹‰à¸™à¹à¸¥à¸°à¸„à¸™à¸—à¸³à¸‡à¸²à¸™à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆ",
-  "Bridges networking with mentorship and real collaboration.": "à¹€à¸Šà¸·à¹ˆà¸­à¸¡à¹‚à¸¢à¸‡à¹€à¸„à¸£à¸·à¸­à¸‚à¹ˆà¸²à¸¢à¹€à¸‚à¹‰à¸²à¸à¸±à¸šà¹€à¸¡à¸™à¹€à¸—à¸­à¸£à¹Œà¹à¸¥à¸°à¸à¸²à¸£à¸—à¸³à¸‡à¸²à¸™à¸£à¹ˆà¸§à¸¡à¸à¸±à¸™à¸ˆà¸£à¸´à¸‡",
-  "Successful execution with target objectives met.": "à¸à¸²à¸£à¸”à¸³à¹€à¸™à¸´à¸™à¸‡à¸²à¸™à¸—à¸µà¹ˆà¸›à¸£à¸°à¸ªà¸šà¸„à¸§à¸²à¸¡à¸ªà¸³à¹€à¸£à¹‡à¸ˆà¸•à¸²à¸¡à¸§à¸±à¸•à¸–à¸¸à¸›à¸£à¸°à¸ªà¸‡à¸„à¹Œà¸—à¸µà¹ˆà¸•à¸±à¹‰à¸‡à¹„à¸§à¹‰",
-  "Participants": "à¸œà¸¹à¹‰à¹€à¸‚à¹‰à¸²à¸£à¹ˆà¸§à¸¡",
-  "Partner Organizations": "à¸­à¸‡à¸„à¹Œà¸à¸£à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£",
+  "A workshop series connecting communication, leadership, and career-readiness for young people entering the workforce.": "ชุดการประชุมเชิงปฏิบัติการที่เชื่อมโยงการสื่อสาร ภาวะผู้นำ และความพร้อมในอาชีพสำหรับคนรุ่นใหม่ที่กำลังก้าวเข้าสู่ตลาดแรงงาน",
+  "Upper secondary and university-aged participants": "ผู้เข้าร่วมในระดับมัธยมศึกษาตอนปลายและมหาวิทยาลัย",
+  "Training pathways with volunteer mentors and partner organizations.": "เส้นทางการเรียนรู้พร้อมเมนเทอร์อาสาสมัครและองค์กรพันธมิตร",
+  "A community initiative that turns environmental awareness into local action through public campaigns and partnerships.": "โครงการริเริ่มของชุมชนที่เปลี่ยนความตระหนักรู้ด้านสิ่งแวดล้อมเป็นการปฏิบัติในท้องถิ่นผ่านการรณรงค์และพันธมิตร",
+  "Neighborhood communities and civic partners": "ชุมชนและพันธมิตรภาคประชาสังคมในพื้นที่",
+  "Creates a visible route from participation to measurable city impact.": "สร้างเส้นทางที่ชัดเจนจากการมีส่วนร่วมไปสู่ผลลัพธ์ที่วัดผลได้ของเมือง",
+  "A collaborative platform for founders, members, and partner organizations to exchange ideas around responsible business growth.": "แพลตฟอร์มการทำงานร่วมกันสำหรับผู้ก่อตั้ง สมาชิก และองค์กรพันธมิตรเพื่อแลกเปลี่ยนแนวคิดการเติบโตทางธุรกิจอย่างรับผิดชอบ",
+  "Early-stage founders and young professionals": "ผู้ก่อตั้งธุรกิจระยะเริ่มต้นและคนทำงานรุ่นใหม่",
+  "Bridges networking with mentorship and real collaboration.": "เชื่อมโยงเครือข่ายเข้ากับเมนเทอร์และการทำงานร่วมกันจริง",
+  "Successful execution with target objectives met.": "การดำเนินงานที่ประสบความสำเร็จตามวัตถุประสงค์ที่ตั้งไว้",
+  "Participants": "ผู้เข้าร่วม",
+  "Partner Organizations": "องค์กรพันธมิตร",
 
   // Article Titles & Summaries
-  "Why young leaders in Bangkok need practice, not just inspiration": "à¸—à¸³à¹„à¸¡à¸œà¸¹à¹‰à¸™à¸³à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆà¹ƒà¸™à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯ à¸–à¸¶à¸‡à¸•à¹‰à¸­à¸‡à¸à¸²à¸£à¸à¸²à¸£à¸¥à¸‡à¸¡à¸·à¸­à¸›à¸à¸´à¸šà¸±à¸•à¸´à¸ˆà¸£à¸´à¸‡ à¹„à¸¡à¹ˆà¹ƒà¸Šà¹ˆà¹à¸„à¹ˆà¹à¸£à¸‡à¸šà¸±à¸™à¸”à¸²à¸¥à¹ƒà¸ˆ",
-  "A perspective on building confidence through committees, projects, and public-facing responsibility.": "à¸¡à¸¸à¸¡à¸¡à¸­à¸‡à¹ƒà¸™à¸à¸²à¸£à¸ªà¸£à¹‰à¸²à¸‡à¸„à¸§à¸²à¸¡à¸¡à¸±à¹ˆà¸™à¹ƒà¸ˆà¸œà¹ˆà¸²à¸™à¸à¸²à¸£à¸—à¸³à¸‡à¸²à¸™à¹ƒà¸™à¸„à¸“à¸°à¸—à¸³à¸‡à¸²à¸™ à¹‚à¸„à¸£à¸‡à¸à¸²à¸£ à¹à¸¥à¸°à¸à¸²à¸£à¸£à¸±à¸šà¸œà¸´à¸”à¸Šà¸­à¸šà¸‡à¸²à¸™à¸ªà¸²à¸˜à¸²à¸£à¸“à¸°",
-  "Inside Community Action Day: what local impact looked like on the ground": "à¹€à¸ˆà¸²à¸°à¸¥à¸¶à¸à¸§à¸±à¸™à¸šà¸³à¹€à¸žà¹‡à¸à¸›à¸£à¸°à¹‚à¸¢à¸Šà¸™à¹Œà¹€à¸žà¸·à¹ˆà¸­à¸Šà¸¸à¸¡à¸Šà¸™: à¸ à¸²à¸žà¸ªà¸°à¸—à¹‰à¸­à¸™à¸‚à¸­à¸‡à¸à¸²à¸£à¸ªà¸£à¹‰à¸²à¸‡à¸œà¸¥à¸¥à¸±à¸žà¸˜à¹Œà¹ƒà¸™à¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆà¸ˆà¸£à¸´à¸‡",
-  "A recap of how local partners and members worked together on a focused district initiative.": "à¸ªà¸£à¸¸à¸›à¸œà¸¥à¸à¸²à¸£à¸—à¸³à¸‡à¸²à¸™à¸£à¹ˆà¸§à¸¡à¸à¸±à¸™à¸‚à¸­à¸‡à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™à¹à¸¥à¸°à¸ªà¸¡à¸²à¸Šà¸´à¸à¹ƒà¸™à¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¸£à¸°à¸”à¸±à¸šà¹€à¸‚à¸•",
-  "A new chapter year with a global mission and a Bangkok mindset": "à¸›à¸µà¹à¸«à¹ˆà¸‡à¸šà¸—à¸šà¸²à¸—à¹ƒà¸«à¸¡à¹ˆà¸à¸±à¸šà¸žà¸±à¸™à¸˜à¸à¸´à¸ˆà¸£à¸°à¸”à¸±à¸šà¹‚à¸¥à¸à¹à¸¥à¸°à¹à¸™à¸§à¸„à¸´à¸”à¹à¸šà¸šà¸„à¸™à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "A message about turning the JCI mission into grounded local opportunities for young active citizens.": "à¸‚à¹‰à¸­à¸„à¸§à¸²à¸¡à¹€à¸à¸µà¹ˆà¸¢à¸§à¸à¸±à¸šà¸à¸²à¸£à¹à¸›à¸¥à¸‡à¸žà¸±à¸™à¸˜à¸à¸´à¸ˆà¸‚à¸­à¸‡ JCI à¹€à¸›à¹‡à¸™à¹‚à¸­à¸à¸²à¸ªà¹ƒà¸™à¸à¸²à¸£à¸›à¸à¸´à¸šà¸±à¸•à¸´à¸ˆà¸£à¸´à¸‡à¸ªà¸³à¸«à¸£à¸±à¸šà¸žà¸¥à¹€à¸¡à¸·à¸­à¸‡à¸•à¸·à¹ˆà¸™à¸£à¸¹à¹‰à¸£à¸¸à¹ˆà¸™à¹ƒà¸«à¸¡à¹ˆ",
+  "Why young leaders in Bangkok need practice, not just inspiration": "ทำไมผู้นำรุ่นใหม่ในกรุงเทพฯ ถึงต้องการการลงมือปฏิบัติจริง ไม่ใช่แค่แรงบันดาลใจ",
+  "A perspective on building confidence through committees, projects, and public-facing responsibility.": "มุมมองในการสร้างความมั่นใจผ่านการทำงานในคณะทำงาน โครงการ และการรับผิดชอบงานสาธารณะ",
+  "Inside Community Action Day: what local impact looked like on the ground": "เจาะลึกวันบำเพ็ญประโยชน์เพื่อชุมชน: ภาพสะท้อนของการสร้างผลลัพธ์ในพื้นที่จริง",
+  "A recap of how local partners and members worked together on a focused district initiative.": "สรุปผลการทำงานร่วมกันของพันธมิตรท้องถิ่นและสมาชิกในโครงการระดับเขต",
+  "A new chapter year with a global mission and a Bangkok mindset": "ปีแห่งบทบาทใหม่กับพันธกิจระดับโลกและแนวคิดแบบคนกรุงเทพฯ",
+  "A message about turning the JCI mission into grounded local opportunities for young active citizens.": "ข้อความเกี่ยวกับการแปลงพันธกิจของ JCI เป็นโอกาสในการปฏิบัติจริงสำหรับพลเมืองตื่นรู้รุ่นใหม่",
 
   // Member Names & Roles & Quotes
-  "Mina S.": "à¸¡à¸´à¸™à¸² à¹€à¸­à¸ª.",
-  "Member and program lead": "à¸ªà¸¡à¸²à¸Šà¸´à¸à¹à¸¥à¸°à¸œà¸¹à¹‰à¸™à¸³à¹‚à¸„à¸£à¸‡à¸à¸²à¸£",
-  "JCI Bangkok gave me a place to test my leadership in public, with real stakes and a supportive team behind me.": "JCI à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯ à¸¡à¸­à¸šà¸žà¸·à¹‰à¸™à¸—à¸µà¹ˆà¹ƒà¸«à¹‰à¸‰à¸±à¸™à¹„à¸”à¹‰à¸—à¸”à¸ªà¸­à¸šà¸„à¸§à¸²à¸¡à¹€à¸›à¹‡à¸™à¸œà¸¹à¹‰à¸™à¸³à¹ƒà¸™à¸—à¸µà¹ˆà¸ªà¸²à¸˜à¸²à¸£à¸“à¸° à¸”à¹‰à¸§à¸¢à¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¸ˆà¸£à¸´à¸‡à¹à¸¥à¸°à¸—à¸µà¸¡à¸‡à¸²à¸™à¸—à¸µà¹ˆà¸„à¸­à¸¢à¸ªà¸™à¸±à¸šà¸ªà¸™à¸¸à¸™à¸­à¸¢à¸¹à¹ˆà¹€à¸šà¸·à¹‰à¸­à¸‡à¸«à¸¥à¸±à¸‡",
-  "From event volunteer to committee lead within one year.": "à¸ˆà¸²à¸à¸­à¸²à¸ªà¸²à¸ªà¸¡à¸±à¸„à¸£à¸à¸´à¸ˆà¸à¸£à¸£à¸¡à¸ªà¸¹à¹ˆà¸œà¸¹à¹‰à¸™à¸³à¸„à¸“à¸°à¸—à¸³à¸‡à¸²à¸™à¸ à¸²à¸¢à¹ƒà¸™à¸«à¸™à¸¶à¹ˆà¸‡à¸›à¸µ",
+  "Mina S.": "มินา เอส.",
+  "Member and program lead": "สมาชิกและผู้นำโครงการ",
+  "JCI Bangkok gave me a place to test my leadership in public, with real stakes and a supportive team behind me.": "JCI กรุงเทพฯ มอบพื้นที่ให้ฉันได้ทดสอบความเป็นผู้นำในที่สาธารณะ ด้วยโครงการจริงและทีมงานที่คอยสนับสนุนอยู่เบื้องหลัง",
+  "From event volunteer to committee lead within one year.": "จากอาสาสมัครกิจกรรมสู่ผู้นำคณะทำงานภายในหนึ่งปี",
   
-  "Narin T.": "à¸™à¸£à¸´à¸™à¸—à¸£à¹Œ à¸—à¸µ.",
-  "Partnership committee": "à¸„à¸“à¸°à¸—à¸³à¸‡à¸²à¸™à¸à¹ˆà¸²à¸¢à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£",
-  "I joined for community impact and stayed because the network pushed me to think bigger than my day job.": "à¸‰à¸±à¸™à¹€à¸‚à¹‰à¸²à¸£à¹ˆà¸§à¸¡à¹€à¸žà¸£à¸²à¸°à¸­à¸¢à¸²à¸à¸ªà¸£à¹‰à¸²à¸‡à¸œà¸¥à¸¥à¸±à¸žà¸˜à¹Œà¹€à¸žà¸·à¹ˆà¸­à¸Šà¸¸à¸¡à¸Šà¸™ à¹à¸¥à¸°à¸¢à¸±à¸‡à¸„à¸‡à¸­à¸¢à¸¹à¹ˆà¹€à¸žà¸£à¸²à¸°à¹€à¸„à¸£à¸·à¸­à¸‚à¹ˆà¸²à¸¢à¸œà¸¥à¸±à¸à¸”à¸±à¸™à¹ƒà¸«à¹‰à¸‰à¸±à¸™à¸„à¸´à¸”à¹„à¸”à¹‰à¹„à¸à¸¥à¸à¸§à¹ˆà¸²à¸‡à¸²à¸™à¸›à¸£à¸°à¸ˆà¸³à¸—à¸µà¹ˆà¸—à¸³",
-  "Built sponsor conversations into long-term partner relationships.": "à¸žà¸±à¸’à¸™à¸²à¸à¸²à¸£à¹€à¸ˆà¸£à¸ˆà¸²à¸à¸±à¸šà¸œà¸¹à¹‰à¸ªà¸™à¸±à¸šà¸ªà¸™à¸¸à¸™à¸ªà¸¹à¹ˆà¸„à¸§à¸²à¸¡à¸ªà¸±à¸¡à¸žà¸±à¸™à¸˜à¹Œà¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸£à¸°à¸¢à¸°à¸¢à¸²à¸§",
+  "Narin T.": "นรินทร์ ที.",
+  "Partnership committee": "คณะทำงานฝ่ายพันธมิตร",
+  "I joined for community impact and stayed because the network pushed me to think bigger than my day job.": "ฉันเข้าร่วมเพราะอยากสร้างผลลัพธ์เพื่อชุมชน และยังคงอยู่เพราะเครือข่ายผลักดันให้ฉันคิดได้ไกลกว่างานประจำที่ทำ",
+  "Built sponsor conversations into long-term partner relationships.": "พัฒนาการเจรจากับผู้สนับสนุนสู่ความสัมพันธ์พันธมิตรระยะยาว",
   
-  "Aiko P.": "à¹„à¸­à¹‚à¸à¸° à¸žà¸µ.",
-  "International relations": "à¸à¹ˆà¸²à¸¢à¸„à¸§à¸²à¸¡à¸ªà¸±à¸¡à¸žà¸±à¸™à¸˜à¹Œà¸£à¸°à¸«à¸§à¹ˆà¸²à¸‡à¸›à¸£à¸°à¹€à¸—à¸¨",
-  "The international side of JCI made Bangkok feel connected to something much bigger, while still keeping the work local.": "à¸”à¹‰à¸²à¸™à¸à¸²à¸£à¸•à¹ˆà¸²à¸‡à¸›à¸£à¸°à¹€à¸—à¸¨ of JCI à¸—à¸³à¹ƒà¸«à¹‰à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯ à¸£à¸¹à¹‰à¸ªà¸¶à¸à¹€à¸Šà¸·à¹ˆà¸­à¸¡à¹‚à¸¢à¸‡à¸à¸±à¸šà¸ªà¸´à¹ˆà¸‡à¸—à¸µà¹ˆà¹ƒà¸«à¸à¹ˆà¸à¸§à¹ˆà¸²à¸¡à¸²à¸à¹ƒà¸™à¸£à¸°à¸”à¸±à¸šà¸ªà¸²à¸à¸¥ à¹ƒà¸™à¸‚à¸“à¸°à¹€à¸”à¸µà¸¢à¸§à¸à¸±à¸™à¸à¹‡à¸¢à¸±à¸‡à¸„à¸‡à¸¥à¸‡à¸¡à¸·à¸­à¸—à¸³à¹ƒà¸™à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™à¸‚à¸­à¸‡à¹€à¸£à¸²",
-  "Led collaboration with visiting delegates and regional partners.": "à¸™à¸³à¸—à¸µà¸¡à¸›à¸£à¸°à¸ªà¸²à¸™à¸‡à¸²à¸™à¸£à¹ˆà¸§à¸¡à¸à¸±à¸šà¸œà¸¹à¹‰à¹à¸—à¸™à¸—à¸µà¹ˆà¸¡à¸²à¹€à¸¢à¸·à¸­à¸™à¹à¸¥à¸°à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¹ƒà¸™à¸ à¸¹à¸¡à¸´à¸ à¸²à¸„",
+  "Aiko P.": "ไอโกะ พี.",
+  "International relations": "ฝ่ายความสัมพันธ์ระหว่างประเทศ",
+  "The international side of JCI made Bangkok feel connected to something much bigger, while still keeping the work local.": "ด้านการต่างประเทศ of JCI ทำให้กรุงเทพฯ รู้สึกเชื่อมโยงกับสิ่งที่ใหญ่กว่ามากในระดับสากล ในขณะเดียวกันก็ยังคงลงมือทำในท้องถิ่นของเรา",
+  "Led collaboration with visiting delegates and regional partners.": "นำทีมประสานงานร่วมกับผู้แทนที่มาเยือนและพันธมิตรในภูมิภาค",
 
   // Board Members
-  "Pimnara L.": "à¸žà¸´à¸¡à¸™à¸²à¸£à¸² à¹à¸­à¸¥.",
-  "Local President": "à¸™à¸²à¸¢à¸à¸ªà¸¡à¸²à¸„à¸¡à¸›à¸µ 2026",
-  "Strategy and partnerships": "à¸à¸¥à¸¢à¸¸à¸—à¸˜à¹Œà¹à¸¥à¸°à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£",
-  "Leads the yearly chapter direction, external relations, and board alignment.": "à¸™à¸³à¸—à¸²à¸‡à¸—à¸´à¸¨à¸—à¸²à¸‡à¸›à¸£à¸°à¸ˆà¸³à¸›à¸µà¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸„à¸¡ à¸„à¸§à¸²à¸¡à¸ªà¸±à¸¡à¸žà¸±à¸™à¸˜à¹Œà¸ à¸²à¸¢à¸™à¸­à¸ à¹à¸¥à¸°à¸à¸²à¸£à¸›à¸£à¸°à¸ªà¸²à¸™à¸‡à¸²à¸™à¸‚à¸­à¸‡à¸„à¸“à¸°à¸à¸£à¸£à¸¡à¸à¸²à¸£",
+  "Pimnara L.": "พิมนารา แอล.",
+  "Local President": "นายกสมาคมปี 2026",
+  "Strategy and partnerships": "กลยุทธ์และพันธมิตร",
+  "Leads the yearly chapter direction, external relations, and board alignment.": "นำทางทิศทางประจำปีของสมาคม ความสัมพันธ์ภายนอก และการประสานงานของคณะกรรมการ",
   
-  "Thanawat C.": "à¸˜à¸™à¸§à¸±à¸’à¸™à¹Œ à¸‹à¸µ.",
-  "Executive Vice President": "à¸£à¸­à¸‡à¸™à¸²à¸¢à¸à¸ªà¸¡à¸²à¸„à¸¡à¸à¹ˆà¸²à¸¢à¸šà¸£à¸´à¸«à¸²à¸£",
-  "Operations": "à¸à¸²à¸£à¸”à¸³à¹€à¸™à¸´à¸™à¸‡à¸²à¸™",
-  "Coordinates chapter execution across committees and annual goals.": "à¸›à¸£à¸°à¸ªà¸²à¸™à¸‡à¸²à¸™à¸à¸²à¸£à¸”à¸³à¹€à¸™à¸´à¸™à¸‡à¸²à¸™à¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸„à¸¡à¸‚à¹‰à¸²à¸¡à¸„à¸“à¸°à¸—à¸³à¸‡à¸²à¸™à¹à¸¥à¸°à¹€à¸›à¹‰à¸²à¸«à¸¡à¸²à¸¢à¸›à¸£à¸°à¸ˆà¸³à¸›à¸µ",
+  "Thanawat C.": "ธนวัฒน์ ซี.",
+  "Executive Vice President": "รองนายกสมาคมฝ่ายบริหาร",
+  "Operations": "การดำเนินงาน",
+  "Coordinates chapter execution across committees and annual goals.": "ประสานงานการดำเนินงานของสมาคมข้ามคณะทำงานและเป้าหมายประจำปี",
   
-  "Kanya R.": "à¸à¸±à¸™à¸¢à¸² à¸­à¸²à¸£à¹Œ.",
-  "Vice President for Membership": "à¸£à¸­à¸‡à¸™à¸²à¸¢à¸à¸ªà¸¡à¸²à¸„à¸¡à¸à¹ˆà¸²à¸¢à¸ªà¸¡à¸²à¸Šà¸´à¸à¸ à¸²à¸ž",
-  "Member development": "à¸à¹ˆà¸²à¸¢à¸žà¸±à¸’à¸™à¸²à¸ªà¸¡à¸²à¸Šà¸´à¸",
-  "Focuses on recruitment, onboarding, and tracking active member pathways.": "à¸¡à¸¸à¹ˆà¸‡à¹€à¸™à¹‰à¸™à¸à¸²à¸£à¸ªà¸£à¸£à¸«à¸² à¸›à¸à¸¡à¸™à¸´à¹€à¸—à¸¨ à¹à¸¥à¸°à¸•à¸´à¸”à¸•à¸²à¸¡à¹€à¸ªà¹‰à¸™à¸—à¸²à¸‡à¸à¸²à¸£à¹€à¸£à¸µà¸¢à¸™à¸£à¸¹à¹‰à¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸Šà¸´à¸à¸ à¸²à¸ž",
+  "Kanya R.": "กันยา อาร์.",
+  "Vice President for Membership": "รองนายกสมาคมฝ่ายสมาชิกภาพ",
+  "Member development": "ฝ่ายพัฒนาสมาชิก",
+  "Focuses on recruitment, onboarding, and tracking active member pathways.": "มุ่งเน้นการสรรหา ปฐมนิเทศ และติดตามเส้นทางการเรียนรู้ของสมาชิกภาพ",
 
-  "Sarut T.": "à¸¨à¸£à¸¸à¸• à¸—à¸µ.",
-  "Vice President for Projects": "à¸£à¸­à¸‡à¸™à¸²à¸¢à¸à¸ªà¸¡à¸²à¸„à¸¡à¸à¹ˆà¸²à¸¢à¹‚à¸„à¸£à¸‡à¸à¸²à¸£",
-  "Civic projects": "à¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¹€à¸žà¸·à¹ˆà¸­à¸ªà¸±à¸‡à¸„à¸¡",
-  "Oversees execution and partner coordination for major community events.": "à¸”à¸¹à¹à¸¥à¸à¸²à¸£à¸”à¸³à¹€à¸™à¸´à¸™à¸‡à¸²à¸™à¹à¸¥à¸°à¸à¸²à¸£à¸›à¸£à¸°à¸ªà¸²à¸™à¸‡à¸²à¸™à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸ªà¸³à¸«à¸£à¸±à¸šà¸à¸´à¸ˆà¸à¸£à¸£à¸¡à¸«à¸¥à¸±à¸à¸‚à¸­à¸‡à¸Šà¸¸à¸¡à¸Šà¸™",
+  "Sarut T.": "ศรุต ที.",
+  "Vice President for Projects": "รองนายกสมาคมฝ่ายโครงการ",
+  "Civic projects": "โครงการเพื่อสังคม",
+  "Oversees execution and partner coordination for major community events.": "ดูแลการดำเนินงานและการประสานงานพันธมิตรสำหรับกิจกรรมหลักของชุมชน",
 
-  "Nutcha J.": "à¸“à¸±à¸à¸Šà¸² à¹€à¸ˆ.",
-  "Secretary General": "à¹€à¸¥à¸‚à¸²à¸˜à¸´à¸à¸²à¸£",
-  "Governance and communication": "à¸à¸²à¸£à¸à¸³à¸à¸±à¸šà¸”à¸¹à¹à¸¥à¹à¸¥à¸°à¸à¸²à¸£à¸ªà¸·à¹ˆà¸­à¸ªà¸²à¸£",
-  "Manages chapter documentation, communications, and administrative compliance.": "à¸ˆà¸±à¸”à¸à¸²à¸£à¹€à¸­à¸à¸ªà¸²à¸£à¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸„à¸¡ à¸à¸²à¸£à¸ªà¸·à¹ˆà¸­à¸ªà¸²à¸£ à¹à¸¥à¸°à¸à¸²à¸£à¸›à¸à¸´à¸šà¸±à¸•à¸´à¸•à¸²à¸¡à¸à¸Žà¸£à¸°à¹€à¸šà¸µà¸¢à¸šà¸à¸²à¸£à¸šà¸£à¸´à¸«à¸²à¸£à¸‡à¸²à¸™",
+  "Nutcha J.": "ณัฐชา เจ.",
+  "Secretary General": "เลขาธิการ",
+  "Governance and communication": "การกำกับดูแลและการสื่อสาร",
+  "Manages chapter documentation, communications, and administrative compliance.": "จัดการเอกสารของสมาคม การสื่อสาร และการปฏิัติตามกฎระเบียบการบริหารงาน",
 
-  "Chaiwat S.": "à¸Šà¸±à¸¢à¸§à¸±à¸’à¸™à¹Œ à¹€à¸­à¸ª.",
-  "Treasurer": "à¹€à¸«à¸£à¸±à¸à¸à¸´à¸",
-  "Finance": "à¸à¸²à¸£à¹€à¸‡à¸´à¸™",
-  "Manages chapter accounts, budget tracking, and corporate filings.": "à¸ˆà¸±à¸”à¸à¸²à¸£à¸šà¸±à¸à¸Šà¸µà¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸„à¸¡ à¸•à¸´à¸”à¸•à¸²à¸¡à¸‡à¸šà¸›à¸£à¸°à¸¡à¸²à¸“ à¹à¸¥à¸°à¸¢à¸·à¹ˆà¸™à¹€à¸­à¸à¸ªà¸²à¸£à¸—à¸²à¸‡à¸à¸²à¸£à¹€à¸‡à¸´à¸™à¸‚à¸­à¸‡à¸™à¸´à¸•à¸´à¸šà¸¸à¸„à¸„à¸¥",
+  "Chaiwat S.": "ชัยวัฒน์ เอส.",
+  "Treasurer": "เหรัญญิก",
+  "Finance": "การเงิน",
+  "Manages chapter accounts, budget tracking, and corporate filings.": "จัดการบัญชีของสมาคม ติดตามงบประมาณ และยื่นเอกสารทางการเงินของนิติบุคคล",
 
-  "Lead forward, build local trust.": "à¸™à¸³à¸žà¸²à¹„à¸›à¸‚à¹‰à¸²à¸‡à¸«à¸™à¹‰à¸² à¸ªà¸£à¹‰à¸²à¸‡à¸„à¸§à¸²à¸¡à¹„à¸§à¹‰à¸§à¸²à¸‡à¹ƒà¸ˆà¹ƒà¸™à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™",
-  "A board focused on member growth, stronger partnerships, and visible project delivery in Bangkok.": "à¸„à¸“à¸°à¸à¸£à¸£à¸¡à¸à¸²à¸£à¸—à¸µà¹ˆà¸¡à¸¸à¹ˆà¸‡à¹€à¸™à¹‰à¸™à¸à¸²à¸£à¹€à¸•à¸´à¸šà¹‚à¸•à¸‚à¸­à¸‡à¸ªà¸¡à¸²à¸Šà¸´à¸ à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸—à¸µà¹ˆà¹€à¸‚à¹‰à¸¡à¹à¸‚à¹‡à¸‡ à¹à¸¥à¸°à¸à¸²à¸£à¸ªà¹ˆà¸‡à¸¡à¸­à¸šà¹‚à¸„à¸£à¸‡à¸à¸²à¸£à¸—à¸µà¹ˆà¸ˆà¸±à¸šà¸•à¹‰à¸­à¸‡à¹„à¸”à¹‰à¹ƒà¸™à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
+  "Lead forward, build local trust.": "นำพาไปข้างหน้า สร้างความไว้วางใจในท้องถิ่น",
+  "A board focused on member growth, stronger partnerships, and visible project delivery in Bangkok.": "คณะกรรมการที่มุ่งเน้นการเติบโตของสมาชิก พันธมิตรที่เข้มแข็ง และการส่งมอบโครงการที่จับต้องได้ในกรุงเทพฯ",
 
   // Partners
-  "Global Sponsor A": "à¸œà¸¹à¹‰à¸ªà¸™à¸±à¸šà¸ªà¸™à¸¸à¸™à¸£à¸°à¸”à¸±à¸šà¹‚à¸¥à¸ A",
-  "Local Partner B": "à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸—à¹‰à¸­à¸‡à¸–à¸´à¹ˆà¸™ B",
-  "Embassy Partner C": "à¸žà¸±à¸™à¸˜à¸¡à¸´à¸•à¸£à¸ªà¸–à¸²à¸™à¸—à¸¹à¸• C",
-  "University D": "à¸¡à¸«à¸²à¸§à¸´à¸—à¸¢à¸²à¸¥à¸±à¸¢ D",
-  "Community Sponsor E": "à¸œà¸¹à¹‰à¸ªà¸™à¸±à¸šà¸ªà¸™à¸¸à¸™à¸Šà¸¸à¸¡à¸Šà¸™ E",
+  "Global Sponsor A": "ผู้สนับสนุนระดับโลก A",
+  "Local Partner B": "พันธมิตรท้องถิ่น B",
+  "Embassy Partner C": "พันธมิตรสถานทูต C",
+  "University D": "มหาวิทยาลัย D",
+  "Community Sponsor E": "ผู้สนับสนุนชุมชน E",
 
   // General Settings
-  "JCI Bangkok": "JCI à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯",
-  "Â© 2026 JCI Bangkok. All Rights Reserved.": "Â© 2026 JCI à¸à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¯ à¸ªà¸‡à¸§à¸™à¸¥à¸´à¸‚à¸ªà¸´à¸—à¸˜à¸´à¹Œà¸—à¸±à¹‰à¸‡à¸«à¸¡à¸”"
+  "JCI Bangkok": "JCI กรุงเทพฯ",
+  "© 2026 JCI Bangkok. All Rights Reserved.": "© 2026 JCI กรุงเทพฯ สงวนลิขสิทธิ์ทั้งหมด"
 }
 
 function toRichText(text: string) {
@@ -570,7 +570,7 @@ async function run() {
     data: {
       siteName: 'JCI Bangkok',
       currentYearTheme: seedBoardYears[0]?.theme || 'Lead forward, build local trust.',
-      footerText: 'Â© 2026 JCI Bangkok. All Rights Reserved.',
+      footerText: '© 2026 JCI Bangkok. All Rights Reserved.',
     },
   })
 
@@ -580,7 +580,7 @@ async function run() {
     data: {
       siteName: TRANSLATIONS['JCI Bangkok'] || 'JCI Bangkok',
       currentYearTheme: TRANSLATIONS[seedBoardYears[0]?.theme || 'Lead forward, build local trust.'] || (seedBoardYears[0]?.theme || 'Lead forward, build local trust.'),
-      footerText: TRANSLATIONS['Â© 2026 JCI Bangkok. All Rights Reserved.'] || 'Â© 2026 JCI Bangkok. All Rights Reserved.',
+      footerText: TRANSLATIONS['© 2026 JCI Bangkok. All Rights Reserved.'] || '© 2026 JCI Bangkok. All Rights Reserved.',
     },
   })
   console.log('Global Site Settings updated.')
