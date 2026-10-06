@@ -34,10 +34,13 @@ When deploying on serverless architectures with read-only filesystems, Payload i
 | Variable | Description | Example |
 | :--- | :--- | :--- |
 | `S3_BUCKET` | The name of your S3 bucket | `jci-bkk-media` |
-| `S3_ACCESS_KEY_ID` | Your AWS or S3 provider access key | `your-access-key-id` |
-| `S3_SECRET_ACCESS_KEY` | Your AWS or S3 provider secret key | `your-secret-access-key` |
+| `S3_ACCESS_KEY_ID` | Your AWS or S3 provider access key | `nak_live_...` |
+| `S3_SECRET_ACCESS_KEY` | Your AWS or S3 provider secret key | `nsk_live_...` |
 | `S3_REGION` | The region of the bucket | `ap-southeast-1` |
-| `S3_ENDPOINT` | *(Optional)* The endpoint URL if using R2/MinIO/DigitalOcean | `https://<account_id>.r2.cloudflarestorage.com` |
+| `S3_ENDPOINT` | *(Optional)* The endpoint URL if using R2/MinIO/Neon | `https://br-lucky-fog-aol9sf27.storage.c-2.ap-southeast-1.aws.neon.tech` |
+
+> **Note on Vercel Environment Variables:**
+> Do NOT wrap values in quotes (`"..."` or `'...'`) when adding them to the Vercel Dashboard. Values must be raw unquoted strings. If quotes are included, the AWS S3 SDK will incorporate the quotation marks into signature calculation, causing `SignatureDoesNotMatch` errors.
 
 ---
 

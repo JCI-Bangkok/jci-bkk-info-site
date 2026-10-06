@@ -24,12 +24,27 @@ const dirname = path.dirname(filename)
 
 const plugins = []
 
+// Helper to clean environment variables from quotes, spaces, newlines, or template placeholders
+function cleanEnv(val?: string, fallback = ''): string {
+  if (!val) return fallback
+  let cleaned = val.trim()
+  // Remove wrapping single or double quotes, including escaped quotes
+  cleaned = cleaned.replace(/^(\\?["'])+|(\\?["'])+$/g, '').trim()
+  if (cleaned.includes('your-') || cleaned === '') return fallback
+  return cleaned
+}
+
+function cleanEndpoint(val?: string, fallback = ''): string {
+  const cleaned = cleanEnv(val, fallback)
+  return cleaned.replace(/\/+$/, '')
+}
+
 // Configure S3 plugin for full asset CRUD (Upload, Read, Update, Delete)
-const s3Bucket = process.env.S3_BUCKET || 'jci-bkk-media'
-const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID || 'nak_live_7bd1883eb92c439a9ee2bc819815eb94'
-const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY || 'nsk_live_90d007d4e32aa3772d25713d7cddb0f34f85cfc04183760b5a4e956d07efd3c6'
-const s3Region = process.env.S3_REGION || 'ap-southeast-1'
-const s3Endpoint = process.env.S3_ENDPOINT || 'https://br-lucky-fog-aol9sf27.storage.c-2.ap-southeast-1.aws.neon.tech'
+const s3Bucket = cleanEnv(process.env.S3_BUCKET, 'jci-bkk-media')
+const s3AccessKeyId = cleanEnv(process.env.S3_ACCESS_KEY_ID, 'nak_live_7bd1883eb92c439a9ee2bc819815eb94')
+const s3SecretAccessKey = cleanEnv(process.env.S3_SECRET_ACCESS_KEY, 'nsk_live_90d007d4e32aa3772d25713d7cddb0f34f85cfc04183760b5a4e956d07efd3c6')
+const s3Region = cleanEnv(process.env.S3_REGION, 'ap-southeast-1')
+const s3Endpoint = cleanEndpoint(process.env.S3_ENDPOINT, 'https://br-lucky-fog-aol9sf27.storage.c-2.ap-southeast-1.aws.neon.tech')
 
 if (s3Bucket && s3AccessKeyId && s3SecretAccessKey) {
   plugins.push(
@@ -77,10 +92,10 @@ export default buildConfig({
     SiteSettings,
   ],
   editor: lexicalEditor({}),
-  secret: process.env.PAYLOAD_SECRET || 'fallback-secret-for-dev-only',
+  secret: cleanEnv(process.env.PAYLOAD_SECRET, 'supersecretpayloadsessionkeyforjcibangkokwebsite2026'),
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
+      connectionString: cleanEnv(process.env.DATABASE_URI),
     },
   }),
   typescript: {

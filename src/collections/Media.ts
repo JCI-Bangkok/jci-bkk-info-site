@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { mediaUrl } from '../lib/media'
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -17,12 +18,15 @@ export const Media: CollectionConfig = {
   upload: {
     staticDir: 'public/media',
     adminThumbnail: ({ doc }) => {
-      return (
-        (doc?.sizes as Record<string, { url?: string }> | undefined)?.thumbnail?.url ||
-        (doc?.url as string) ||
-        (doc?.thumbnailURL as string) ||
-        null
-      )
+      const thumb = (doc?.sizes as Record<string, { url?: string }> | undefined)?.thumbnail?.url
+      if (thumb) {
+        return mediaUrl({ url: thumb }) || thumb
+      }
+      const raw = (doc?.url as string) || (doc?.thumbnailURL as string)
+      if (raw) {
+        return mediaUrl({ url: raw }) || raw
+      }
+      return null
     },
     imageSizes: [
       {
