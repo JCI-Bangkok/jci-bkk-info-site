@@ -21,7 +21,7 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
   }
 
   const contactEmail = settings?.contactEmail || 'hello@jcibangkok.org'
-  const footerText = settings?.footerText || 'Â© 2026 JCI Bangkok. All Rights Reserved.'
+  const footerText = settings?.footerText || '© 2026 JCI Bangkok. All Rights Reserved.'
 
   return (
     <footer className="border-t border-[var(--line)] bg-[var(--jci-black)] text-white">
