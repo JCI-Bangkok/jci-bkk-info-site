@@ -5,11 +5,12 @@ function mediaUrl(media: unknown): string | undefined {
   if (media && typeof media === 'object' && 'url' in media && typeof media.url === 'string') return media.url
 }
 
-type PartnerItem = {
+export type PartnerItem = {
   website?: string | null;
   logo?: unknown;
-  organizationName: string;
+  organizationName?: string;
   partnerType?: 'sponsor' | 'partner' | string;
+  [key: string]: unknown;
 };
 
 function PartnerCard({ partner, variant }: { partner: PartnerItem; variant: 'sponsor' | 'partner' }) {
@@ -19,10 +20,10 @@ function PartnerCard({ partner, variant }: { partner: PartnerItem; variant: 'spo
       <a href={partner.website || '#'} target={partner.website ? '_blank' : undefined} className="relative w-full h-full flex flex-col items-center justify-center">
         {mediaUrl(partner.logo) ? (
           <div className="relative w-full flex-grow mb-2">
-            <Image src={mediaUrl(partner.logo)!} alt={partner.organizationName} fill sizes={isSponsor ? '20rem' : '17rem'} className={`object-contain ${!isSponsor ? 'grayscale hover:grayscale-0 transition-all duration-300' : ''}`} />
+            <Image src={mediaUrl(partner.logo)!} alt={partner.organizationName || ''} fill sizes={isSponsor ? '20rem' : '17rem'} className={`object-contain ${!isSponsor ? 'grayscale hover:grayscale-0 transition-all duration-300' : ''}`} />
           </div>
         ) : null}
-        <p className={`${isSponsor ? 'text-sm' : 'text-xs'} font-semibold text-[var(--ink)] mt-1 truncate w-full`}>{partner.organizationName}</p>
+        <p className={`${isSponsor ? 'text-sm' : 'text-xs'} font-semibold text-[var(--ink)] mt-1 truncate w-full`}>{partner.organizationName || ''}</p>
       </a>
     </article>
   );
