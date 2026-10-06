@@ -29,18 +29,10 @@ const articleCategoryLabelsEn: Record<string, string> = {
   knowledge: 'Knowledge Article',
 }
 
+import { formatBangkokDate } from '@/lib/calendar-date'
+
 function formatDate(dateStr: string, locale: string) {
-  const code = locale === 'th' ? 'th-TH' : 'en-US'
-  try {
-    const d = new Date(dateStr)
-    return d.toLocaleDateString(code, {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  } catch {
-    return dateStr
-  }
+  return formatBangkokDate(dateStr, locale)
 }
 
 export async function generateStaticParams() {

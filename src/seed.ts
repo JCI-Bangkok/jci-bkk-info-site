@@ -340,6 +340,7 @@ async function run() {
         title: event.title,
         slug: event.slug,
         eventDate: parseDate(event.date),
+        eventDate_tz: 'Asia/Bangkok',
         venue: event.venue,
         eventType: eventTypeMap[event.type] || 'training',
         shortDescription: event.summary,
@@ -474,6 +475,7 @@ async function run() {
         summary: article.summary,
         body: toRichText(article.summary),
         publishDate: parseDate(article.publishedAt),
+        publishDate_tz: 'Asia/Bangkok',
         relatedEvent,
       },
     })

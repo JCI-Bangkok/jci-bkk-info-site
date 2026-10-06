@@ -1,4 +1,4 @@
-﻿import type { CollectionConfig } from 'payload'
+import type { CollectionConfig } from 'payload'
 import { revalidateArticle, revalidateDeleteArticle } from './hooks/revalidate'
 
 export const Articles: CollectionConfig = {
@@ -79,8 +79,13 @@ export const Articles: CollectionConfig = {
       name: 'publishDate',
       type: 'date',
       required: true,
+      timezone: true,
       admin: {
         position: 'sidebar',
+        date: {
+          pickerAppearance: 'dayAndTime',
+          timeIntervals: 15,
+        },
       },
     },
     {

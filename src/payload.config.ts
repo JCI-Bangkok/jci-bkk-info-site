@@ -74,6 +74,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    timezones: {
+      defaultTimezone: 'Asia/Bangkok',
+    },
   },
   collections: [
     Users,

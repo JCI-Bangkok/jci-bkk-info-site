@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { bangkokDay } from '@/lib/calendar-date'
+import { bangkokDay, formatBangkokDate, formatBangkokTime, hasSpecificBangkokTime } from '@/lib/calendar-date'
 import type { Activity } from '@/lib/activity-data'
 import type { Locale } from '@/lib/i18n'
 
@@ -129,7 +129,14 @@ export function EventCalendar({ events, locale, today }: { events: Activity[]; l
                     <li key={event.id} className="py-3">
                       <Link href={event.href} className="font-semibold hover:text-[var(--jci-blue)]">{event.title}</Link>
                       <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-[var(--muted)]">
-                        <time dateTime={event.date!}>{new Intl.DateTimeFormat(locale === 'th' ? 'th-TH' : 'en-GB', { dateStyle: 'medium', timeZone: 'Asia/Bangkok' }).format(new Date(event.date!))}</time>
+                        <time dateTime={event.date!}>
+                          {event.endDate && bangkokDay(event.endDate) !== bangkokDay(event.date!)
+                            ? `${formatBangkokDate(event.date!, locale)} – ${formatBangkokDate(event.endDate, locale)}`
+                            : formatBangkokDate(event.date!, locale)}
+                        </time>
+                        {(event.time || hasSpecificBangkokTime(event.date!)) && (
+                          <span>&middot; {event.time || formatBangkokTime(event.date!, locale)}</span>
+                        )}
                         {event.venue && <span className="truncate">&middot; {event.venue}</span>}
                       </div>
                     </li>
@@ -148,7 +155,14 @@ export function EventCalendar({ events, locale, today }: { events: Activity[]; l
                     <li key={event.id} className="py-3">
                       <Link href={event.href} className="font-semibold text-[var(--muted)] hover:text-[var(--jci-blue)]">{event.title}</Link>
                       <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-sm text-[var(--muted)]">
-                        <time dateTime={event.date!}>{new Intl.DateTimeFormat(locale === 'th' ? 'th-TH' : 'en-GB', { dateStyle: 'medium', timeZone: 'Asia/Bangkok' }).format(new Date(event.date!))}</time>
+                        <time dateTime={event.date!}>
+                          {event.endDate && bangkokDay(event.endDate) !== bangkokDay(event.date!)
+                            ? `${formatBangkokDate(event.date!, locale)} – ${formatBangkokDate(event.endDate, locale)}`
+                            : formatBangkokDate(event.date!, locale)}
+                        </time>
+                        {(event.time || hasSpecificBangkokTime(event.date!)) && (
+                          <span>&middot; {event.time || formatBangkokTime(event.date!, locale)}</span>
+                        )}
                         {event.venue && <span className="truncate">&middot; {event.venue}</span>}
                       </div>
                     </li>

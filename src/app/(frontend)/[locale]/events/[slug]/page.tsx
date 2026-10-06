@@ -43,18 +43,10 @@ const statusLabelsEn: Record<string, string> = {
   cancelled: 'Cancelled',
 }
 
+import { formatBangkokDate, formatBangkokTime, hasSpecificBangkokTime, bangkokDay } from '@/lib/calendar-date'
+
 function formatDate(dateStr: string, locale: string) {
-  const code = locale === 'th' ? 'th-TH' : 'en-US'
-  try {
-    const d = new Date(dateStr)
-    return d.toLocaleDateString(code, {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  } catch {
-    return dateStr
-  }
+  return formatBangkokDate(dateStr, locale)
 }
 
 export async function generateStaticParams() {
@@ -173,12 +165,23 @@ export default async function EventDetailPage({
                     <div className="grid min-w-0 flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
                       <div>
                         <p className="text-white/50 text-xs font-bold uppercase tracking-wider mb-1">{locale === 'th' ? 'วันที่' : 'Date'}</p>
-                        <p className="text-white font-medium text-base md:text-lg">{formatDate(event.eventDate, locale)}</p>
+                        <p className="text-white font-medium text-base md:text-lg">
+                          {event.endDate && bangkokDay(event.endDate) !== bangkokDay(event.eventDate)
+                            ? `${formatDate(event.eventDate, locale)} – ${formatDate(event.endDate, locale)}`
+                            : formatDate(event.eventDate, locale)}
+                        </p>
                       </div>
-                      {event.eventTime && (
+                      {(event.eventTime || hasSpecificBangkokTime(event.eventDate)) && (
                         <div>
                           <p className="text-white/50 text-xs font-bold uppercase tracking-wider mb-1">{locale === 'th' ? 'เวลา' : 'Time'}</p>
-                          <p className="whitespace-pre-wrap text-white font-medium text-base md:text-lg">{event.eventTime}</p>
+                          <p className="whitespace-pre-wrap text-white font-medium text-base md:text-lg">
+                            {event.eventTime || (
+                              <>
+                                {formatBangkokTime(event.eventDate, locale)}
+                                {event.endDate && hasSpecificBangkokTime(event.endDate) ? ` – ${formatBangkokTime(event.endDate, locale)}` : ''}
+                              </>
+                            )}
+                          </p>
                         </div>
                       )}
                     </div>

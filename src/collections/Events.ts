@@ -31,17 +31,31 @@ export const Events: CollectionConfig = {
       name: 'eventDate',
       type: 'date',
       required: true,
+      timezone: true,
+      admin: {
+        date: {
+          pickerAppearance: 'dayAndTime',
+          timeIntervals: 15,
+        },
+      },
     },
     {
       name: 'eventTime',
       type: 'textarea',
       admin: {
-        description: 'Enter each time or session on a new line.',
+        description: 'Enter each time or session on a new line (or rely on time picked in Event Date).',
       },
     },
     {
       name: 'endDate',
       type: 'date',
+      timezone: true,
+      admin: {
+        date: {
+          pickerAppearance: 'dayAndTime',
+          timeIntervals: 15,
+        },
+      },
     },
     {
       name: 'price',

@@ -10,6 +10,8 @@ export type Activity = {
   summary: string
   image: string
   date?: string
+  endDate?: string
+  time?: string
   year?: number
   venue?: string
   registration?: string
@@ -35,7 +37,8 @@ export async function getActivities(locale: Locale) {
     ...events.docs.map(event => ({
       id: 'event-' + event.id, title: event.title, href: `/${locale}/events/${event.slug}`,
       summary: event.shortDescription, image: mediaUrl(event.coverImage) || '/images/home/leadership-workshop.png',
-      date: event.eventDate, venue: event.venue, registration: event.registrationLink || undefined,
+      date: event.eventDate, endDate: event.endDate || undefined, time: event.eventTime || undefined,
+      venue: event.venue, registration: event.registrationLink || undefined,
       upcoming: isUpcoming({ status: event.status, eventDate: event.eventDate, endDate: event.endDate }, today), kind: 'event' as const,
     })),
     ...projects.docs.map(project => ({
