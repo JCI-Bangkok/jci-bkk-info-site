@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
-    "build": "node --import tsx scripts/generate-import-map.ts && next build --webpack",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
-    "generate:importmap": "node --import tsx scripts/generate-import-map.ts",
     "seed": "node --import tsx src/seed.ts"
   },
   "dependencies": {

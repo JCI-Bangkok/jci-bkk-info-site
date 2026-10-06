@@ -8,7 +8,6 @@ const config = [
       "node_modules/**",
       "ds-bundle/**",
       ".ds-sync/**",
-      "scripts/**",
       "out/**",
     ],
   },
