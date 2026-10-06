@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { ActivityCard } from './activity-card'
 import type { Activity } from '@/lib/activity-data'
 
@@ -18,10 +18,11 @@ export function PaginatedGrid({ items, locale, itemsPerPage = 6 }: PaginatedGrid
 
   const totalPages = Math.ceil(items.length / itemsPerPage)
   
-  // Reset page if items change
-  useEffect(() => {
+  const [prevItems, setPrevItems] = useState(items)
+  if (items !== prevItems) {
+    setPrevItems(items)
     setCurrentPage(1)
-  }, [items])
+  }
 
   if (items.length === 0) {
     return <p className="py-4 text-[var(--muted)]">{locale === 'th' ? 'ไม่มีข้อมูล' : 'No data available.'}</p>

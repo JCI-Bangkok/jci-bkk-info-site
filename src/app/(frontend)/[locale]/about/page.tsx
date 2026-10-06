@@ -81,7 +81,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           
           <div className="flex flex-col gap-6">
             <div className="p-10 bg-white shadow-xl shadow-[var(--jci-blue)]/5 rounded-[2rem] border border-[var(--line)] relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-6 text-9xl text-[var(--jci-blue)]/10 leading-none font-serif select-none pointer-events-none">"</div>
+              <div className="absolute top-0 right-0 p-6 text-9xl text-[var(--jci-blue)]/10 leading-none font-serif select-none pointer-events-none">&ldquo;</div>
               <h3 className="text-2xl font-semibold text-[var(--ink)]">{locale === 'th' ? 'ปณิธาน JCI (JCI Creed)' : 'JCI Creed'}</h3>
               <div className="mt-6 text-[15px] italic leading-relaxed text-[var(--muted)] space-y-3 relative z-10">
                 <p>We believe . . .</p>

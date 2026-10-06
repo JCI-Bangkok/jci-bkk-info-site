@@ -5,7 +5,7 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import { opportunities } from "@/lib/site-data";
 import { getDictionary, Locale } from "@/lib/i18n";
-import { getActivities, getGalleryPhotos, mediaUrl } from '@/lib/activity-data'
+import { getActivities, mediaUrl } from '@/lib/activity-data'
 import { EventCalendar } from '@/components/event-calendar'
 import { SocialLinks } from '@/components/social-links'
 import { PartnerMarquee } from '@/components/partner-marquee'
@@ -33,21 +33,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   const { locale } = await params
   const dict = getDictionary(locale)
   const payload = await getPayload({ config: configPromise })
-  const [{ activities, today }, photos, settings, storiesResult, partnersResult] = await Promise.all([
+  const [{ activities, today }, settings, storiesResult, partnersResult] = await Promise.all([
     getActivities(locale),
-    getGalleryPhotos(locale),
     payload.findGlobal({ slug: 'site-settings', locale }),
     payload.find({ collection: 'member-stories', locale, limit: 2 }),
     payload.find({ collection: 'partners', locale, limit: 20, sort: '-partnershipYear' }),
   ])
-  let homePartners = partnersResult.docs
+  const homePartners = [...partnersResult.docs]
   const dindeepromIndex = homePartners.findIndex(p => p.organizationName === 'ดินดีพร้อม')
   if (dindeepromIndex > -1) {
     const [dindeeprom] = homePartners.splice(dindeepromIndex, 1)
     homePartners.unshift(dindeeprom)
   }
   const stories = storiesResult.docs.filter(s => s.memberName.includes("Nattapat"))
-  const galleryImages = photos.slice(0, 6)
 
   const pathways = dict.home.pathways.map((pathway, index) => ({ ...pathway, number: String(index + 1).padStart(2, '0') }))
   const sponsorCTA = locale === 'th' ? 'ร่วมเป็นผู้สนับสนุน' : 'Become a Sponsor'
@@ -216,7 +214,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <section key={idx} className="member-story overflow-hidden bg-[var(--paper-tint)] border-b border-[var(--line)]">
             <div className={`mx-auto grid w-full max-w-[90rem] lg:grid-cols-[0.92fr_1.08fr] ${idx % 2 === 1 ? 'lg:grid-cols-[1.08fr_0.92fr]' : ''}`}>
               <div className={`relative flex min-h-[22rem] flex-col justify-center px-5 py-16 sm:px-10 lg:px-20 lg:order-2 ${idx % 2 === 1 ? 'lg:order-1' : ''}`}>
-                <span className="font-accent text-7xl leading-none text-[var(--jci-blue)]">"</span>
+                <span className="font-accent text-7xl leading-none text-[var(--jci-blue)]">&ldquo;</span>
                 <blockquote className="font-accent max-w-3xl text-2xl leading-[1.35] text-[var(--ink)] sm:text-3xl">{featuredStory.quote}</blockquote>
                 <div className="mt-8 border-l-2 border-[var(--jci-blue)] pl-4">
                   <p className="font-semibold text-[var(--ink)]">{featuredStory.memberName}</p>

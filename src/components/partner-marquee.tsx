@@ -5,7 +5,14 @@ function mediaUrl(media: unknown): string | undefined {
   if (media && typeof media === 'object' && 'url' in media && typeof media.url === 'string') return media.url
 }
 
-function PartnerCard({ partner, variant }: { partner: any; variant: 'sponsor' | 'partner' }) {
+type PartnerItem = {
+  website?: string | null;
+  logo?: unknown;
+  organizationName: string;
+  partnerType?: 'sponsor' | 'partner' | string;
+};
+
+function PartnerCard({ partner, variant }: { partner: PartnerItem; variant: 'sponsor' | 'partner' }) {
   const isSponsor = variant === 'sponsor';
   return (
     <article className={`${isSponsor ? 'w-[17.5rem] sm:w-[20rem] h-[11rem] sm:h-[12.5rem]' : 'w-[15rem] sm:w-[17rem] h-[10rem] sm:h-[11rem]'} shrink-0 flex flex-col items-center justify-center rounded-2xl border border-[var(--line)] ${isSponsor ? 'bg-white' : 'bg-[var(--paper-soft)]'} p-4 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
@@ -25,7 +32,7 @@ export function PartnerMarquee({
   partners, 
   locale 
 }: { 
-  partners: any[]; 
+  partners: PartnerItem[]; 
   locale: string;
 }) {
   const sponsors = partners.filter(p => p.partnerType === 'sponsor');

@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react'
 import Image from 'next/image'
 import { mediaUrl } from '@/lib/media'
 
-export function PaginatedGallery({ images, alt }: { images: any[], alt: string }) {
+export function PaginatedGallery({ images, alt }: { images: { image?: unknown }[], alt: string }) {
   const [currentPage, setCurrentPage] = useState(1)
   const containerRef = useRef<HTMLDivElement>(null)
   const itemsPerPage = 9

@@ -64,7 +64,7 @@ export default async function MembershipPage({ params }: PageProps) {
   const benefits = locale === 'th' ? benefitsTh : benefitsEn
   const faq = locale === 'th' ? faqTh : faqEn
 
-  let settings: any = null
+  let settings: { membershipCoverImage?: unknown } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
@@ -99,7 +99,7 @@ export default async function MembershipPage({ params }: PageProps) {
               <div className="relative z-10 flex-grow" />
               
               <div className="relative z-10 mt-20">
-                <span className="font-accent text-6xl leading-none text-[var(--jci-blue)] opacity-60">"</span>
+                <span className="font-accent text-6xl leading-none text-[var(--jci-blue)] opacity-60">&ldquo;</span>
                 <p className="text-2xl font-medium text-white leading-snug">
                   {locale === 'th' 
                     ? 'พื้นที่แห่งการเรียนรู้ผ่านการลงมือทำ เครือข่ายที่จะช่วยดึงศักยภาพที่ดีที่สุดในตัวคุณออกมา'

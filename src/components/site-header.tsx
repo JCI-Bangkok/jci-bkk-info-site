@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import React from "react";
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
@@ -12,7 +12,7 @@ import { LanguageSelector } from "./language-selector";
 export async function SiteHeader({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
 
-  let settings: any = null
+  let settings: { logo?: unknown } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
@@ -23,7 +23,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     console.error('Error fetching site settings in header:', error)
   }
 
-  const logoUrl = (settings?.logo && typeof settings.logo === 'object') ? settings.logo.url : '/brand/logo-ribbon.png'
+  const logoUrl = (settings?.logo && typeof settings.logo === 'object' && 'url' in settings.logo && typeof (settings.logo as { url: unknown }).url === 'string') ? (settings.logo as { url: string }).url : '/brand/logo-ribbon.png'
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[color:rgba(255,255,255,0.92)] backdrop-blur-xl">

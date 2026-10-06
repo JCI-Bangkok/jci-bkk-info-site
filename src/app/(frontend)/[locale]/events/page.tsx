@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import { getActivities } from '@/lib/activity-data'
-import { ActivityCard } from '@/components/activity-card'
 import { PaginatedGrid } from '@/components/paginated-grid'
 import { EventCalendar } from '@/components/event-calendar'
 import { getDictionary, type Locale } from '@/lib/i18n'

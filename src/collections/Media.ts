@@ -36,7 +36,7 @@ export const Media: CollectionConfig = {
   },
   hooks: {
     beforeChange: [
-      ({ data, req }) => {
+      ({ data }) => {
         // Auto-generate alt from filename if missing
         if (!data.alt && data.filename) {
           // Remove extension and replace dashes/underscores with spaces

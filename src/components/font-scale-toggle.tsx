@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 
@@ -22,6 +22,7 @@ export function FontScaleToggle() {
   useEffect(() => {
     const savedScale = window.localStorage.getItem(STORAGE_KEY) as FontScaleKey | null
     const selected = FONT_SCALES.find((option) => option.key === savedScale) ?? FONT_SCALES[0]
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveScale(selected.key)
     applyFontScale(selected.scale)
   }, [])

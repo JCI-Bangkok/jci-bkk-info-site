@@ -5,9 +5,7 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 
 import { RichText } from "@/components/rich-text";
-import { PaginatedGallery } from "@/components/paginated-gallery";
 import React from 'react'
-import { getDictionary, Locale } from "@/lib/i18n";
 
 type EventDetailPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -223,7 +221,7 @@ export default async function EventDetailPage({
                     )}
                     {event.facebookPosts && event.facebookPosts.length > 0 && (
                       <div className="flex flex-col gap-2.5 w-full sm:max-w-md">
-                        {event.facebookPosts.map((post: any, i: number) => (
+                        {event.facebookPosts.map((post: { url: string; label?: string }, i: number) => (
                           <a key={i} href={post.url} target="_blank" rel="noopener noreferrer" className="w-full text-left px-5 py-2.5 rounded-full bg-transparent border border-white/20 text-white/80 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all text-sm font-medium flex items-center gap-3">
                             <svg className="w-4 h-4 shrink-0 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg>
                             <span className="truncate">{post.label || (locale === 'th' ? 'ดูโพสต์บน Facebook' : 'View on Facebook')}</span>
@@ -246,7 +244,7 @@ export default async function EventDetailPage({
                 {locale === 'th' ? 'โปสเตอร์เพิ่มเติม' : 'Additional Posters'}
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {event.secondaryPosters.map((image: any, idx: number) => {
+              {event.secondaryPosters.map((image: { alt?: string }, idx: number) => {
               const url = mediaUrl(image);
               if (!url) return null;
               return (
@@ -278,7 +276,7 @@ export default async function EventDetailPage({
               {locale === 'th' ? 'ภาพบรรยากาศ' : 'Event Gallery'}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {event.eventPhotos.map((image: any, idx: number) => {
+              {event.eventPhotos.map((image: { alt?: string }, idx: number) => {
                 const url = mediaUrl(image);
                 if (!url) return null;
                 return (
