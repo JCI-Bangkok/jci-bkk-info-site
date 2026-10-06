@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+﻿import type { CollectionConfig } from 'payload'
 import { revalidateProject, revalidateDeleteProject } from './hooks/revalidate'
 
 export const Projects: CollectionConfig = {

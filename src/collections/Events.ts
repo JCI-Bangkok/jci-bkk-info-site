@@ -33,8 +33,23 @@ export const Events: CollectionConfig = {
       required: true,
     },
     {
+      name: 'eventTime',
+      type: 'textarea',
+      admin: {
+        description: 'Enter each time or session on a new line.',
+      },
+    },
+    {
       name: 'endDate',
       type: 'date',
+    },
+    {
+      name: 'price',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        description: 'e.g. Free, 500 THB, etc. (Can press Enter for multiple lines)'
+      }
     },
     {
       name: 'venue',
@@ -49,6 +64,28 @@ export const Events: CollectionConfig = {
     {
       name: 'registrationLink',
       type: 'text',
+    },
+        {
+      name: 'facebookPosts',
+      type: 'array',
+      labels: {
+        singular: 'Facebook Post',
+        plural: 'Facebook Posts',
+      },
+      fields: [
+        {
+          name: 'url',
+          type: 'text',
+          required: true,
+        },
+        {
+          name: 'label',
+          type: 'text',
+          admin: {
+            description: 'Optional (e.g. Day 1 Photos, Summary, etc.)',
+          }
+        }
+      ]
     },
     {
       name: 'eventType',
@@ -85,17 +122,24 @@ export const Events: CollectionConfig = {
       required: true,
     },
     {
-      name: 'gallery',
-      type: 'array',
-      fields: [
-        {
-          name: 'image',
-          type: 'upload',
-          relationTo: 'media',
-        },
-      ],
+      name: 'secondaryPosters',
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+      admin: {
+        description: 'โปสเตอร์รอง (ถ้ามี) เลือกได้หลายรูป จะแสดงอยู่ด้านบนสุด',
+      }
     },
     {
+      name: 'eventPhotos',
+      type: 'relationship',
+      relationTo: 'media',
+      hasMany: true,
+      admin: {
+        description: 'แกลเลอรีภาพถ่ายกิจกรรม เลือกทีละหลายๆ รูป และลากจัดลำดับได้ง่าย',
+      }
+    },
+     {
       name: 'status',
       type: 'select',
       defaultValue: 'draft',

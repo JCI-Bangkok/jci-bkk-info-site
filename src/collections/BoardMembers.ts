@@ -46,6 +46,10 @@ export const BoardMembers: CollectionConfig = {
       localized: true,
     },
     {
+      name: 'yearJoined',
+      type: 'number',
+    },
+    {
       name: 'linkedin',
       type: 'text',
     },

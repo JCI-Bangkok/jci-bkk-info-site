@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+﻿import type { CollectionConfig } from 'payload'
 import { revalidateArticle, revalidateDeleteArticle } from './hooks/revalidate'
 
 export const Articles: CollectionConfig = {

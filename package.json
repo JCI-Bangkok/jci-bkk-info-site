@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint .",
-    "seed": "npx tsx src/seed.ts"
+    "seed": "node --import tsx src/seed.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.85.1",

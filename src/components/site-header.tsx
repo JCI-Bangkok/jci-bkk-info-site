@@ -1,9 +1,10 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import React from "react";
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 
 import { BrandMark } from "@/components/brand-mark";
+import { FontScaleToggle } from "@/components/font-scale-toggle";
 import { navigation } from "@/lib/site-data";
 import { getDictionary, Locale } from "@/lib/i18n";
 import { LanguageSelector } from "./language-selector";
@@ -22,14 +23,15 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     console.error('Error fetching site settings in header:', error)
   }
 
-  const logoUrl = (settings?.logo && typeof settings.logo === 'object') ? settings.logo.url : '/brand/jci-primary.svg'
+  const logoUrl = (settings?.logo && typeof settings.logo === 'object') ? settings.logo.url : '/brand/logo-ribbon.png'
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[color:rgba(255,255,255,0.92)] backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-3 px-5 py-3 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <BrandMark locale={locale} logoUrl={logoUrl} />
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex flex-wrap items-center gap-2 lg:hidden">
+            <FontScaleToggle />
             <LanguageSelector currentLocale={locale} />
             <Link
               href={`/${locale}/membership`}
@@ -56,6 +58,7 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
           })}
         </nav>
         <div className="hidden items-center gap-4 lg:inline-flex">
+          <FontScaleToggle />
           <LanguageSelector currentLocale={locale} />
           <Link
             href={`/${locale}/membership`}
@@ -68,4 +71,5 @@ export async function SiteHeader({ locale }: { locale: Locale }) {
     </header>
   );
 }
+
 

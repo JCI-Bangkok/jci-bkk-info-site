@@ -22,12 +22,30 @@ export const emailInquiryNotification: CollectionAfterChangeHook = async ({
       subject: `[JCI BKK Website] New ${String(doc.inquiryType).toUpperCase()} Inquiry from ${doc.name}`,
       html: `
         <h2>New Inquiry Received</h2>
-        <p><strong>Name:</strong> ${doc.name}</p>
-        <p><strong>Email:</strong> ${doc.email}</p>
-        <p><strong>Phone:</strong> ${doc.phone || 'N/A'}</p>
-        <p><strong>Type:</strong> ${doc.inquiryType}</p>
-        <p><strong>Message:</strong></p>
-        <p style="white-space: pre-wrap; background: #f5f5f5; padding: 15px; border-radius: 5px;">${doc.message}</p>
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <tbody>
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd; width: 30%;">Name</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">${doc.name}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd;">Email</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">${doc.email}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd;">Phone</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">${doc.phone || 'N/A'}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd;">Type</th>
+              <td style="padding: 8px; border: 1px solid #ddd;">${doc.inquiryType}</td>
+            </tr>
+            <tr>
+              <th style="padding: 8px; border: 1px solid #ddd;">Message</th>
+              <td style="padding: 8px; border: 1px solid #ddd; white-space: pre-wrap;">${doc.message}</td>
+            </tr>
+          </tbody>
+        </table>
       `,
     })
     console.log(`[Email] Inquiry notification sent to ${recipientEmail}`)

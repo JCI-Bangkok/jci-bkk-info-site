@@ -5,7 +5,7 @@ export const Forms: CollectionConfig = {
   slug: 'forms',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'inquiryType', 'email', 'createdAt'],
+    defaultColumns: ['name', 'inquiryType', 'email', 'phone', 'message', 'createdAt'],
   },
   access: {
     create: () => true, // Anyone can submit a form

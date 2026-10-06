@@ -15,7 +15,7 @@ export function MembershipForm({ locale }: { locale: Locale }) {
   return (
     <article className="paper-frame p-7">
       <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
-        {locale === 'th' ? 'ส่งแบบฟอร์มแสดงความสนใจ' : 'Membership inquiry'}
+        {locale === 'th' ? 'ส่งแบบแสดงความสนใจ' : 'Membership inquiry'}
       </h2>
       <form action={formAction} className="mt-6 grid gap-4">
         <input type="hidden" name="locale" value={locale} />
@@ -24,15 +24,19 @@ export function MembershipForm({ locale }: { locale: Locale }) {
         <input
           name="name"
           required
+          onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please fill out this field.')}
+          onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
           className="rounded-2xl border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--jci-blue)]"
-          placeholder={locale === 'th' ? 'ชื่อ-นามสกุล' : 'Full name'}
+          placeholder={locale === 'th' ? 'ชื่อ - นามสกุล' : 'Full name'}
         />
         <input
           name="email"
           type="email"
           required
+          onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please enter a valid email address.')}
+          onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
           className="rounded-2xl border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--jci-blue)]"
-          placeholder={locale === 'th' ? 'ที่อยู่อีเมล' : 'Email address'}
+          placeholder={locale === 'th' ? 'อีเมล' : 'Email address'}
         />
         <input
           name="phone"
@@ -42,18 +46,27 @@ export function MembershipForm({ locale }: { locale: Locale }) {
         <textarea
           name="message"
           required
+          onInvalid={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('Please fill out this field.')}
+          onInput={(e) => (e.target as HTMLTextAreaElement).setCustomValidity('')}
           className="min-h-36 rounded-2xl border border-[var(--line)] bg-white px-4 py-3 text-sm text-[var(--ink)] outline-none focus:border-[var(--jci-blue)]"
           placeholder={
             locale === 'th'
-              ? 'บอกเราว่าคุณต้องการค้นหาหรือพัฒนาอะไรผ่าน JCI กรุงเทพฯ'
+              ? 'บอกเราหน่อยว่าคุณสนใจอยากเรียนรู้หรือพัฒนาทักษะด้านใดกับ JCI Bangkok'
               : 'Tell us what you want to explore through JCI Bangkok.'
           }
         />
         <label className="flex items-start gap-3 rounded-2xl border border-[var(--line)] bg-white/72 px-4 py-3 text-sm leading-6 text-[var(--muted)] cursor-pointer">
-          <input name="consent" required type="checkbox" className="mt-1" />
+          <input 
+            name="consent" 
+            required 
+            type="checkbox" 
+            className="mt-1" 
+            onInvalid={(e) => (e.target as HTMLInputElement).setCustomValidity('Please check this box if you want to proceed.')}
+            onInput={(e) => (e.target as HTMLInputElement).setCustomValidity('')}
+          />
           <span>
             {locale === 'th'
-              ? 'ฉันยินยอมให้ JCI กรุงเทพฯ จัดเก็บข้อมูลนี้สำหรับการติดต่อประสานงานและการติดตามสมาชิกภาพ'
+              ? 'ข้าพเจ้ายินยอมให้ JCI Bangkok จัดเก็บข้อมูลนี้เพื่อใช้สำหรับการติดต่อและให้ข้อมูลเกี่ยวกับสมาชิกภาพ'
               : 'I consent to JCI Bangkok collecting this information for membership follow-up and chapter communications.'}
           </span>
         </label>
@@ -71,7 +84,7 @@ export function MembershipForm({ locale }: { locale: Locale }) {
         >
           {isPending 
             ? (locale === 'th' ? 'กำลังส่ง...' : 'Submitting...') 
-            : (locale === 'th' ? 'ส่งใบสมัคร' : 'Submit inquiry')}
+            : (locale === 'th' ? 'ส่งแบบสอบถาม' : 'Submit inquiry')}
         </button>
       </form>
     </article>

@@ -30,7 +30,7 @@ export async function submitInquiry(prevState: FormState | null, formData: FormD
   if (!consent) {
     return {
       success: false,
-      message: locale === 'th' ? 'คุณต้องให้ความยินยอมตามข้อกำหนดความเป็นส่วนตัวเพื่อส่งแบบฟอร์ม' : 'You must consent to the privacy terms to submit the inquiry.',
+      message: locale === 'th' ? 'คุณต้องให้ความยินยอมในนโยบายความเป็นส่วนตัวเพื่อส่งแบบฟอร์ม' : 'You must consent to the privacy terms to submit the inquiry.',
     }
   }
 
@@ -60,4 +60,3 @@ export async function submitInquiry(prevState: FormState | null, formData: FormD
     }
   }
 }
-

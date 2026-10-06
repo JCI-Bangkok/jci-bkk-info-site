@@ -1,65 +1,56 @@
-import { CtaBanner } from "@/components/cta-banner";
-import { PageIntro } from "@/components/page-intro";
 import { MembershipForm } from "./membership-form";
-import React from 'react'
+import { CtaBanner } from "@/components/cta-banner";
+import { getDictionary, Locale } from "@/lib/i18n";
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
-import { Locale } from "@/lib/i18n";
+import Image from "next/image";
+import { mediaUrl } from "@/lib/media";
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  return {
-    title: locale === 'th' ? 'สมัครสมาชิก' : 'Membership'
-  };
-}
+export const metadata = {
+  title: "Membership",
+};
 
 const benefitsEn = [
-  "Leadership practice through committees, events, and projects",
-  "Business and professional networking across sectors",
-  "Training opportunities in speaking, facilitation, and communication",
-  "International JCI exposure through regional and global connections",
-  "Meaningful friendships built through collaboration and service"
+  "Hands-on practice leading projects and managing diverse teams.",
+  "Direct connections to business owners, professionals, and civic leaders.",
+  "Opportunities to attend international JCI academies and conferences.",
+  "A platform to launch community initiatives with organizational backing.",
 ];
 
 const benefitsTh = [
-  "การฝึกฝนความเป็นผู้นำผ่านคณะทำงาน กิจกรรม และโครงการต่างๆ",
-  "เครือข่ายธุรกิจและวิชาชีพในหลากหลายภาคส่วน",
-  "โอกาสการฝึกอบรมการพูด การอำนวยความสะดวก และการสื่อสาร",
-  "การเรียนรู้ระดับนานาชาติของ JCI ผ่านการเชื่อมต่อภูมิภาคและระดับโลก",
-  "มิตรภาพที่มีความหมายที่สร้างขึ้นผ่านการทำงานร่วมกันและการบริการสังคม"
+  "โอกาสในการลงมือปฏิบัติจริงเพื่อบริหารโครงการและนำทีมงานที่หลากหลาย",
+  "สร้างคอนเนคชันโดยตรงกับเจ้าของธุรกิจ คนทำงานมืออาชีพ และผู้นำในสังคม",
+  "โอกาสในการเข้าร่วมงานประชุมและสถาบันฝึกอบรมของ JCI ในระดับนานาชาติ",
+  "พื้นที่สำหรับริเริ่มโครงการเพื่อชุมชนพร้อมการสนับสนุนจากองค์กร",
 ];
 
 const faqEn = [
   {
-    question: "Who can join?",
-    answer: "People aged 18 to 40 who are based in or connected to Bangkok and interested in personal growth, leadership, and community impact."
+    question: "Time commitment",
+    answer: "Members are free to participate as much as they are comfortable with, but we highly recommend attending our monthly general meetings and trying to lead at least one project to get the most out of JCI Bangkok."
   },
   {
-    question: "Is this only for entrepreneurs?",
-    answer: "No. The chapter is relevant to professionals, founders, creatives, civic-minded members, and emerging leaders."
+    question: "Age limits",
+    answer: "Active membership is strictly for ages 18-40. This ensures opportunities flow continuously to the next generation of young leaders."
   },
   {
-    question: "How does the application process work?",
-    answer: "Submit a membership inquiry form. Once received, our membership committee will contact you for a brief chat, onboarding, and orientation."
+    question: "Background",
+    answer: "You do not need to be an entrepreneur. Our members come from all professions—corporate professionals, founders, creatives, and more—united by a desire to build leadership skills through action."
   }
 ];
 
 const faqTh = [
   {
-    question: "ใครสามารถเข้าร่วมได้บ้าง?",
-    answer: "บุคคลที่มีอายุระหว่าง 18 ถึง 40 ปี ซึ่งมีพื้นที่อาศัยหรือเชื่อมโยงกับกรุงเทพมหานคร และมีความสนใจในการพัฒนาตนเอง ความเป็นผู้นำ และการสร้างผลกระทบต่อชุมชน"
+    question: "เวลาที่ต้องใช้",
+    answer: "สมาชิกสามารถจัดสรรเวลาเข้าร่วมกิจกรรมที่สะดวกได้เลย แต่เราขอแนะนำให้เข้าร่วมการประชุมใหญ่ประจำเดือน และลองเป็นผู้นำ (Lead) โครงการดูสัก 1 โครงการ เพื่อให้ได้รับประโยชน์สูงสุดจาก JCI Bangkok"
   },
   {
-    question: "สำหรับผู้ประกอบการเท่านั้นหรือไม่?",
-    answer: "ไม่ใช่ สมาคมกรุงเทพฯ ยินดีต้อนรับทั้งคนทำงานประจำ ผู้ก่อตั้งธุรกิจ ศิลปินนักสร้างสรรค์ สมาชิกฝ่ายประชาสังคม และผู้นำรุ่นใหม่จากหลากหลายสาขาอาชีพ"
+    question: "ข้อจำกัดด้านอายุ",
+    answer: "สมาชิกสามัญจำกัดอายุระหว่าง 18-40 ปีเท่านั้น เพื่อให้แน่ใจว่าโอกาสต่างๆ จะถูกส่งต่อไปยังผู้นำเยาวชนรุ่นใหม่อย่างต่อเนื่อง"
   },
   {
-    question: "ขั้นตอนการสมัครสมาชิกเป็นอย่างไร?",
-    answer: "ส่งแบบฟอร์มแสดงความสนใจเข้าร่วม คณะทำงานฝ่ายสมาชิกภาพจะติดต่อกลับเพื่อพูดคุยสั้นๆ ปฐมนิเทศ และแนะแนวทางการมีส่วนร่วมในสมาคม"
+    question: "คุณสมบัติเบื้องต้น",
+    answer: "คุณไม่จำเป็นต้องเป็นเจ้าของธุรกิจ สมาชิกของเรามาจากทุกสาขาอาชีพ ไม่ว่าจะเป็นพนักงานบริษัท ผู้ก่อตั้งธุรกิจ ครีเอทีฟ และอีกมากมาย ที่รวมตัวกันด้วยความตั้งใจที่จะพัฒนาทักษะความเป็นผู้นำผ่านการลงมือทำ"
   }
 ];
 
@@ -69,6 +60,7 @@ interface PageProps {
 
 export default async function MembershipPage({ params }: PageProps) {
   const { locale } = await params
+  const dict = getDictionary(locale as Locale)
   const benefits = locale === 'th' ? benefitsTh : benefitsEn
   const faq = locale === 'th' ? faqTh : faqEn
 
@@ -84,102 +76,143 @@ export default async function MembershipPage({ params }: PageProps) {
   }
 
   return (
-    <>
-      <PageIntro
-        title={locale === 'th' ? 'การร่วมเป็นสมาชิกที่สร้างการเติบโตและการมีส่วนร่วมที่คุ้มค่า' : 'Membership should feel concrete, welcoming, and worth the commitment.'}
-        lead={locale === 'th' ? 'หน้าสมาชิกภาพนี้ช่วยตอบคำถามสำคัญสำหรับผู้สมัครใหม่: ทำไมต้องร่วมงานกับ JCI กรุงเทพฯ นอกเหนือไปจากการสร้างเครือข่ายหรืออาสาสมัครทั่วไป' : 'The role of this page is to answer the most important question for potential members: why join JCI Bangkok instead of another networking or volunteer group?'}
-      />
-      <section className="section-space mx-auto grid w-full max-w-7xl gap-5 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-        <article className="paper-frame p-7">
-          <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-            {locale === 'th' ? 'ผู้ที่สามารถสมัครสมาชิก' : 'Who can join'}
-          </p>
-          <h2 className="mt-4 font-display text-4xl leading-none text-[var(--ink)]">
-            {locale === 'th' ? 'พลเมืองตื่นรู้คนรุ่นใหม่อายุ 18 ถึง 40 ปี ที่เชื่อมต่อกรุงเทพฯ' : 'Young active citizens aged 18 to 40 with a Bangkok connection.'}
-          </h2>
-          <p className="mt-6 text-base leading-7 text-[var(--muted)]">
-            {locale === 'th'
-              ? 'สมาชิกภาพออกแบบขึ้นสำหรับผู้ที่ต้องการหาประสบการณ์ภาวะผู้นำเชิงปฏิบัติ คอนเนกชันที่มีความหมาย และผลการทำงานเพื่อสังคมที่เป็นรูปธรรมมากกว่าตารางสังสรรค์ทั่วไป'
-              : 'Membership is designed for people who want practical leadership experience, meaningful networks, and community-facing work that feels bigger than a social calendar.'}
-          </p>
-        </article>
-        <article className="paper-frame p-7">
-          <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-            {locale === 'th' ? 'ทำไมต้องสมัครสมาชิก' : 'Why join'}
-          </p>
-          <div className="mt-5 grid gap-4">
-            {benefits.map((benefit) => (
-              <div
-                key={benefit}
-                className="rounded-[1.4rem] border border-[var(--line)] bg-white/75 px-5 py-4 text-base leading-7 text-[var(--muted)]"
-              >
-                {benefit}
+    <div className="cursor-chinchin">
+      <section className="relative overflow-hidden bg-[var(--jci-black)] text-white border-b border-white/10">
+        <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8 lg:py-24">
+          <h1 className="text-4xl lg:text-6xl font-semibold tracking-tight">{dict.membership.title}</h1>
+          <p className="mt-4 max-w-2xl text-lg text-white/70">{dict.membership.sub}</p>
+        </div>
+      </section>
+
+      {/* Main Form Section */}
+      <section className="bg-[var(--paper-soft)] border-b border-[var(--line)] py-12 lg:py-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="grid gap-0 lg:grid-cols-2 bg-white rounded-[2rem] shadow-xl border border-[var(--line)] overflow-hidden">
+            
+            {/* Image/Pitch Side */}
+            <div className="relative p-8 lg:p-12 flex flex-col justify-between overflow-hidden bg-[#0c2340]">
+              <div className="absolute inset-0 opacity-40">
+                <Image src={settings?.membershipCoverImage ? (mediaUrl(settings.membershipCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok Members" fill className="object-cover" />
               </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#061121] via-[#0c2340]/80 to-transparent" />
+              
+              <div className="relative z-10 flex-grow" />
+              
+              <div className="relative z-10 mt-20">
+                <span className="font-accent text-6xl leading-none text-[var(--jci-blue)] opacity-60">"</span>
+                <p className="text-2xl font-medium text-white leading-snug">
+                  {locale === 'th' 
+                    ? 'พื้นที่แห่งการเรียนรู้ผ่านการลงมือทำ เครือข่ายที่จะช่วยดึงศักยภาพที่ดีที่สุดในตัวคุณออกมา'
+                    : 'A space for learning by doing, a network that brings out the best in you.'}
+                </p>
+                <div className="mt-6 flex items-center gap-4">
+                  <div>
+                    <p className="font-semibold text-white">Join JCI Bangkok</p>
+                    <p className="text-sm text-white/60">{locale === 'th' ? 'องค์กรพัฒนาผู้นำรุ่นใหม่' : 'Leadership Development Organization'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Form Side */}
+            <div className="p-8 lg:p-12 flex flex-col justify-center bg-white">
+              <div className="mb-8">
+                <h2 className="text-3xl font-semibold text-[var(--ink)]">
+                  {locale === 'th' ? 'แบบฟอร์มแสดงความสนใจ' : 'Membership Interest Form'}
+                </h2>
+                <p className="mt-2 text-[var(--muted)]">
+                  {locale === 'th' 
+                    ? 'กรอกข้อมูลของคุณด้านล่าง แล้วทีมงานจะติดต่อกลับไปเพื่อพูดคุยถึงก้าวต่อไป' 
+                    : 'Fill out your details below and our team will get in touch with you about the next steps.'}
+                </p>
+              </div>
+
+              {settings?.membershipFormLink ? (
+                <a
+                  href={settings.membershipFormLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-[var(--jci-blue)] px-6 py-4 text-center text-sm font-semibold text-white hover:bg-[var(--jci-navy)] transition block"
+                >
+                  {locale === 'th' ? 'เปิดแบบฟอร์มรับสมัคร ↗' : 'Open Membership Application ↗'}
+                </a>
+              ) : (
+                <MembershipForm locale={locale as Locale} />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Info Section */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-2">
+          
+          <div>
+            <h2 className="text-2xl font-semibold text-[var(--ink)] mb-6">
+              {locale === 'th' ? 'ทำไมถึงควรเข้าร่วม' : 'Why join'}
+            </h2>
+            <div className="space-y-4">
+              {benefits.map((benefit, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--jci-blue)]/10 text-[var(--jci-blue)]">
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                  </div>
+                  <p className="text-[var(--muted)] leading-relaxed mt-1">{benefit}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-[var(--ink)] mb-6">
+              {locale === 'th' ? 'ขั้นตอนการสมัครสมาชิก' : 'Application process'}
+            </h2>
+            <div className="relative border-l border-[var(--line)] ml-4 space-y-8 pl-8 pb-4">
+              {dict.home.pathways.map((step, index) => (
+                <div key={index} className="relative">
+                  <div className="absolute -left-[41px] top-0 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--line)] bg-white text-xs font-semibold text-[var(--muted)]">
+                    {index + 1}
+                  </div>
+                  <h3 className="font-semibold text-[var(--ink)]">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">{step.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="bg-[var(--paper-soft)] border-t border-[var(--line)]">
+        <div className="mx-auto w-full max-w-7xl px-5 py-20 lg:px-8">
+          <div className="mb-12 text-center">
+            <h2 className="text-3xl font-semibold text-[var(--ink)]">
+              {locale === 'th' ? 'คำถามที่พบบ่อย' : 'Frequently Asked Questions'}
+            </h2>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {faq.map((item) => (
+              <article key={item.question} className="bg-white p-6 rounded-2xl border border-[var(--line)] shadow-sm hover:shadow-md transition-shadow">
+                <h3 className="text-lg font-semibold text-[var(--ink)]">
+                  {item.question}
+                </h3>
+                <p className="mt-4 text-sm leading-6 text-[var(--muted)]">
+                  {item.answer}
+                </p>
+              </article>
             ))}
           </div>
-        </article>
-      </section>
-
-      <section className="mx-auto grid w-full max-w-7xl gap-5 px-5 pb-20 lg:grid-cols-[0.86fr_1.14fr] lg:px-8">
-        <article className="paper-frame p-7">
-          <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
-            {locale === 'th' ? 'ขั้นตอนการสมัครสมาชิก' : 'Application process'}
-          </h2>
-          <ol className="mt-6 space-y-4 text-base leading-7 text-[var(--muted)]">
-            <li>{locale === 'th' ? '1. ส่งคำติดต่อสั้นๆ ระบุความสนใจและภูมิหลังของคุณ' : '1. Submit a short inquiry with your interests and background.'}</li>
-            <li>{locale === 'th' ? '2. รอการตอบรับและการติดต่อจากทีมงานฝ่ายสมาชิกภาพ' : '2. Receive a response from the chapter team or membership lead.'}</li>
-            <li>{locale === 'th' ? '3. เข้าร่วมกิจกรรมสมาคมหรือเข้ารับการปฐมนิเทศ' : '3. Join an upcoming event or orientation touchpoint.'}</li>
-            <li>{locale === 'th' ? '4. ดำเนินการสมัครสมาชิกสมาคมอย่างเป็นทางการและชำระค่าบำรุงประจำปี' : '4. Continue with the formal chapter application flow.'}</li>
-          </ol>
-        </article>
-        
-        {settings?.membershipFormLink ? (
-          <article className="paper-frame p-7 flex flex-col justify-between h-full bg-[var(--paper-soft)]">
-            <div>
-              <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
-                {locale === 'th' ? 'สมัครสมาชิกผ่านระบบภายนอก' : 'External Application'}
-              </h2>
-              <p className="mt-6 text-base leading-7 text-[var(--muted)]">
-                {locale === 'th'
-                  ? 'ขณะนี้สมาคมเปิดรับสมัครสมาชิกผ่านระบบภายนอกอย่างเป็นทางการ กรุณาคลิกปุ่มด้านล่างเพื่อกรอกใบสมัครของคุณ'
-                  : 'Our chapter is currently accepting formal membership applications through our external application portal.'}
-              </p>
-            </div>
-            <a
-              href={settings.membershipFormLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-8 rounded-full bg-[var(--jci-blue)] px-6 py-4 text-center text-sm font-semibold text-white hover:bg-[var(--jci-navy)] transition block"
-            >
-              {locale === 'th' ? 'เปิดใบสมัครสมาชิก →' : 'Open Membership Application →'}
-            </a>
-          </article>
-        ) : (
-          <MembershipForm locale={locale as Locale} />
-        )}
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-5 pb-20 lg:px-8">
-        <div className="grid gap-5 lg:grid-cols-3">
-          {faq.map((item) => (
-            <article key={item.question} className="paper-frame p-6">
-              <h2 className="font-display text-3xl leading-none text-[var(--ink)]">
-                {item.question}
-              </h2>
-              <p className="mt-5 text-base leading-7 text-[var(--muted)]">
-                {item.answer}
-              </p>
-            </article>
-          ))}
         </div>
       </section>
 
       <CtaBanner
-        title={locale === 'th' ? 'มีคำถามอื่นๆ เกี่ยวกับการสมัครสมาชิกหรือไม่?' : 'Have more questions about membership?'}
-        description={locale === 'th' ? 'คณะทำงานยินดีให้ข้อมูลและต้อนรับคุณเข้าสู่สมาคมเพื่อเป็นพลังขับเคลื่อนกรุงเทพฯ ร่วมกัน' : 'Our team is happy to help and welcome you to the chapter to drive Bangkok forward together.'}
+        title={locale === 'th' ? 'มีคำถามเพิ่มเติมใช่ไหม?' : 'Have more questions about membership?'}
+        description={locale === 'th' ? 'ทีมงานยินดีให้ข้อมูลและต้อนรับคุณเข้าร่วมกิจกรรมเพื่อพัฒนาตัวเองและขับเคลื่อนสังคมไปพร้อมกับเรา' : 'Our team is happy to help and welcome you to the chapter to drive Bangkok forward together.'}
         primaryHref={`/${locale}/contact`}
-        primaryLabel={locale === 'th' ? 'ติดต่อสมาคม' : 'Contact the chapter'}
+        primaryLabel={locale === 'th' ? 'ติดต่อสอบถาม' : 'Contact the chapter'}
       />
-    </>
+    </div>
   );
 }

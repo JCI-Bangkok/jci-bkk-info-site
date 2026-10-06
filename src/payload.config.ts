@@ -16,6 +16,7 @@ import { Events } from './collections/Events'
 import { Projects } from './collections/Projects'
 import { Articles } from './collections/Articles'
 import { BoardMembers } from './collections/BoardMembers'
+import { Members } from './collections/Members'
 import { MemberStories } from './collections/MemberStories'
 import { Partners } from './collections/Partners'
 import { Forms } from './collections/Forms'
@@ -62,6 +63,7 @@ export default buildConfig({
     Projects,
     Articles,
     BoardMembers,
+    Members,
     MemberStories,
     Partners,
     Forms,

@@ -52,7 +52,7 @@ export function LanguageSelector({ currentLocale }: { currentLocale: Locale }) {
             ? 'bg-white text-[var(--jci-blue)] shadow-sm'
             : 'text-[var(--muted)] hover:text-[var(--ink)]'
         }`}
-        aria-label="สลับเป็นภาษาไทย"
+        aria-label="เปลี่ยนเป็นภาษาไทย"
       >
         TH
       </button>

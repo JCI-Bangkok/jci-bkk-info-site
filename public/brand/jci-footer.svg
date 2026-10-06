@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 118" role="img" aria-labelledby="title">
+  <title>JCI Bangkok</title>
+  <g fill="#ffffff">
+    <text x="0" y="72" font-family="Arial, sans-serif" font-size="72" font-weight="700">JCI</text>
+    <path d="M150 19c31-18 76-18 108 0v18c-31-17-77-17-108 0zm0 28c31-17 77-17 108 0v18c-31-17-77-17-108 0zm0 28c31-17 77-17 108 0v18c-31-17-77-17-108 0z"/>
+    <text x="0" y="112" font-family="Arial, sans-serif" font-size="25" font-weight="700">BANGKOK</text>
+  </g>
+</svg>

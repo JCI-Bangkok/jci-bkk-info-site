@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Kanit } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getDictionary, Locale } from "@/lib/i18n";
 
 import "../globals.css";
+
+const kanit = Kanit({
+  weight: ["300", "400", "500", "600", "700"],
+  subsets: ["thai", "latin"],
+  variable: "--font-kanit",
+  display: "swap"
+});
 
 const plusJakartaSans = localFont({
   src: [
@@ -59,7 +67,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       data-scroll-behavior="smooth"
-      className={`${plusJakartaSans.variable} ${arvo.variable}`}
+      className={`${plusJakartaSans.variable} ${arvo.variable} ${kanit.variable}`}
     >
       <body>
         <SiteHeader locale={locale as Locale} />

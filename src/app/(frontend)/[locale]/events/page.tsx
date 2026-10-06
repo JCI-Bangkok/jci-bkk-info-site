@@ -1,141 +1,52 @@
-import Link from "next/link";
-import { getPayload } from 'payload'
-import configPromise from '@/payload.config'
-import { PageIntro } from "@/components/page-intro";
-import React from 'react'
-import { getDictionary, Locale } from "@/lib/i18n";
+import Link from 'next/link'
+import { getActivities } from '@/lib/activity-data'
+import { ActivityCard } from '@/components/activity-card'
+import { PaginatedGrid } from '@/components/paginated-grid'
+import { EventCalendar } from '@/components/event-calendar'
+import { getDictionary, type Locale } from '@/lib/i18n'
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  return {
-    title: locale === 'th' ? 'กิจกรรม' : 'Events'
-  };
-}
+export const revalidate = 300
 
-const eventTypeLabelsTh: Record<string, string> = {
-  training: 'การฝึกอบรมและพัฒนา',
-  networking: 'ธุรกิจและการสร้างเครือข่าย',
-  community: 'โครงการเพื่อชุมชน',
-  general: 'การประชุมทั่วไป',
-  international: 'กิจกรรมระดับนานาชาติ',
-  partner: 'กิจกรรมร่วมกับพันธมิตร',
-}
-
-const eventTypeLabelsEn: Record<string, string> = {
-  training: 'Training & Development',
-  networking: 'Business & Networking',
-  community: 'Community Project',
-  general: 'General Meeting',
-  international: 'International Event',
-  partner: 'Partner Event',
-}
-
-function formatDate(dateStr: string, locale: string) {
-  const code = locale === 'th' ? 'th-TH' : 'en-US'
-  try {
-    const d = new Date(dateStr)
-    return d.toLocaleDateString(code, {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    })
-  } catch {
-    return dateStr
-  }
-}
-
-interface PageProps {
-  params: Promise<{ locale: string }>
-}
-
-export default async function EventsPage({ params }: PageProps) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  const dict = getDictionary(locale as Locale)
-  const payload = await getPayload({ config: configPromise })
-  
-  const result = await payload.find({
-    collection: 'events',
-    locale,
-    limit: 100,
-    sort: '-eventDate',
-  })
-  
-  const upcoming = result.docs.filter((event) => event.status === "upcoming");
-  const completed = result.docs.filter((event) => event.status === "completed");
-  const eventTypeLabels = locale === 'th' ? eventTypeLabelsTh : eventTypeLabelsEn
+  return { title: locale === 'th' ? 'กิจกรรม' : 'Events' }
+}
 
-  return (
-    <>
-      <PageIntro
-        title={locale === 'th' ? 'กิจกรรมที่ขับเคลื่อนสมาคมให้เติบโต' : 'Events that keep the chapter visible and active.'}
-        lead={locale === 'th' ? 'ตั้งแต่กิจกรรมฝึกอบรม การสร้างเครือข่ายธุรกิจ ไปจนถึงโครงการพัฒนาชุมชนและความร่วมมือระหว่างประเทศ กิจกรรมต่างๆ จะช่วยให้เข้าใจวิถีชีวิตและการลงมือทำจริงของ JCI กรุงเทพฯ' : 'From training and networking to community projects and international opportunities, the event section should help visitors understand how JCI Bangkok shows up in real life.'}
-      />
-      <section className="section-space mx-auto w-full max-w-7xl px-5 lg:px-8">
-        <div className="space-y-12">
-          {upcoming.length > 0 && (
-            <div>
-              <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
-                {dict.events.upcoming}
-              </h2>
-              <div className="mt-6 grid gap-5 lg:grid-cols-2">
-                {upcoming.map((event) => (
-                  <article key={event.slug} className="paper-frame p-6">
-                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
-                      <span>{eventTypeLabels[event.eventType] || event.eventType}</span>
-                      <span>{formatDate(event.eventDate, locale)}</span>
-                    </div>
-                    <h3 className="mt-5 font-display text-4xl leading-none text-[var(--ink)]">
-                      {event.title}
-                    </h3>
-                    <p className="mt-5 text-base leading-7 text-[var(--muted)]">
-                      {event.shortDescription}
-                    </p>
-                    <p className="mt-4 text-sm font-semibold text-[var(--ink)]">
-                      {event.venue}
-                    </p>
-                    <Link
-                      href={`/${locale}/events/${event.slug}`}
-                      className="mt-6 inline-flex text-sm font-semibold text-[var(--ink)]"
-                    >
-                      {locale === 'th' ? 'ดูรายละเอียดกิจกรรม' : 'Read event detail'}
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </div>
-          )}
-          
-          {completed.length > 0 && (
-            <div>
-              <h2 className="font-display text-4xl leading-none text-[var(--ink)]">
-                {dict.events.past}
-              </h2>
-              <div className="mt-6 grid gap-5 lg:grid-cols-2">
-                {completed.map((event) => (
-                  <article key={event.slug} className="paper-frame p-6">
-                    <p className="text-xs uppercase tracking-[0.22em] text-[var(--muted)]">
-                      {eventTypeLabels[event.eventType] || event.eventType}
-                    </p>
-                    <h3 className="mt-5 font-display text-4xl leading-none text-[var(--ink)]">
-                      {event.title}
-                    </h3>
-                    <p className="mt-5 text-base leading-7 text-[var(--muted)]">
-                      {event.shortDescription}
-                    </p>
-                    <p className="mt-4 text-sm font-semibold text-[var(--ink)]">
-                      {formatDate(event.eventDate, locale)}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-    </>
-  );
+export default async function EventsPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params
+  const dict = getDictionary(locale)
+  const { activities, today } = await getActivities(locale)
+  const groups = [
+    { id: 'upcoming', title: dict.events.upcoming, items: activities.filter(item => item.upcoming) },
+    { id: 'past', title: locale === 'th' ? 'กิจกรรมและโครงการที่ผ่านมา' : 'Past Events & Projects', items: activities.filter(item => !item.upcoming && item.kind !== 'update').sort((a, b) => (b.date || String(b.year)).localeCompare(a.date || String(a.year))) },
+    { id: 'updates', title: locale === 'th' ? 'ข่าวสารเพิ่มเติม' : 'Chapter Updates', items: activities.filter(item => item.kind === 'update') },
+  ]
+  return <>
+    <section className="border-b border-[var(--line)] bg-[var(--paper-soft)]">
+      <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
+        <h1 className="text-4xl font-semibold">{dict.events.title}</h1>
+        <p className="mt-3 max-w-2xl leading-7 text-[var(--muted)]">{dict.events.sub}</p>
+        <nav aria-label={dict.events.title} className="mt-5 flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-[var(--jci-blue)]">
+          <a href="#calendar">{locale === 'th' ? 'ปฏิทิน' : 'Calendar'}</a>
+          {groups.map(group => <a key={group.id} href={`#${group.id}`}>{group.title}</a>)}
+        </nav>
+      </div>
+    </section>
+    <section id="calendar" className="mx-auto max-w-7xl scroll-mt-40 px-5 py-10 lg:px-8">
+      <h2 className="mb-5 text-2xl font-semibold">{locale === 'th' ? 'ปฏิทินกิจกรรม' : 'Event Calendar'}</h2>
+      <EventCalendar events={activities.filter(item => item.kind === 'event')} locale={locale} today={today} />
+    </section>
+    {groups.map(group => <section key={group.id} id={group.id} className="scroll-mt-40 border-t border-[var(--line)]">
+      <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
+        <h2 className="mb-5 text-2xl font-semibold">{group.title}</h2>
+        <PaginatedGrid items={group.items} locale={locale} itemsPerPage={6} />
+      </div>
+    </section>)}
+    <section className="border-t border-[var(--line)] bg-[var(--paper-soft)]">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 py-8 lg:px-8">
+        <h2 className="text-xl font-semibold">{locale === 'th' ? 'ร่วมเป็นส่วนหนึ่งของ JCI Bangkok' : 'Be part of JCI Bangkok.'}</h2>
+        <Link href={`/${locale}/membership`} className="button-primary">{dict.nav.becomeMember}</Link>
+      </div>
+    </section>
+  </>
 }

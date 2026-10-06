@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    useAsTitle: 'alt',
+    defaultColumns: ['alt', 'filename', 'updatedAt'],
+  },
   access: {
     read: () => true,
   },
@@ -30,11 +34,28 @@ export const Media: CollectionConfig = {
     ],
     mimeTypes: ['image/*'],
   },
+  hooks: {
+    beforeChange: [
+      ({ data, req }) => {
+        // Auto-generate alt from filename if missing
+        if (!data.alt && data.filename) {
+          // Remove extension and replace dashes/underscores with spaces
+          let name = data.filename.split('.').slice(0, -1).join(' ');
+          name = name.replace(/[-_]/g, ' ');
+          data.alt = name;
+        }
+        return data;
+      }
+    ]
+  },
   fields: [
     {
       name: 'alt',
       type: 'text',
-      required: true,
+      required: false,
+      admin: {
+        description: 'Auto-generated from filename if left blank.',
+      }
     },
   ],
 }

@@ -60,11 +60,10 @@ export type BoardYear = {
 
 export const navigation = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
   { href: "/events", label: "Events" },
-  { href: "/projects", label: "Projects" },
-  { href: "/membership", label: "Membership" },
-  { href: "/news", label: "News" },
+  { href: "/members", label: "Members" },
+  { href: "/photobomb", label: "PhotoBomb" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" }
 ] as const;
 
@@ -101,37 +100,34 @@ export const opportunities: Opportunity[] = [
 
 export const events: EventItem[] = [
   {
-    title: "Bangkok Leadership Lab",
-    slug: "bangkok-leadership-lab",
+    title: "ENTREPRENEUR CLUB 7: YOUNG TO YAK",
+    slug: "entrepreneur-club-7-young-to-yak",
     type: "Training",
-    date: "July 18, 2026",
-    venue: "Creative Hall, Sukhumvit",
+    date: "August 23, 2026",
+    venue: "Formosa Potetato (MRT Phetchaburi)",
     status: "Upcoming",
-    summary:
-      "A practical leadership intensive focused on facilitation, speaking, and leading across committees.",
-    highlight: "Designed for first-time and emerging chapter leaders."
+    summary: "Hands-on Salepage workshop: Design and build your sales landing page with AI, including domain setup and Q&A.",
+    highlight: "Learn from Khun Poon Pakpoom, Construction Brain AI Agent Builder at Homitage Co.,Ltd. Includes lunch and roundtable session."
   },
   {
-    title: "Impact Mixer with Mission-Driven Founders",
-    slug: "impact-mixer-founders",
+    title: "ENTREPRENEUR CLUB 8: LECTURE BAR",
+    slug: "entrepreneur-club-8-lecture-bar",
     type: "Networking",
-    date: "August 6, 2026",
-    venue: "Riverside Commons, Bangkok",
+    date: "September 26, 2026",
+    venue: "YELLOW CLOUD CRAFT BEER & BOTTLE SHOP",
     status: "Upcoming",
-    summary:
-      "An evening of founder stories, civic entrepreneurship, and cross-sector introductions for young professionals.",
-    highlight: "Blends networking with live case studies from Bangkok builders."
+    summary: "A unique lecture bar experience exploring unexpected business risks (Risk Management You Wish You Knew) with industry experts.",
+    highlight: "Featuring Khun Peemai and a panel of experts in a casual bar setting. Limited to 30 seats."
   },
   {
-    title: "Community Action Day",
-    slug: "community-action-day",
-    type: "Community Project",
-    date: "May 10, 2026",
-    venue: "Khlong Toei District",
-    status: "Completed",
-    summary:
-      "A volunteer activation that paired local partners, members, and youth leaders around a targeted neighborhood initiative.",
-    highlight: "Built to demonstrate visible local action, not abstract volunteering."
+    title: "JCI TOYP 2026: HUMAN ADVANTAGE IN THE AI ERA",
+    slug: "jci-toyp-2026",
+    type: "Networking",
+    date: "October 31, 2026",
+    venue: "UTCC อาคาร 5 ชั้น 2 ห้อง 5201",
+    status: "Upcoming",
+    summary: "Ten Outstanding Young Persons 2026 awards. Discover the Human Advantage in the AI Era: Intelligence, Resilience, Inclusion.",
+    highlight: "Meet the 10 outstanding young leaders of 2026 at the University of the Thai Chamber of Commerce."
   }
 ];
 
@@ -228,62 +224,51 @@ export const articles: ArticleItem[] = [
 export const boardYears: BoardYear[] = [
   {
     year: "2026",
-    theme: "Lead forward, build local trust.",
-    president: "Pimnara L.",
-    summary:
-      "A board focused on member growth, stronger partnerships, and visible project delivery in Bangkok.",
+    theme: "Young to Yak - 12 years JCI Bangkok",
+    president: "Nattapat Channgarm",
+    summary: "Yak Board of Directors",
     members: [
-      {
-        name: "Pimnara L.",
-        role: "Local President",
-        company: "Strategy and partnerships",
-        bio: "Leads the yearly chapter direction, external relations, and board alignment."
-      },
-      {
-        name: "Thanawat C.",
-        role: "Executive Vice President",
-        company: "Operations",
-        bio: "Coordinates chapter execution across committees and annual goals."
-      },
-      {
-        name: "Kanya R.",
-        role: "Vice President for Membership",
-        company: "People and culture",
-        bio: "Drives member journey, onboarding, and retention across the chapter."
-      },
-      {
-        name: "Michele A.",
-        role: "Vice President for Projects",
-        company: "Community programs",
-        bio: "Oversees project design, implementation, and partner coordination."
-      }
+      { name: "Nattapat Channgarm", role: "Local President", company: "", bio: "" },
+      { name: "Witchaya Wongwai", role: "Immediate Past President", company: "", bio: "" },
+      { name: "Sirinapa Taweepongpinyo", role: "Secretary General", company: "", bio: "" },
+      { name: "Krittapas Numnam", role: "Treasurer", company: "", bio: "" },
+      { name: "Apichaya Yenjai", role: "VP Business & Entrepreneurship", company: "", bio: "" },
+      { name: "Putthipat Lapatphumpat", role: "VP Business & Entrepreneurship", company: "", bio: "" },
+      { name: "Bhumphuree Loakhajorn", role: "VP Membership", company: "", bio: "" },
+      { name: "Nathachon Tachapisitpong", role: "VP Data Intelligence", company: "", bio: "" },
+      { name: "Krit Buaprasert", role: "VP Training & Development", company: "", bio: "" },
+      { name: "Piriyapol Prasankh", role: "VP Project", company: "", bio: "" },
+      { name: "Nontatat Lekhyananda", role: "VP Partnership", company: "", bio: "" },
+      { name: "Sitthiphon Thittitham", role: "VP International Affairs", company: "", bio: "" },
+      { name: "Jeerameth Klomsing", role: "VP Europe", company: "", bio: "" },
+      { name: "Ponpitcha Charnchaleo", role: "Director Membership", company: "", bio: "" },
+      { name: "Pipooh Boonsombat", role: "Director International Affairs", company: "", bio: "" },
+      { name: "Yanathip Bhoosawang", role: "Director", company: "", bio: "" },
+      { name: "Pakpoom Watcharapipatpant", role: "Director", company: "", bio: "" },
+      { name: "Khin La Woon", role: "Secretary Officer", company: "", bio: "" },
+      { name: "Saridta Chaiwan", role: "Secretary Officer", company: "", bio: "" }
     ]
   },
   {
     year: "2025",
-    theme: "Action that connects.",
+    theme: "Connect Them All",
     president: "Napat V.",
     summary:
       "A year centered on visible programming, stronger event cadence, and rebuilding chapter momentum.",
     members: [
-      {
-        name: "Napat V.",
-        role: "Local President",
-        company: "Business development",
-        bio: "Set the yearly strategy and represented the chapter nationally."
-      },
-      {
-        name: "Lisa H.",
-        role: "Secretary General",
-        company: "Administration",
-        bio: "Managed governance, communication flow, and operational continuity."
-      },
-      {
-        name: "Arthit S.",
-        role: "Vice President for Events",
-        company: "Program design",
-        bio: "Led the event calendar across training, networking, and community formats."
-      }
+      { name: "Witchaya Wongwai", role: "Local President", company: "", bio: "" },
+      { name: "Akkaranand Akesirinararwich", role: "Immediate Past President", company: "", bio: "" },
+      { name: "Nattapat Channgarm", role: "Secretary", company: "", bio: "" },
+      { name: "Nathachon Tachapisitpong", role: "Treasurer", company: "", bio: "" },
+      { name: "Sirinapa Taweepongpinyo", role: "VP Membership", company: "", bio: "" },
+      { name: "Bhumphuree Loakhajorn", role: "VP International Affairs", company: "", bio: "" },
+      { name: "Jeerameth Klomsing", role: "VP Project", company: "", bio: "" },
+      { name: "Apichaya Yenjai", role: "VP Marketing", company: "", bio: "" },
+      { name: "Krittapas Numnam", role: "Director International Affairs", company: "", bio: "" },
+      { name: "Yanatib Bhoosawang", role: "Director Project", company: "", bio: "" },
+      { name: "Chavangkon Kanjanakuldit", role: "Director Membership", company: "", bio: "" },
+      { name: "Putthipat Lapatphumipat", role: "Director International Affairs", company: "", bio: "" },
+      { name: "Piriyapol Prasankliew", role: "Director International Affairs", company: "", bio: "" }
     ]
   }
 ];

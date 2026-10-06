@@ -1,240 +1,125 @@
-import Link from "next/link";
+import { getDictionary, type Locale } from '@/lib/i18n'
+import Image from 'next/image'
+import Link from 'next/link'
+
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
-import { CtaBanner } from "@/components/cta-banner";
-import { PageIntro } from "@/components/page-intro";
-import { opportunities } from "@/lib/site-data";
-import React from 'react'
-import { getDictionary, Locale } from "@/lib/i18n";
+import { mediaUrl } from '@/lib/media'
 
-export async function generateMetadata({
-  params
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  return {
-    title: locale === 'th' ? 'เกี่ยวกับเรา' : 'About'
-  };
-}
-
-const boardYearMetadataEn: Record<string, { theme: string; summary: string }> = {
-  "2026": {
-    theme: "Lead forward, build local trust.",
-    summary: "A board focused on member growth, stronger partnerships, and visible project delivery in Bangkok."
-  },
-  "2025": {
-    theme: "Action that connects.",
-    summary: "A year centered on visible programming, stronger event cadence, and rebuilding chapter momentum."
-  }
-}
-
-const boardYearMetadataTh: Record<string, { theme: string; summary: string }> = {
-  "2026": {
-    theme: "นำไปข้างหน้า สร้างความเชื่อมั่นในท้องถิ่น",
-    summary: "คณะกรรมการบริหารที่มุ่งเน้นการเติบโตของสมาชิก พันธมิตรที่เข้มแข็ง และการส่งมอบโครงการที่จับต้องได้ในกรุงเทพฯ"
-  },
-  "2025": {
-    theme: "การลงมือทำที่เชื่อมโยงถึงกัน",
-    summary: "ปีที่เน้นแผนงานที่ชัดเจน การจัดกิจกรรมอย่างต่อเนื่อง และการฟื้นฟูพลังขับเคลื่อนของสมาคม"
-  }
-}
-
-interface PageProps {
-  params: Promise<{ locale: string }>
-}
-
-export default async function AboutPage({ params }: PageProps) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  const dict = getDictionary(locale as Locale)
+  return { title: locale === 'th' ? 'เกี่ยวกับเรา' : 'About Us' }
+}
+
+export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params
+  const dict = getDictionary(locale)
   const payload = await getPayload({ config: configPromise })
-
-  const result = await payload.find({
-    collection: 'board-members',
-    locale,
-    limit: 150,
-  })
-
-  const years = Array.from(new Set(result.docs.map((member) => member.year)))
-    .sort((a, b) => b - a)
-
-  const boardYearsList = years.map((yr) => {
-    const yearStr = yr.toString()
-    const metadata = locale === 'th'
-      ? (boardYearMetadataTh[yearStr] || { theme: "รับใช้ JCI กรุงเทพฯ", summary: `คณะกรรมการบริหารสำหรับปี ${yearStr}` })
-      : (boardYearMetadataEn[yearStr] || { theme: "Serving JCI Bangkok", summary: `The board of directors for the year ${yearStr}.` })
-    return {
-      year: yearStr,
-      theme: metadata.theme,
-      summary: metadata.summary
-    }
-  })
-
-  // Localize opportunities
-  const localizedOpportunities = opportunities.map((opp, idx) => {
-    const thOpp = [
-      {
-        title: "การพัฒนาภาวะผู้นำ",
-        summary: "โอกาสในการลงมือปฏิบัติจริงเพื่อนำคณะทำงาน จัดโปรแกรมกิจกรรม และเติบโตอย่างมั่นใจผ่านประสบการณ์ตรง",
-        accent: "สำหรับพลเมืองตื่นรู้รุ่นใหม่",
-        stat: "อายุระหว่าง 18-40 ปี"
-      },
-      {
-        title: "ธุรกิจและการเป็นผู้ประกอบการ",
-        summary: "เครือข่ายสำหรับคนทำงานรุ่นใหม่และผู้ก่อตั้งธุรกิจที่ต้องการฝึกทักษะการสื่อสารที่เฉียบคม คอนเนกชันที่แข็งแกร่ง และการเติบโตอย่างรับผิดชอบ",
-        accent: "ธุรกิจ ประชาสังคม และความคิดสร้างสรรค์",
-        stat: "ข้ามภาคส่วน"
-      },
-      {
-        title: "ความร่วมมือระหว่างประเทศ",
-        summary: "คอนเนกชันไปยังสมาคมท้องถิ่นและองค์กรระดับชาติของ JCI ทั่วโลก รวมถึงกิจกรรมนานาชาติที่จะขยายมุมมองและการร่วมมือของคุณ",
-        accent: "เครือข่าย JCI ทั่วโลก",
-        stat: "กว่า 100 ประเทศ"
-      },
-      {
-        title: "การสร้างผลกระทบต่อชุมชน",
-        summary: "โครงการริเริ่มในกรุงเทพฯ ที่เปลี่ยนไอเดียให้เป็นผลลัพธ์ที่จับต้องได้สำหรับชุมชน พันธมิตร และผู้นำแห่งอนาคต",
-        accent: "ผลลัพธ์ที่มีจุดมุ่งหมาย",
-        stat: "การลงมือทำในพื้นที่"
-      }
-    ][idx];
-
-    return {
-      title: locale === 'th' ? thOpp.title : opp.title,
-      summary: locale === 'th' ? thOpp.summary : opp.summary,
-      accent: locale === 'th' ? thOpp.accent : opp.accent,
-      stat: locale === 'th' ? thOpp.stat : opp.stat
-    }
-  });
-
+  const settings = await payload.findGlobal({ slug: 'site-settings', locale }).catch(() => null)
+  
   return (
     <>
-      <PageIntro
-        title={locale === 'th' ? 'JCI กรุงเทพฯ เปลี่ยนพันธกิจระดับโลกให้เป็นโอกาสระดับท้องถิ่น' : 'JCI Bangkok turns a global mission into local opportunities.'}
-        lead={locale === 'th' ? 'ในฐานะสมาคมท้องถิ่นของ JCI ประเทศไทย JCI กรุงเทพฯ มุ่งสร้างโอกาสความเป็นผู้นำ โครงการ และเครือข่ายสำหรับพลเมืองตื่นรู้รุ่นใหม่ที่ต้องการเติบโตควบคู่ไปกับการทำประโยชน์ให้แก่เมืองของตน' : 'As a local chapter of JCI Thailand, JCI Bangkok creates leadership opportunities, projects, and networks for young active citizens who want to grow while contributing to their city.'}
-        aside={
-          <div className="space-y-4">
-            <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-              {locale === 'th' ? 'โครงสร้างองค์กร' : 'Organization hierarchy'}
-            </p>
-            <div className="space-y-3 text-sm leading-7 text-[var(--muted)]">
-              <p>{locale === 'th' ? 'สมาพันธ์สภาวิชาชีพเยาวชนนานาชาติระดับโลก' : 'Junior Chamber International Global'}</p>
-              <p className="pl-5">JCI Thailand</p>
-              <p className="pl-10 font-semibold text-[var(--ink)]">JCI Bangkok</p>
-            </div>
-          </div>
-        }
-      />
-
-      <section className="section-space mx-auto grid w-full max-w-7xl gap-6 px-5 lg:grid-cols-2 lg:px-8">
-        <article className="paper-frame p-7">
-          <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-            {dict.about.structureTitle}
+      <section className="relative overflow-hidden bg-[var(--jci-black)] text-white border-b border-white/10">
+        <div className="absolute inset-0 opacity-20">
+          <Image src={settings?.aboutCoverImage ? (mediaUrl(settings.aboutCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok" fill className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--jci-black)] to-transparent" />
+        
+        <div className="relative mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-32">
+          <h1 className="text-4xl lg:text-6xl font-semibold tracking-tight">{dict.about.title}</h1>
+          <p className="mt-6 max-w-2xl text-lg text-white/80 leading-relaxed">
+            {dict.about.intro}
           </p>
-          <h2 className="mt-4 font-display text-4xl leading-none text-[var(--ink)]">
-            {locale === 'th' ? 'บทบาทสำคัญสำหรับผู้นำรุ่นใหม่ที่ต้องการฝึกฝน ไม่ใช่เพียงแค่แรงบันดาลใจ' : 'A chapter for young leaders who want practice, not just inspiration.'}
-          </h2>
-          <p className="mt-6 text-base leading-7 text-[var(--muted)]">
-            {locale === 'th'
-              ? 'JCI กรุงเทพฯ ขับเคลื่อนเพื่อคนรุ่นใหม่อายุระหว่าง 18 ถึง 40 ปี ที่ต้องการพัฒนาตนเองผ่านโครงการจริง บทบาทหน้าที่ที่มีความหมาย และเครือข่ายที่พัฒนาวิชาชีพควบคู่ไปกับผลกระทบต่อชุมชน'
-              : 'JCI Bangkok exists for people aged 18 to 40 who want to develop through real projects, meaningful roles, and a network that blends professional growth with community impact.'}
-          </p>
-        </article>
-        <article className="paper-frame p-7">
-          <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-            {locale === 'th' ? 'พันธกิจและวิสัยทัศน์' : 'Mission and vision'}
-          </p>
-          <div className="mt-6 grid gap-5">
-            <div className="rounded-[1.6rem] border border-[var(--line)] bg-white/75 p-5">
-              <p className="font-semibold text-[var(--ink)]">{locale === 'th' ? 'พันธกิจ' : 'Mission'}</p>
-              <p className="mt-2 text-base leading-7 text-[var(--muted)]">
-                {locale === 'th'
-                  ? 'มอบโอกาสการพัฒนาภาวะผู้นำที่เสริมสร้างพลังให้คนรุ่นใหม่สร้างการเปลี่ยนแปลงเชิงบวก'
-                  : 'Provide leadership development opportunities that empower young people to create positive change.'}
-              </p>
-            </div>
-            <div className="rounded-[1.6rem] border border-[var(--line)] bg-white/75 p-5">
-              <p className="font-semibold text-[var(--ink)]">{locale === 'th' ? 'วิสัยทัศน์' : 'Vision'}</p>
-              <p className="mt-2 text-base leading-7 text-[var(--muted)]">
-                {locale === 'th'
-                  ? 'เป็นเครือข่ายระดับโลกชั้นนำของผู้นำรุ่นใหม่ ซึ่งแสดงออกในกรุงเทพฯ ผ่านการลงมือทำจริงและความร่วมมือในท้องถิ่น'
-                  : 'Be the foremost global network of young leaders, expressed in Bangkok through visible local action and collaboration.'}
-              </p>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section className="mx-auto w-full max-w-7xl px-5 pb-20 lg:px-8">
-        <div className="grid gap-5 lg:grid-cols-2">
-          {localizedOpportunities.map((item) => (
-            <article key={item.title} className="paper-frame p-7">
-              <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-                {item.accent}
-              </p>
-              <h2 className="mt-4 font-display text-4xl leading-none text-[var(--ink)]">
-                {item.title}
-              </h2>
-              <p className="mt-5 text-base leading-7 text-[var(--muted)]">
-                {item.summary}
-              </p>
-            </article>
-          ))}
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-7xl px-5 pb-20 lg:px-8">
-        <div className="paper-frame p-7 lg:p-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <div className="grid gap-16 lg:grid-cols-2">
+          
+          <div className="space-y-12">
             <div>
-              <p className="text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-                {locale === 'th' ? 'จดหมายเหตุคณะกรรมการ' : 'Board archive'}
-              </p>
-              <h2 className="mt-4 font-display text-5xl leading-none text-[var(--ink)]">
-                {locale === 'th' ? 'ความเป็นผู้นำในแต่ละปีมีความสำคัญที่นี่' : 'Yearly leadership matters here.'}
+              <h2 className="text-3xl font-semibold text-[var(--ink)] border-b border-[var(--line)] pb-4 mb-6">
+                {dict.about.historyTitle}
               </h2>
+              <p className="text-lg leading-8 text-[var(--muted)]">
+                {dict.about.historyText}
+              </p>
+              
+              <div className="mt-8 flex flex-col gap-4">
+                <a href="https://www.jci.cc" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-[var(--line)] hover:border-[var(--jci-blue)] hover:bg-[var(--jci-blue)]/5 transition group">
+                  <div className="w-12 h-12 bg-[var(--paper-soft)] rounded-lg flex items-center justify-center shrink-0 group-hover:bg-white transition">
+                    <svg className="w-6 h-6 text-[var(--jci-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[var(--ink)] group-hover:text-[var(--jci-blue)] transition">Junior Chamber International (JCI)</p>
+                    <p className="text-sm text-[var(--muted)]">{locale === 'th' ? 'เว็บไซต์หลัก JCI ระดับโลก' : 'Global JCI Website'}</p>
+                  </div>
+                </a>
+                
+                <a href="https://www.jcithailand.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-[var(--line)] hover:border-[var(--jci-blue)] hover:bg-[var(--jci-blue)]/5 transition group">
+                  <div className="w-12 h-12 bg-[var(--paper-soft)] rounded-lg flex items-center justify-center shrink-0 group-hover:bg-white transition">
+                    <svg className="w-6 h-6 text-[var(--jci-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[var(--ink)] group-hover:text-[var(--jci-blue)] transition">JCI Thailand</p>
+                    <p className="text-sm text-[var(--muted)]">{locale === 'th' ? 'เว็บไซต์ประจำประเทศไทย' : 'National Organization Website'}</p>
+                  </div>
+                </a>
+                
+                <a href="https://apicc.net" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-4 rounded-xl border border-[var(--line)] hover:border-[var(--jci-blue)] hover:bg-[var(--jci-blue)]/5 transition group">
+                  <div className="w-12 h-12 bg-[var(--paper-soft)] rounded-lg flex items-center justify-center shrink-0 group-hover:bg-white transition">
+                    <svg className="w-6 h-6 text-[var(--jci-blue)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[var(--ink)] group-hover:text-[var(--jci-blue)] transition">APICC</p>
+                    <p className="text-sm text-[var(--muted)]">{locale === 'th' ? 'เครือข่ายความร่วมมือระดับภูมิภาคเอเชียแปซิฟิก' : 'Asia Pacific Inter-City Conference'}</p>
+                  </div>
+                </a>
+              </div>
             </div>
-            <Link href={`/${locale}/about/board`} className="text-sm font-semibold text-[var(--ink)]">
-              {locale === 'th' ? 'ดูจดหมายเหตุคณะกรรมการทั้งหมด' : 'View full board archive'}
-            </Link>
           </div>
-          <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            {boardYearsList.map((year) => (
-              <article
-                key={year.year}
-                className="rounded-[1.6rem] border border-[var(--line)] bg-white/75 p-6"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="font-display text-4xl leading-none text-[var(--ink)]">
-                    {year.year}
-                  </p>
-                  <Link
-                    href={`/${locale}/about/board/${year.year}`}
-                    className="text-sm font-semibold text-[var(--ink)]"
-                  >
-                    {locale === 'th' ? 'สำรวจรายปี' : 'Explore year'}
-                  </Link>
-                </div>
-                <p className="mt-4 text-sm uppercase tracking-[0.22em] text-[var(--muted)]">
-                  {year.theme}
-                </p>
-                <p className="mt-5 text-base leading-7 text-[var(--muted)]">
-                  {year.summary}
-                </p>
-              </article>
-            ))}
+          
+          <div className="flex flex-col gap-6">
+            <div className="p-10 bg-white shadow-xl shadow-[var(--jci-blue)]/5 rounded-[2rem] border border-[var(--line)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-6 text-9xl text-[var(--jci-blue)]/10 leading-none font-serif select-none pointer-events-none">"</div>
+              <h3 className="text-2xl font-semibold text-[var(--ink)]">{locale === 'th' ? 'ปณิธาน JCI (JCI Creed)' : 'JCI Creed'}</h3>
+              <div className="mt-6 text-[15px] italic leading-relaxed text-[var(--muted)] space-y-3 relative z-10">
+                <p>We believe . . .</p>
+                <p>That faith in God gives meaning and purpose to human life;</p>
+                <p>That the brotherhood of man transcends the sovereignty of nations;</p>
+                <p>That economic justice can best be won by free men through free enterprise;</p>
+                <p>That government should be of laws rather than of men;</p>
+                <p>That earth&rsquo;s great treasure lies in human personality;</p>
+                <p className="font-semibold text-[var(--jci-blue)] not-italic mt-6 pt-6 border-t border-[var(--line)] text-lg">And that service to humanity is the best work of life.</p>
+              </div>
+            </div>
+            
+            <div className="grid sm:grid-cols-2 gap-6 mt-2">
+              <div className="p-8 bg-[var(--paper-soft)] rounded-3xl border border-[var(--line)] flex flex-col justify-center">
+                <h3 className="text-xl font-semibold text-[var(--ink)]">{locale === 'th' ? 'พันธกิจ (JCI Mission)' : 'JCI Mission'}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-[var(--muted)]">To provide leadership development opportunities that empower young people to create positive change.</p>
+              </div>
+              <div className="p-8 bg-[var(--paper-soft)] rounded-3xl border border-[var(--line)] flex flex-col justify-center">
+                <h3 className="text-xl font-semibold text-[var(--ink)]">{locale === 'th' ? 'วิสัยทัศน์ (JCI Vision)' : 'JCI Vision'}</h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-[var(--muted)]">To be the foremost global network of young leaders.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <CtaBanner
-        title={locale === 'th' ? 'ดูวิธีการจัดระเบียบความเป็นผู้นำปีต่อปี' : 'See how leadership is organized year by year.'}
-        description={locale === 'th' ? 'หอจดหมายเหตุคณะกรรมการช่วยให้สมาชิก พันธมิตร และเครือข่าย JCI ในวงกว้างเข้าใจการกำกับดูแล ความต่อเนื่อง และทิศทางของสมาคม' : 'Board archives help members, partners, and the wider JCI network understand governance, continuity, and chapter direction.'}
-        primaryHref={`/${locale}/about/board`}
-        primaryLabel={locale === 'th' ? 'เปิดจดหมายเหตุคณะกรรมการ' : 'Open board archive'}
-        secondaryHref={`/${locale}/contact`}
-        secondaryLabel={locale === 'th' ? 'ติดต่อสมาคม' : 'Contact the chapter'}
-      />
+      <section className="bg-[var(--paper-soft)] border-t border-[var(--line)] py-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8 text-center">
+          <h2 className="text-3xl font-semibold text-[var(--ink)] mb-6">{dict.about.structureTitle}</h2>
+          <p className="max-w-3xl mx-auto text-lg leading-8 text-[var(--muted)] mb-10">
+            {dict.about.structureText}
+          </p>
+          <Link href={`/${locale}/members/board/2026`} className="button-primary inline-flex items-center gap-2">
+            {locale === 'th' ? 'ทำความรู้จักคณะกรรมการของเรา' : 'Meet our Board of Directors'}
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </Link>
+        </div>
+      </section>
     </>
-  );
+  )
 }

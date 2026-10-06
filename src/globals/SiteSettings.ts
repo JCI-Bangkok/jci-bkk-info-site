@@ -53,5 +53,53 @@ export const SiteSettings: GlobalConfig = {
       type: 'text',
       label: 'Membership Form Link',
     },
+    {
+      name: 'membershipCoverImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Membership Page Cover Image',
+    },
+    {
+      name: 'aboutCoverImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'About Page Cover Image',
+    },
+    {
+      name: 'homeHeroImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Home Page Hero Image',
+    },
+    {
+      name: 'homePathway1',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Home Pathway 1 (Leadership)',
+    },
+    {
+      name: 'homePathway2',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Home Pathway 2 (Business)',
+    },
+    {
+      name: 'homePathway3',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Home Pathway 3 (International)',
+    },
+    {
+      name: 'homePathway4',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Home Pathway 4 (Community)',
+    },
+    {
+      name: 'memberStoryFallback',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Member Story Default Image',
+    },
   ],
 }
