@@ -16,10 +16,8 @@ export type Activity = {
   upcoming: boolean
   kind: 'event' | 'project' | 'update'
 }
-
-export function mediaUrl(media: unknown): string | undefined {
-  if (media && typeof media === 'object' && 'url' in media && typeof media.url === 'string') return media.url
-}
+import { mediaUrl } from './media'
+export { mediaUrl }
 
 export function isUpcoming(event: { status?: string | null; eventDate: string; endDate?: string | null }, today: string) {
   return event.status === 'upcoming' && bangkokDay(event.endDate || event.eventDate) >= today

@@ -29,7 +29,9 @@ if (process.env.S3_BUCKET) {
   plugins.push(
     s3Storage({
       collections: {
-        media: true,
+        media: {
+          disablePayloadAccessControl: true,
+        },
       },
       bucket: process.env.S3_BUCKET,
       config: {

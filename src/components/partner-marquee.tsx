@@ -1,9 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 
-function mediaUrl(media: unknown): string | undefined {
-  if (media && typeof media === 'object' && 'url' in media && typeof media.url === 'string') return media.url
-}
+import { mediaUrl } from '@/lib/media';
 
 export type PartnerItem = {
   website?: string | null;
