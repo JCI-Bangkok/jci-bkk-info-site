@@ -24,8 +24,14 @@ const dirname = path.dirname(filename)
 
 const plugins = []
 
-// Configure S3 plugin if environment variables are present (Vercel deployment)
-if (process.env.S3_BUCKET) {
+// Configure S3 plugin for full asset CRUD (Upload, Read, Update, Delete)
+const s3Bucket = process.env.S3_BUCKET || 'jci-bkk-media'
+const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID || 'nak_live_7bd1883eb92c439a9ee2bc819815eb94'
+const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY || 'nsk_live_90d007d4e32aa3772d25713d7cddb0f34f85cfc04183760b5a4e956d07efd3c6'
+const s3Region = process.env.S3_REGION || 'ap-southeast-1'
+const s3Endpoint = process.env.S3_ENDPOINT || 'https://br-lucky-fog-aol9sf27.storage.c-2.ap-southeast-1.aws.neon.tech'
+
+if (s3Bucket && s3AccessKeyId && s3SecretAccessKey) {
   plugins.push(
     s3Storage({
       collections: {
@@ -33,14 +39,14 @@ if (process.env.S3_BUCKET) {
           disablePayloadAccessControl: true,
         },
       },
-      bucket: process.env.S3_BUCKET,
+      bucket: s3Bucket,
       config: {
         credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || '',
+          accessKeyId: s3AccessKeyId,
+          secretAccessKey: s3SecretAccessKey,
         },
-        region: process.env.S3_REGION || 'ap-southeast-1',
-        endpoint: process.env.S3_ENDPOINT,
+        region: s3Region,
+        endpoint: s3Endpoint,
         forcePathStyle: true,
       },
     })

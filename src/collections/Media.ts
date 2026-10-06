@@ -4,14 +4,26 @@ export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
     useAsTitle: 'alt',
-    defaultColumns: ['alt', 'filename', 'updatedAt'],
+    defaultColumns: ['filename', 'alt', 'filesize', 'updatedAt'],
+    listSearchableFields: ['alt', 'filename'],
+    group: 'Assets',
   },
   access: {
     read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   upload: {
     staticDir: 'public/media',
-    adminThumbnail: 'thumbnail',
+    adminThumbnail: ({ doc }) => {
+      return (
+        (doc?.sizes as Record<string, { url?: string }> | undefined)?.thumbnail?.url ||
+        (doc?.url as string) ||
+        (doc?.thumbnailURL as string) ||
+        null
+      )
+    },
     imageSizes: [
       {
         name: 'thumbnail',
