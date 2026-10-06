@@ -64,7 +64,7 @@ export default async function MembershipPage({ params }: PageProps) {
   const benefits = locale === 'th' ? benefitsTh : benefitsEn
   const faq = locale === 'th' ? faqTh : faqEn
 
-  let settings: { membershipCoverImage?: unknown } | null = null
+  let settings: { membershipCoverImage?: unknown; membershipFormLink?: string } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
