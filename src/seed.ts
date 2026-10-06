@@ -194,7 +194,25 @@ async function run() {
   await payload.delete({ collection: 'board-members', where: { id: { exists: true } } })
   await payload.delete({ collection: 'member-stories', where: { id: { exists: true } } })
   await payload.delete({ collection: 'partners', where: { id: { exists: true } } })
-  await payload.delete({ collection: 'media', where: { id: { exists: true } } })
+  // Reset site settings media references before clearing media
+  try {
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: {
+        logo: null,
+        membershipCoverImage: null,
+        aboutCoverImage: null,
+        homeHeroImage: null,
+        homePathway1: null,
+        homePathway2: null,
+        homePathway3: null,
+        homePathway4: null,
+        memberStoryFallback: null,
+      },
+    })
+  } catch {
+    // ignore if global not yet initialized
+  }
 
   // 1. Create Admin User
   console.log('Seeding Admin User...')
@@ -223,17 +241,12 @@ async function run() {
     console.log('Admin User already exists.')
   }
 
-  // 2. Upload Media Images
-  console.log('Seeding Media images...')
-  const imageNames = [
-    'hero-community.png',
-    'community-project.png',
-    'leadership-workshop.png',
-    'member-story.png',
-    'ux-concept.png',
-    'ec7.jpg',
-    'ec8.jpg',
-    'toyp.jpg',
+  // 2. Upload Media Images to S3
+  console.log('Seeding Media images to S3...')
+  const directoriesToScan = [
+    path.resolve(dirname, '../public/images/home'),
+    path.resolve(dirname, '../public/brand'),
+    path.resolve(dirname, '../public/images'),
   ]
 
   interface SeedMedia {
@@ -242,26 +255,36 @@ async function run() {
 
   const mediaDocs: Record<string, SeedMedia> = {}
 
-  for (const name of imageNames) {
-    const filePath = path.resolve(dirname, '../public/images/home', name)
-    if (fs.existsSync(filePath)) {
+  for (const dir of directoriesToScan) {
+    if (!fs.existsSync(dir)) continue
+    const files = fs.readdirSync(dir)
+    for (const name of files) {
+      if (name.startsWith('.')) continue
+      const filePath = path.join(dir, name)
+      if (fs.statSync(filePath).isDirectory()) continue
+
+      const ext = path.extname(name).toLowerCase()
+      if (!['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) continue
+
+      if (mediaDocs[name]) continue // already uploaded
+
       const fileBuffer = fs.readFileSync(filePath)
+      const mimetype = ext === '.png' ? 'image/png' : ext === '.webp' ? 'image/webp' : 'image/jpeg'
+
       const mediaDoc = await payload.create({
         collection: 'media',
         data: {
-          alt: name.replace('-', ' ').replace('.png', ''),
+          alt: name.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, ''),
         },
         file: {
           data: fileBuffer,
           name,
-          mimetype: name.endsWith('.jpg') ? 'image/jpeg' : 'image/png',
+          mimetype,
           size: fileBuffer.length,
         },
       })
       mediaDocs[name] = mediaDoc as unknown as SeedMedia
-      console.log(`Uploaded media image: ${name}`)
-    } else {
-      console.warn(`File not found: ${filePath}`)
+      console.log(`Uploaded media image to S3: ${name} (ID: ${mediaDoc.id})`)
     }
   }
 
@@ -285,6 +308,12 @@ async function run() {
       coverImageId = mediaDocs['ec8.jpg'].id
     } else if (event.slug === 'jci-toyp-2026' && mediaDocs['toyp.jpg']) {
       coverImageId = mediaDocs['toyp.jpg'].id
+    } else if (event.slug === 'bangkok-leadership-lab' && mediaDocs['leadership-workshop.png']) {
+      coverImageId = mediaDocs['leadership-workshop.png'].id
+    } else if (event.slug === 'community-action-day' && mediaDocs['community-project.png']) {
+      coverImageId = mediaDocs['community-project.png'].id
+    } else if (event.slug === 'impact-mixer-with-mission-driven-founders' && mediaDocs['banner-p-golf.jpg']) {
+      coverImageId = mediaDocs['banner-p-golf.jpg'].id
     } else if (mediaDocs['hero-community.png']) {
       coverImageId = mediaDocs['hero-community.png'].id
     }
@@ -350,6 +379,17 @@ async function run() {
       'International Cooperation': 'international',
     }
 
+    let projectImageId = getFallbackMediaId()
+    if (project.slug === 'future-skills-for-bangkok-youth' && mediaDocs['leadership-workshop.png']) {
+      projectImageId = mediaDocs['leadership-workshop.png'].id
+    } else if (project.slug === 'green-district-challenge' && mediaDocs['community-project.png']) {
+      projectImageId = mediaDocs['community-project.png'].id
+    } else if (project.slug === 'bangkok-social-enterprise-exchange' && mediaDocs['pathway-business.jpg']) {
+      projectImageId = mediaDocs['pathway-business.jpg'].id
+    } else if (mediaDocs['community-project.png']) {
+      projectImageId = mediaDocs['community-project.png'].id
+    }
+
     // A. Create in English
     const doc = await payload.create({
       collection: 'projects',
@@ -368,6 +408,7 @@ async function run() {
           { value: '5+', label: 'Partner Organizations' },
         ],
         sdgTags: ['sdg-4', 'sdg-8', 'sdg-17'],
+        gallery: projectImageId ? [{ image: projectImageId }] : [],
       },
     })
 
@@ -399,6 +440,10 @@ async function run() {
     let coverImageId = getFallbackMediaId()
     if (article.slug === 'inside-community-action-day' && mediaDocs['community-project.png']) {
       coverImageId = mediaDocs['community-project.png'].id
+    } else if (article.slug === 'why-young-leaders-need-practice' && mediaDocs['leadership-workshop.png']) {
+      coverImageId = mediaDocs['leadership-workshop.png'].id
+    } else if (article.slug === 'new-chapter-year-global-mission-bangkok-mindset' && mediaDocs['hero-community.png']) {
+      coverImageId = mediaDocs['hero-community.png'].id
     } else if (mediaDocs['hero-community.png']) {
       coverImageId = mediaDocs['hero-community.png'].id
     }
@@ -571,6 +616,15 @@ async function run() {
       siteName: 'JCI Bangkok',
       currentYearTheme: seedBoardYears[0]?.theme || 'Lead forward, build local trust.',
       footerText: '© 2026 JCI Bangkok. All Rights Reserved.',
+      logo: mediaDocs['logo-ribbon.png']?.id || mediaDocs['footer-logo.png']?.id || getFallbackMediaId(),
+      homeHeroImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      aboutCoverImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      membershipCoverImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      homePathway1: mediaDocs['pathway-leadership.jpg']?.id,
+      homePathway2: mediaDocs['pathway-business.jpg']?.id,
+      homePathway3: mediaDocs['pathway-international.jpg']?.id,
+      homePathway4: mediaDocs['pathway-community.jpg']?.id,
+      memberStoryFallback: mediaDocs['member-story.png']?.id,
     },
   })
 
@@ -581,6 +635,15 @@ async function run() {
       siteName: TRANSLATIONS['JCI Bangkok'] || 'JCI Bangkok',
       currentYearTheme: TRANSLATIONS[seedBoardYears[0]?.theme || 'Lead forward, build local trust.'] || (seedBoardYears[0]?.theme || 'Lead forward, build local trust.'),
       footerText: TRANSLATIONS['© 2026 JCI Bangkok. All Rights Reserved.'] || '© 2026 JCI Bangkok. All Rights Reserved.',
+      logo: mediaDocs['logo-ribbon.png']?.id || mediaDocs['footer-logo.png']?.id || getFallbackMediaId(),
+      homeHeroImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      aboutCoverImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      membershipCoverImage: mediaDocs['hero-cover.jpg']?.id || mediaDocs['hero-community.png']?.id,
+      homePathway1: mediaDocs['pathway-leadership.jpg']?.id,
+      homePathway2: mediaDocs['pathway-business.jpg']?.id,
+      homePathway3: mediaDocs['pathway-international.jpg']?.id,
+      homePathway4: mediaDocs['pathway-community.jpg']?.id,
+      memberStoryFallback: mediaDocs['member-story.png']?.id,
     },
   })
   console.log('Global Site Settings updated.')
