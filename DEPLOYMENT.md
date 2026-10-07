@@ -26,7 +26,7 @@ Configure the following environment variables on your deployment platform:
 | :--- | :--- | :--- |
 | `DATABASE_URI` | Connection string to your PostgreSQL instance | `postgresql://user:pass@host:5432/db` |
 | `PAYLOAD_SECRET` | Secure random string used for Payload authentication | Generate with `openssl rand -hex 32` |
-| `NEXT_PUBLIC_SERVER_URL` | Full public URL of the deployed application | `https://jcibangkok.org` |
+| `NEXT_PUBLIC_SERVER_URL` | Full public URL of the deployed application | `https://www.jcibangkok.org` |
 
 ### S3 Media Uploads (Required for Vercel/Serverless/Cloudflare R2)
 When deploying on serverless architectures with read-only filesystems, Payload is configured to upload media directly to S3-compatible storage if the following variables are present:
@@ -58,7 +58,7 @@ When deploying on serverless architectures with read-only filesystems, Payload i
      {
        "AllowedHeaders": ["*"],
        "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
-       "AllowedOrigins": ["https://jcibangkok.org", "http://localhost:3000"],
+       "AllowedOrigins": ["https://www.jcibangkok.org", "http://localhost:3000"],
        "ExposeHeaders": []
      }
    ]
@@ -87,3 +87,7 @@ Verify compile step locally before pushing:
 npm run build
 ```
 This performs static pre-rendering, type checking, and creates optimized JavaScript bundles.
+
+## SEO release checks
+
+Set `NEXT_PUBLIC_SERVER_URL=https://www.jcibangkok.org` to keep canonical URLs, social previews and sitemap URLs consistent. After deployment, run `npm run check:seo -- https://www.jcibangkok.org`, submit `/sitemap.xml` in Google Search Console, and validate representative detail pages in the Rich Results Test. See [the SEO assessment](docs/SEO-ASSESSMENT.md) for the baseline and remaining content/performance work.

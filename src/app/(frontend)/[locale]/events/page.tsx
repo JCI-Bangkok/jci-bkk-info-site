@@ -1,3 +1,4 @@
+import { staticMetadata } from '@/lib/seo'
 import Link from 'next/link'
 import { getActivities } from '@/lib/activity-data'
 import { PaginatedGrid } from '@/components/paginated-grid'
@@ -8,7 +9,7 @@ export const revalidate = 300
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return { title: locale === 'th' ? 'กิจกรรม' : 'Events' }
+  return staticMetadata(locale, 'events')
 }
 
 export default async function EventsPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -39,6 +40,12 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
       <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
         <h2 className="mb-5 text-2xl font-semibold">{group.title}</h2>
         <PaginatedGrid items={group.items} locale={locale} itemsPerPage={6} />
+        {group.items.length > 6 && <details className="mt-6 rounded-xl border border-[var(--line)] p-5">
+          <summary className="cursor-pointer font-semibold">{locale === 'th' ? 'ดูรายการทั้งหมด' : 'Browse the full archive'}</summary>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {group.items.map(item => <li key={item.id}><Link href={item.href} className="text-[var(--jci-blue)] hover:underline">{item.title}</Link></li>)}
+          </ul>
+        </details>}
       </div>
     </section>)}
     <section className="border-t border-[var(--line)] bg-[var(--paper-soft)]">

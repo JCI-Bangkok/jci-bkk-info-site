@@ -1,3 +1,6 @@
+import { getPublicContent } from '@/lib/public-content'
+import { absoluteUrl, pageMetadata } from '@/lib/seo'
+import { Breadcrumbs, StructuredData, breadcrumbData } from '@/components/structured-data'
 import Image from 'next/image';
 import { mediaUrl } from '@/lib/activity-data';
 import { notFound } from "next/navigation";
@@ -54,7 +57,8 @@ export async function generateStaticParams() {
     const payload = await getPayload({ config: configPromise })
     const result = await payload.find({
       collection: 'events',
-      limit: 100,
+      where: { status: { in: ['upcoming', 'completed', 'cancelled'] } },
+      pagination: false,
     })
     
     const params: { locale: string; slug: string }[] = []
@@ -72,42 +76,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: EventDetailPageProps) {
   const { locale, slug } = await params;
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'events',
-    locale,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-  const event = result.docs[0];
+  const event = await getPublicContent('events', locale, slug);
 
-  if (!event) {
-    return { title: locale === 'th' ? "ไม่พบกิจกรรม" : "Event not found" };
-  }
+  if (!event) notFound();
 
-  return {
-    title: event.title
-  };
+  return pageMetadata(locale, `/events/${encodeURIComponent(slug)}`, event.title, event.shortDescription, mediaUrl(event.coverImage) || undefined);
 }
 
 export default async function EventDetailPage({
   params
 }: EventDetailPageProps) {
   const { locale, slug } = await params;
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'events',
-    locale,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-  const event = result.docs[0];
+  const event = await getPublicContent('events', locale, slug);
 
   if (!event) {
     notFound();
@@ -116,12 +96,16 @@ export default async function EventDetailPage({
   const eventTypeLabels = locale === 'th' ? eventTypeLabelsTh : eventTypeLabelsEn
   const statusLabels = locale === 'th' ? statusLabelsTh : statusLabelsEn
 
+  const path = `/${locale}/events/${encodeURIComponent(slug)}`
   return (
     <>
+      <Breadcrumbs locale={locale} title={event.title} />
+      <StructuredData data={breadcrumbData(locale, `/events/${encodeURIComponent(slug)}`, event.title)} />
+      <StructuredData data={{ '@type': 'Event', name: event.title, description: event.shortDescription, url: absoluteUrl(path), startDate: event.eventDate, ...(event.endDate ? { endDate: event.endDate } : {}), eventStatus: event.status === 'cancelled' ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: event.venue }, image: mediaUrl(event.coverImage) ? [absoluteUrl(mediaUrl(event.coverImage)!)] : undefined, organizer: { '@type': 'Organization', name: 'JCI Bangkok', url: absoluteUrl(`/${locale}`) } }} />
             <div className="relative w-full bg-[#0a1526] text-white overflow-hidden pb-10 min-h-[70vh] flex items-center">
         {event.coverImage && mediaUrl(event.coverImage) && (
           <div className="absolute inset-0 opacity-20 blur-2xl scale-110 pointer-events-none">
-            <Image src={mediaUrl(event.coverImage)!} alt="" fill className="object-cover" />
+            <Image src={mediaUrl(event.coverImage)!} alt="" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
           </div>
         )}
         
@@ -252,7 +236,7 @@ export default async function EventDetailPage({
               if (!url) return null;
               return (
                 <div key={idx} className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden border border-[var(--line)] shadow-lg group bg-[var(--paper-soft)]">
-                  <Image src={url} alt={image.alt || event.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <Image src={url} alt={image.alt || event.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 </div>
               );
             })}
@@ -284,7 +268,7 @@ export default async function EventDetailPage({
                 if (!url) return null;
                 return (
                   <div key={idx} className="relative aspect-square w-full rounded-xl overflow-hidden border border-[var(--line)] shadow-sm group bg-[var(--paper-soft)]">
-                    <Image src={url} alt={image.alt || event.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <Image src={url} alt={image.alt || event.title} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                 );
               })}
@@ -295,3 +279,5 @@ export default async function EventDetailPage({
     </>
   );
 }
+
+export const revalidate = 300

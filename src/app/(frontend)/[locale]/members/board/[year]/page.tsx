@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/seo'
 import { notFound } from "next/navigation";
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
@@ -57,14 +58,12 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: BoardYearPageProps) {
   const { locale, year } = await params;
-  return {
-    title: locale === 'th' ? `คณะกรรมการบริหารปี ${year}` : `Board ${year}`
-  };
+  return pageMetadata(locale, `/members/board/${year}`, locale === 'th' ? `คณะกรรมการบริหารปี ${year}` : `Board of Directors ${year}`, locale === 'th' ? `รู้จักคณะกรรมการบริหาร JCI Bangkok ประจำปี ${year} และทีมงานผู้ขับเคลื่อนกิจกรรมพัฒนาผู้นำและโครงการเพื่อสังคม` : `Meet the JCI Bangkok board of directors for ${year}, the team supporting our chapter leadership programs, events and community projects.`);
 }
 
 export default async function BoardYearPage({ params }: BoardYearPageProps) {
   const { locale, year } = await params;
-  const yearInt = parseInt(year);
+  const yearInt = /^\d{4}$/.test(year) ? Number(year) : NaN;
   
   if (isNaN(yearInt)) {
     notFound();

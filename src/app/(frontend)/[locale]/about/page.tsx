@@ -1,3 +1,4 @@
+import { staticMetadata } from '@/lib/seo'
 import { getDictionary, type Locale } from '@/lib/i18n'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -8,7 +9,7 @@ import { mediaUrl } from '@/lib/media'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return { title: locale === 'th' ? 'เกี่ยวกับเรา' : 'About Us' }
+  return staticMetadata(locale, 'about')
 }
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -21,7 +22,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     <>
       <section className="relative overflow-hidden bg-[var(--jci-black)] text-white border-b border-white/10">
         <div className="absolute inset-0 opacity-20">
-          <Image src={settings?.aboutCoverImage ? (mediaUrl(settings.aboutCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok" fill className="object-cover" />
+          <Image src={settings?.aboutCoverImage ? (mediaUrl(settings.aboutCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--jci-black)] to-transparent" />
         

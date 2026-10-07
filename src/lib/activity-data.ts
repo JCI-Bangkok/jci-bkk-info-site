@@ -29,7 +29,7 @@ export async function getActivities(locale: Locale) {
   const payload = await getPayload({ config })
   const today = bangkokDay(new Date())
   const [events, projects, articles] = await Promise.all([
-    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: 'eventDate', where: { status: { in: ['upcoming', 'completed'] } } }),
+    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: 'eventDate', where: { status: { in: ['upcoming', 'completed', 'cancelled'] } } }),
     payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year' }),
     payload.find({ collection: 'articles', locale, depth: 1, pagination: false, sort: '-publishDate', where: { publishDate: { less_than_equal: new Date().toISOString() } } }),
   ])
@@ -59,7 +59,7 @@ export async function getGalleryPhotos(locale: Locale) {
   const payload = await getPayload({ config })
   const today = bangkokDay(new Date())
   const [events, projects] = await Promise.all([
-    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: '-eventDate', where: { status: { in: ['upcoming', 'completed'] } } }),
+    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: '-eventDate', where: { status: { in: ['upcoming', 'completed', 'cancelled'] } } }),
     payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year' }),
   ])
   const photos: { src: string; alt: string }[] = []

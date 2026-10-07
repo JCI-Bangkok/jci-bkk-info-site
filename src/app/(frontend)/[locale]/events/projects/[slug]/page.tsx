@@ -1,3 +1,6 @@
+import { getPublicContent } from '@/lib/public-content'
+import { absoluteUrl, pageMetadata } from '@/lib/seo'
+import { Breadcrumbs, StructuredData, breadcrumbData } from '@/components/structured-data'
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,42 +54,18 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectDetailPageProps) {
   const { locale, slug } = await params;
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'projects',
-    locale,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-  const project = result.docs[0];
+  const project = await getPublicContent('projects', locale, slug);
 
-  if (!project) {
-    return { title: locale === 'th' ? "ไม่พบโครงการ" : "Project not found" };
-  }
+  if (!project) notFound();
 
-  return {
-    title: project.title
-  };
+  return pageMetadata(locale, `/events/projects/${encodeURIComponent(slug)}`, project.title, project.problemStatement, mediaUrl(project.gallery?.[0]?.image) || undefined);
 }
 
 export default async function ProjectDetailPage({
   params
 }: ProjectDetailPageProps) {
   const { locale, slug } = await params;
-  const payload = await getPayload({ config: configPromise })
-  const result = await payload.find({
-    collection: 'projects',
-    locale,
-    where: {
-      slug: {
-        equals: slug,
-      },
-    },
-  })
-  const project = result.docs[0];
+  const project = await getPublicContent('projects', locale, slug);
 
   if (!project) {
     notFound();
@@ -94,11 +73,15 @@ export default async function ProjectDetailPage({
 
   const categoryLabels = locale === 'th' ? categoryLabelsTh : categoryLabelsEn
 
+  const path = `/${locale}/events/projects/${encodeURIComponent(slug)}`
   return (
     <>
+      <Breadcrumbs locale={locale} title={project.title} />
+      <StructuredData data={breadcrumbData(locale, `/events/projects/${encodeURIComponent(slug)}`, project.title)} />
+      <StructuredData data={{ '@type': 'WebPage', name: project.title, description: project.problemStatement, url: absoluteUrl(path), inLanguage: locale }} />
       <PageIntro
         title={project.title}
-        lead={project.summary}
+        lead={project.problemStatement}
         aside={
           <div className="space-y-3 text-sm text-[var(--muted)]">
             <p className="font-semibold text-[var(--jci-blue)]">
@@ -112,11 +95,11 @@ export default async function ProjectDetailPage({
         <div className="space-y-5">
           {project.gallery && project.gallery.length > 0 ? (
             <div className="relative w-full h-[28rem] rounded-[2rem] overflow-hidden border border-[var(--line)]">
-              {mediaUrl(project.gallery[0].media) && (
+              {mediaUrl(project.gallery[0].image) && (
                 <Image
-                  src={mediaUrl(project.gallery[0].media)!}
+                  src={mediaUrl(project.gallery[0].image)!}
                   alt={project.title}
-                  fill
+                  fill sizes="(max-width: 768px) 100vw, 50vw"
                   priority
                   className="object-cover"
                 />
@@ -128,7 +111,7 @@ export default async function ProjectDetailPage({
               {locale === 'th' ? 'เกี่ยวกับโครงการ' : 'About the Project'}
             </h2>
             <div className="mt-4 text-[var(--muted)] space-y-4 leading-7 text-sm">
-              <RichText content={project.details} />
+              <RichText content={project.activities} />
             </div>
           </article>
         </div>
@@ -143,13 +126,13 @@ export default async function ProjectDetailPage({
                 <p className="text-xs uppercase tracking-wider text-white/70 font-semibold mb-2">
                   {locale === 'th' ? 'กลุ่มผู้ได้รับประโยชน์' : 'Beneficiaries'}
                 </p>
-                <p className="text-lg font-medium">{project.beneficiaries}</p>
+                <p className="text-lg font-medium">{project.targetBeneficiaries}</p>
               </div>
               <div className="border-t border-white/20 pt-6">
                 <p className="text-xs uppercase tracking-wider text-white/70 font-semibold mb-2">
                   {locale === 'th' ? 'ผลกระทบเชิงบวก' : 'Key Impact'}
                 </p>
-                <p className="text-lg font-medium">{project.impact}</p>
+                <div className="[&_*]:!text-white"><RichText content={project.outcomes} /></div>
               </div>
             </div>
           </article>
@@ -175,3 +158,5 @@ export default async function ProjectDetailPage({
     </>
   );
 }
+
+export const revalidate = 300

@@ -1,0 +1,434 @@
+[
+  {
+    "path": "/en",
+    "status": 200,
+    "final_url": "http://localhost:3100/en",
+    "content_type": "text/html; charset=utf-8",
+    "title": "Young Leaders, Networking & Community Impact | JCI Bangkok",
+    "description": "Join JCI Bangkok, a local chapter of JCI Thailand. Develop leadership skills, connect with young professionals and take part in community projects in Bangkok.",
+    "canonical": "https://www.jcibangkok.org/en",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en",
+      "th": "https://www.jcibangkok.org/th",
+      "x-default": "https://www.jcibangkok.org/en"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.jcibangkok.org/#organization",
+            "name": "JCI Bangkok",
+            "url": "https://www.jcibangkok.org/en",
+            "logo": "https://www.jcibangkok.org/brand/footer-logo.png",
+            "description": "A Bangkok community where young people build leadership through real projects, meaningful connections, and action that matters.",
+            "parentOrganization": {
+              "@type": "Organization",
+              "name": "JCI Thailand"
+            },
+            "sameAs": []
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.jcibangkok.org/#website",
+            "name": "JCI Bangkok",
+            "url": "https://www.jcibangkok.org/",
+            "inLanguage": [
+              "en",
+              "th"
+            ],
+            "publisher": {
+              "@id": "https://www.jcibangkok.org/#organization"
+            }
+          }
+        ]
+      }
+    ],
+    "images": 19,
+    "missing_alt": 0,
+    "links": 36,
+    "html_bytes": 141052
+  },
+  {
+    "path": "/en/about",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/about",
+    "content_type": "text/html; charset=utf-8",
+    "title": "About Our Bangkok Leadership Community | JCI Bangkok",
+    "description": "Learn about JCI Bangkok and our mission to develop young leaders through leadership training, business networking, international cooperation and community action.",
+    "canonical": "https://www.jcibangkok.org/en/about",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/about",
+      "th": "https://www.jcibangkok.org/th/about",
+      "x-default": "https://www.jcibangkok.org/en/about"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 3,
+    "missing_alt": 0,
+    "links": 21,
+    "html_bytes": 45576
+  },
+  {
+    "path": "/en/events",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/events",
+    "content_type": "text/html; charset=utf-8",
+    "title": "Bangkok Events, Workshops & Chapter Updates | JCI Bangkok",
+    "description": "Explore JCI Bangkok events, leadership workshops, business networking, community projects and chapter news. Find dates, venues and registration details.",
+    "canonical": "https://www.jcibangkok.org/en/events",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/events",
+      "th": "https://www.jcibangkok.org/th/events",
+      "x-default": "https://www.jcibangkok.org/en/events"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 11,
+    "missing_alt": 0,
+    "links": 50,
+    "html_bytes": 80628
+  },
+  {
+    "path": "/en/members",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/members",
+    "content_type": "text/html; charset=utf-8",
+    "title": "Members & Board of Directors | JCI Bangkok",
+    "description": "Meet the JCI Bangkok board of directors and read member stories. Discover the people behind our leadership programs and community projects.",
+    "canonical": "https://www.jcibangkok.org/en/members",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/members",
+      "th": "https://www.jcibangkok.org/th/members",
+      "x-default": "https://www.jcibangkok.org/en/members"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 24,
+    "missing_alt": 0,
+    "links": 21,
+    "html_bytes": 96929
+  },
+  {
+    "path": "/en/membership",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/membership",
+    "content_type": "text/html; charset=utf-8",
+    "title": "Join Our Young Leaders Community | JCI Bangkok",
+    "description": "Become a JCI Bangkok member. Explore leadership development, business networking, international connections and opportunities to contribute to community projects.",
+    "canonical": "https://www.jcibangkok.org/en/membership",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/membership",
+      "th": "https://www.jcibangkok.org/th/membership",
+      "x-default": "https://www.jcibangkok.org/en/membership"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 3,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 53000
+  },
+  {
+    "path": "/en/contact",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/contact",
+    "content_type": "text/html; charset=utf-8",
+    "title": "Contact & Partnership Enquiries | JCI Bangkok",
+    "description": "Contact JCI Bangkok about membership, events, volunteering and partnerships. Connect with our team to get involved in leadership and community initiatives.",
+    "canonical": "https://www.jcibangkok.org/en/contact",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/contact",
+      "th": "https://www.jcibangkok.org/th/contact",
+      "x-default": "https://www.jcibangkok.org/en/contact"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 2,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 35263
+  },
+  {
+    "path": "/en/photobomb",
+    "status": 200,
+    "final_url": "http://localhost:3100/en/photobomb",
+    "content_type": "text/html; charset=utf-8",
+    "title": "PhotoBomb: Event & Community Photo Gallery | JCI Bangkok",
+    "description": "Explore photos from JCI Bangkok events and community projects. See members in action through our chapter photo gallery.",
+    "canonical": "https://www.jcibangkok.org/en/photobomb",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/photobomb",
+      "th": "https://www.jcibangkok.org/th/photobomb",
+      "x-default": "https://www.jcibangkok.org/en/photobomb"
+    },
+    "lang": "en",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 4,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 42496
+  },
+  {
+    "path": "/th",
+    "status": 200,
+    "final_url": "http://localhost:3100/th",
+    "content_type": "text/html; charset=utf-8",
+    "title": "เครือข่ายผู้นำรุ่นใหม่และกิจกรรมเพื่อสังคม | JCI Bangkok",
+    "description": "ร่วมกับ JCI Bangkok เครือข่ายผู้นำรุ่นใหม่ในกรุงเทพฯ พัฒนาทักษะความเป็นผู้นำ สร้างเครือข่ายธุรกิจ และร่วมโครงการเพื่อชุมชนภายใต้ JCI Thailand",
+    "canonical": "https://www.jcibangkok.org/th",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en",
+      "th": "https://www.jcibangkok.org/th",
+      "x-default": "https://www.jcibangkok.org/en"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://www.jcibangkok.org/#organization",
+            "name": "JCI Bangkok",
+            "url": "https://www.jcibangkok.org/th",
+            "logo": "https://www.jcibangkok.org/brand/footer-logo.png",
+            "description": "ชุมชนคนรุ่นใหม่ในกรุงเทพฯ ที่มุ่งมั่นเสริมสร้างทักษะความเป็นผู้นำผ่านโครงการที่ลงมือทำจริง เครือข่ายที่หลากหลาย และการลงมือปฏิบัติที่มีเป้าหมายชัดเจน",
+            "parentOrganization": {
+              "@type": "Organization",
+              "name": "JCI Thailand"
+            },
+            "sameAs": []
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://www.jcibangkok.org/#website",
+            "name": "JCI Bangkok",
+            "url": "https://www.jcibangkok.org/",
+            "inLanguage": [
+              "en",
+              "th"
+            ],
+            "publisher": {
+              "@id": "https://www.jcibangkok.org/#organization"
+            }
+          }
+        ]
+      }
+    ],
+    "images": 19,
+    "missing_alt": 0,
+    "links": 36,
+    "html_bytes": 154385
+  },
+  {
+    "path": "/th/about",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/about",
+    "content_type": "text/html; charset=utf-8",
+    "title": "เกี่ยวกับเครือข่ายผู้นำรุ่นใหม่ในกรุงเทพฯ | JCI Bangkok",
+    "description": "รู้จัก JCI Bangkok และพันธกิจในการพัฒนาผู้นำรุ่นใหม่ ผ่านการฝึกอบรม เครือข่ายธุรกิจ ความร่วมมือนานาชาติ และกิจกรรมเพื่อสังคม",
+    "canonical": "https://www.jcibangkok.org/th/about",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/about",
+      "th": "https://www.jcibangkok.org/th/about",
+      "x-default": "https://www.jcibangkok.org/en/about"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 3,
+    "missing_alt": 0,
+    "links": 21,
+    "html_bytes": 51425
+  },
+  {
+    "path": "/th/events",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/events",
+    "content_type": "text/html; charset=utf-8",
+    "title": "กิจกรรม อบรม และข่าวสารในกรุงเทพฯ | JCI Bangkok",
+    "description": "ติดตามกิจกรรม JCI Bangkok การอบรมผู้นำ เครือข่ายธุรกิจ โครงการเพื่อสังคม และข่าวสาร พร้อมรายละเอียดวันเวลา สถานที่ และการสมัครเข้าร่วม",
+    "canonical": "https://www.jcibangkok.org/th/events",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/events",
+      "th": "https://www.jcibangkok.org/th/events",
+      "x-default": "https://www.jcibangkok.org/en/events"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 11,
+    "missing_alt": 0,
+    "links": 50,
+    "html_bytes": 90520
+  },
+  {
+    "path": "/th/members",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/members",
+    "content_type": "text/html; charset=utf-8",
+    "title": "สมาชิกและคณะกรรมการบริหาร | JCI Bangkok",
+    "description": "รู้จักคณะกรรมการบริหาร JCI Bangkok และเรื่องราวสมาชิก ผู้ร่วมขับเคลื่อนการพัฒนาผู้นำรุ่นใหม่และโครงการเพื่อชุมชน",
+    "canonical": "https://www.jcibangkok.org/th/members",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/members",
+      "th": "https://www.jcibangkok.org/th/members",
+      "x-default": "https://www.jcibangkok.org/en/members"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 24,
+    "missing_alt": 0,
+    "links": 21,
+    "html_bytes": 102188
+  },
+  {
+    "path": "/th/membership",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/membership",
+    "content_type": "text/html; charset=utf-8",
+    "title": "สมัครสมาชิกเครือข่ายผู้นำรุ่นใหม่ | JCI Bangkok",
+    "description": "สมัครสมาชิก JCI Bangkok เพื่อพัฒนาความเป็นผู้นำ สร้างเครือข่ายธุรกิจ เชื่อมต่อเพื่อนนานาชาติ และร่วมสร้างผลกระทบเชิงบวกให้ชุมชน",
+    "canonical": "https://www.jcibangkok.org/th/membership",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/membership",
+      "th": "https://www.jcibangkok.org/th/membership",
+      "x-default": "https://www.jcibangkok.org/en/membership"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 3,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 62697
+  },
+  {
+    "path": "/th/contact",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/contact",
+    "content_type": "text/html; charset=utf-8",
+    "title": "ติดต่อและร่วมเป็นพันธมิตร | JCI Bangkok",
+    "description": "ติดต่อ JCI Bangkok เพื่อสอบถามการสมัครสมาชิก กิจกรรม การเป็นอาสาสมัคร และความร่วมมือกับพันธมิตรเพื่อพัฒนาผู้นำและชุมชน",
+    "canonical": "https://www.jcibangkok.org/th/contact",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/contact",
+      "th": "https://www.jcibangkok.org/th/contact",
+      "x-default": "https://www.jcibangkok.org/en/contact"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 2,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 39485
+  },
+  {
+    "path": "/th/photobomb",
+    "status": 200,
+    "final_url": "http://localhost:3100/th/photobomb",
+    "content_type": "text/html; charset=utf-8",
+    "title": "PhotoBomb: ภาพกิจกรรมและโครงการเพื่อสังคม | JCI Bangkok",
+    "description": "ชมภาพกิจกรรมและโครงการเพื่อชุมชนของ JCI Bangkok พบกับบรรยากาศการทำงานร่วมกันและการมีส่วนร่วมของสมาชิก",
+    "canonical": "https://www.jcibangkok.org/th/photobomb",
+    "hreflang": {
+      "en": "https://www.jcibangkok.org/en/photobomb",
+      "th": "https://www.jcibangkok.org/th/photobomb",
+      "x-default": "https://www.jcibangkok.org/en/photobomb"
+    },
+    "lang": "th",
+    "h1_count": 1,
+    "og_image": "https://www.jcibangkok.org/images/home/hero-cover.jpg",
+    "robots": null,
+    "schemas": [],
+    "images": 4,
+    "missing_alt": 0,
+    "links": 18,
+    "html_bytes": 45723
+  },
+  {
+    "path": "/robots.txt",
+    "status": 200,
+    "final_url": "http://localhost:3100/robots.txt",
+    "content_type": "text/plain",
+    "title": "",
+    "description": null,
+    "canonical": null,
+    "hreflang": {},
+    "lang": null,
+    "h1_count": 0,
+    "og_image": null,
+    "robots": null,
+    "schemas": [],
+    "images": 0,
+    "missing_alt": 0,
+    "links": 0,
+    "html_bytes": 105
+  },
+  {
+    "path": "/sitemap.xml",
+    "status": 200,
+    "final_url": "http://localhost:3100/sitemap.xml",
+    "content_type": "application/xml",
+    "title": "",
+    "description": null,
+    "canonical": null,
+    "hreflang": {},
+    "lang": null,
+    "h1_count": 0,
+    "og_image": null,
+    "robots": null,
+    "schemas": [],
+    "images": 0,
+    "missing_alt": 0,
+    "links": 0,
+    "html_bytes": 3800
+  },
+  {
+    "path": "/zz/about",
+    "status": 404
+  },
+  {
+    "path": "/en/events/nonexistent-seo-audit",
+    "status": 404
+  }
+]

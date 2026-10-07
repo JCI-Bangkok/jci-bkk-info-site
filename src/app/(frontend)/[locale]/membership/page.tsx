@@ -1,3 +1,4 @@
+import { staticMetadata } from '@/lib/seo'
 import { MembershipForm } from "./membership-form";
 import { CtaBanner } from "@/components/cta-banner";
 import { getDictionary, Locale } from "@/lib/i18n";
@@ -6,9 +7,6 @@ import configPromise from '@/payload.config'
 import Image from "next/image";
 import { mediaUrl } from "@/lib/media";
 
-export const metadata = {
-  title: "Membership",
-};
 
 const benefitsEn = [
   "Hands-on practice leading projects and managing diverse teams.",
@@ -92,7 +90,7 @@ export default async function MembershipPage({ params }: PageProps) {
             {/* Image/Pitch Side */}
             <div className="relative p-8 lg:p-12 flex flex-col justify-between overflow-hidden bg-[#0c2340]">
               <div className="absolute inset-0 opacity-40">
-                <Image src={settings?.membershipCoverImage ? (mediaUrl(settings.membershipCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok Members" fill className="object-cover" />
+                <Image src={settings?.membershipCoverImage ? (mediaUrl(settings.membershipCoverImage) || "/images/home/hero-cover.jpg") : "/images/home/hero-cover.jpg"} alt="JCI Bangkok Members" fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-[#061121] via-[#0c2340]/80 to-transparent" />
               
@@ -215,4 +213,9 @@ export default async function MembershipPage({ params }: PageProps) {
       />
     </div>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  return staticMetadata(locale, 'membership')
 }
