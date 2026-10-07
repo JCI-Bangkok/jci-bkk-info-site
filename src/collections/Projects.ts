@@ -1,17 +1,24 @@
-﻿import type { CollectionConfig } from 'payload'
+import { validateSingleSlug } from '@/lib/seo-model'
+import { editorialTabs } from '@/fields/seo'
+import { canEditContent, canReadContent } from './hooks/editorial'
+import type { CollectionConfig } from 'payload'
 import { revalidateProject, revalidateDeleteProject } from './hooks/revalidate'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
+  versions: { maxPerDoc: 25 },
+  access: { read: canReadContent({ status: { equals: 'published' } }), create: canEditContent, update: canEditContent, delete: canEditContent },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'year', 'category'],
+    group: 'Website content',
+    defaultColumns: ['title', 'status', 'year', 'category'],
   },
   hooks: {
     afterChange: [revalidateProject],
     afterDelete: [revalidateDeleteProject],
   },
-  fields: [
+  fields: editorialTabs([
+    { name: 'status', label: 'Publication status', type: 'select', defaultValue: 'draft', required: true, options: [{ label: 'Draft', value: 'draft' }, { label: 'Published', value: 'published' }], admin: { position: 'sidebar', description: 'Draft content is visible only to signed-in editors.' } },
     {
       name: 'title',
       type: 'text',
@@ -21,6 +28,7 @@ export const Projects: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      validate: validateSingleSlug,
       required: true,
       unique: true,
       admin: {
@@ -135,5 +143,5 @@ export const Projects: CollectionConfig = {
       type: 'text',
       localized: true,
     },
-  ],
+  ]),
 }

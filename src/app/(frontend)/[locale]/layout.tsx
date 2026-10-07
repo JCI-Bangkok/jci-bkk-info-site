@@ -1,3 +1,4 @@
+import { siteOrigin, validLocale } from '@/lib/seo';
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Kanit } from "next/font/google";
@@ -44,12 +45,13 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const dict = getDictionary(locale as Locale);
+  const dict = getDictionary(validLocale(locale));
   return {
     title: {
       default: dict.nav.home + " | JCI Bangkok",
       template: `%s | JCI Bangkok`
     },
+    metadataBase: new URL(siteOrigin()),
     description: dict.home.heroSub
   };
 }
@@ -62,6 +64,7 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+  validLocale(locale);
   
   return (
     <html

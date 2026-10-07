@@ -1,9 +1,9 @@
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getGalleryPhotos } from '@/lib/activity-data'
 import type { Locale } from '@/lib/i18n'
 
-export const metadata = { title: 'PhotoBomb' }
 export const revalidate = 300
 
 // Deterministic pseudo-random based on index
@@ -119,4 +119,9 @@ export default async function PhotoBombPage({ params }: { params: Promise<{ loca
       </div>
     </section>
   )
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  return cmsStaticMetadata(locale, 'photobomb')
 }

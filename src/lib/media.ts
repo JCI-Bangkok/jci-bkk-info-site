@@ -12,7 +12,7 @@ const S3_BUCKET = cleanEnv(process.env.S3_BUCKET, 'jci-bkk-media')
 export function mediaUrl(media: unknown): string | undefined {
   if (media && typeof media === 'object' && 'url' in media && typeof (media as { url: unknown }).url === 'string') {
     const rawUrl = (media as { url: string }).url
-    if (rawUrl.startsWith('/api/media/file/')) {
+    if (rawUrl.startsWith('/api/media/file/') && process.env.S3_ENABLED !== 'false') {
       const filename = rawUrl.replace('/api/media/file/', '')
       return `${S3_ENDPOINT}/${S3_BUCKET}/${filename}`
     }
