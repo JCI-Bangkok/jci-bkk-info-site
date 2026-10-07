@@ -1,71 +1,8 @@
-﻿import React from 'react'
+import { RichText as PayloadRichText } from '@payloadcms/richtext-lexical/react'
+import type { SerializedEditorState } from 'lexical'
 
-interface LexicalNode {
-  type: string
-  text?: string
-  format?: number
-  tag?: string
-  listType?: string
-  children?: LexicalNode[]
+// Preserve CMS links, nested lists, line breaks and formatting in server-rendered HTML.
+export function RichText({ content }: { content: SerializedEditorState | null | undefined }) {
+  if (!content?.root?.children?.length) return null
+  return <PayloadRichText data={content} className="space-y-4 text-base leading-7 text-[var(--muted)] [&_a]:text-[var(--jci-blue)] [&_a]:underline [&_h2]:mt-6 [&_h2]:text-2xl [&_h3]:mt-5 [&_h3]:text-xl [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5" />
 }
-
-interface LexicalRoot {
-  children?: LexicalNode[]
-}
-
-interface LexicalContent {
-  root?: LexicalRoot
-}
-
-export function RichText({ content }: { content: LexicalContent | null | undefined }) {
-  if (!content || !content.root || !content.root.children) return null
-
-  return (
-    <div className="space-y-4">
-      {content.root.children.map((node, index) => {
-        if (node.type === 'paragraph') {
-          return (
-            <p key={index} className="text-base leading-7 text-[var(--muted)]">
-              {node.children?.map((child, i) => {
-                if (child.type === 'text') {
-                  const text = child.text || ''
-                  const format = child.format || 0
-                  if (format & 1) { // bold
-                    return <strong key={i}>{text}</strong>
-                  }
-                  if (format & 2) { // italic
-                    return <em key={i}>{text}</em>
-                  }
-                  return <span key={i}>{text}</span>
-                }
-                return null
-              })}
-            </p>
-          )
-        }
-        if (node.type === 'heading') {
-          const Tag = (node.tag || 'h3') as keyof React.JSX.IntrinsicElements
-          return (
-            <Tag key={index} className="font-display text-2xl mt-6 text-[var(--ink)]">
-              {node.children?.map((child) => child.text).join('')}
-            </Tag>
-          )
-        }
-        if (node.type === 'list') {
-          const Tag = node.listType === 'number' ? 'ol' : 'ul'
-          return (
-            <Tag key={index} className="list-disc pl-5 space-y-2 text-base leading-7 text-[var(--muted)]">
-              {node.children?.map((li, i) => (
-                <li key={i}>
-                  {li.children?.map((child) => child.text).join('')}
-                </li>
-              ))}
-            </Tag>
-          )
-        }
-        return null
-      })}
-    </div>
-  )
-}
-

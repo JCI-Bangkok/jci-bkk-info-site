@@ -39,14 +39,20 @@ function cleanEndpoint(val?: string, fallback = ''): string {
   return cleaned.replace(/\/+$/, '')
 }
 
+function requiredPayloadSecret(): string {
+  const secret = cleanEnv(process.env.PAYLOAD_SECRET)
+  if (!secret) throw new Error('Set PAYLOAD_SECRET in the server environment before starting the CMS.')
+  return secret
+}
+
 // Configure S3 plugin for full asset CRUD (Upload, Read, Update, Delete)
 const s3Bucket = cleanEnv(process.env.S3_BUCKET, 'jci-bkk-media')
-const s3AccessKeyId = cleanEnv(process.env.S3_ACCESS_KEY_ID, 'nak_live_7bd1883eb92c439a9ee2bc819815eb94')
-const s3SecretAccessKey = cleanEnv(process.env.S3_SECRET_ACCESS_KEY, 'nsk_live_90d007d4e32aa3772d25713d7cddb0f34f85cfc04183760b5a4e956d07efd3c6')
+const s3AccessKeyId = cleanEnv(process.env.S3_ACCESS_KEY_ID)
+const s3SecretAccessKey = cleanEnv(process.env.S3_SECRET_ACCESS_KEY)
 const s3Region = cleanEnv(process.env.S3_REGION, 'ap-southeast-1')
 const s3Endpoint = cleanEndpoint(process.env.S3_ENDPOINT, 'https://br-lucky-fog-aol9sf27.storage.c-2.ap-southeast-1.aws.neon.tech')
 
-if (s3Bucket && s3AccessKeyId && s3SecretAccessKey) {
+if (process.env.S3_ENABLED !== 'false' && s3Bucket && s3AccessKeyId && s3SecretAccessKey) {
   plugins.push(
     s3Storage({
       collections: {
@@ -95,8 +101,9 @@ export default buildConfig({
     SiteSettings,
   ],
   editor: lexicalEditor({}),
-  secret: cleanEnv(process.env.PAYLOAD_SECRET, 'supersecretpayloadsessionkeyforjcibangkokwebsite2026'),
+  secret: requiredPayloadSecret(),
   db: postgresAdapter({
+    push: false,
     pool: {
       connectionString: cleanEnv(process.env.DATABASE_URI),
     },

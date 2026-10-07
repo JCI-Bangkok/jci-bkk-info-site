@@ -1,3 +1,6 @@
+import { absoluteUrl } from '@/lib/seo'
+import { StructuredData } from '@/components/structured-data'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
@@ -96,6 +99,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
   return (
     <>
+      <StructuredData data={{ '@graph': [
+        { '@type': 'Organization', '@id': absoluteUrl('/#organization'), name: 'JCI Bangkok', url: absoluteUrl(`/${locale}`), logo: absoluteUrl('/brand/footer-logo.png'), description: dict.home.heroSub, parentOrganization: { '@type': 'Organization', name: 'JCI Thailand' }, sameAs: Object.values(settings.socialLinks || {}).filter((value): value is string => typeof value === 'string' && /^https?:\/\//.test(value)) },
+        { '@type': 'WebSite', '@id': absoluteUrl('/#website'), name: 'JCI Bangkok', url: absoluteUrl('/'), inLanguage: ['en', 'th'], publisher: { '@id': absoluteUrl('/#organization') } },
+      ] }} />
       <section className="hero-grid relative overflow-hidden border-b border-[var(--line)] bg-white">
         <div className="hero-ripple" aria-hidden="true" />
         <div className="mx-auto grid min-h-[38rem] w-full max-w-[90rem] lg:grid-cols-[0.84fr_1.16fr]">
@@ -118,7 +125,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
               <Link href={`/${locale}/membership`} className="button-primary group">
                 {dict.nav.becomeMember} <Arrow className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link href={`/${locale}/contact#about`} className="button-secondary group">
+              <Link href={`/${locale}/about`} className="button-secondary group">
                 {dict.home.explore} <Arrow className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
             </div>
@@ -275,4 +282,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       </section>
     </>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  return cmsStaticMetadata(locale, 'home')
 }

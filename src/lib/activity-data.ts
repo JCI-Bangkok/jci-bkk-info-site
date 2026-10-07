@@ -1,3 +1,4 @@
+import { publishedArticles, publishedProjects, publicEvents } from './public-content'
 import { bangkokDay } from './calendar-date'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
@@ -29,9 +30,9 @@ export async function getActivities(locale: Locale) {
   const payload = await getPayload({ config })
   const today = bangkokDay(new Date())
   const [events, projects, articles] = await Promise.all([
-    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: 'eventDate', where: { status: { in: ['upcoming', 'completed'] } } }),
-    payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year' }),
-    payload.find({ collection: 'articles', locale, depth: 1, pagination: false, sort: '-publishDate', where: { publishDate: { less_than_equal: new Date().toISOString() } } }),
+    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: 'eventDate', where: publicEvents }),
+    payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year', where: publishedProjects }),
+    payload.find({ collection: 'articles', locale, depth: 1, pagination: false, sort: '-publishDate', where: publishedArticles() }),
   ])
   const activities: Activity[] = [
     ...events.docs.map(event => ({
@@ -59,8 +60,8 @@ export async function getGalleryPhotos(locale: Locale) {
   const payload = await getPayload({ config })
   const today = bangkokDay(new Date())
   const [events, projects] = await Promise.all([
-    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: '-eventDate', where: { status: { in: ['upcoming', 'completed'] } } }),
-    payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year' }),
+    payload.find({ collection: 'events', locale, depth: 1, pagination: false, sort: '-eventDate', where: publicEvents }),
+    payload.find({ collection: 'projects', locale, depth: 1, pagination: false, sort: '-year', where: publishedProjects }),
   ])
   const photos: { src: string; alt: string }[] = []
   for (const event of events.docs.filter(event => !isUpcoming({ status: event.status, eventDate: event.eventDate, endDate: event.endDate }, today))) {

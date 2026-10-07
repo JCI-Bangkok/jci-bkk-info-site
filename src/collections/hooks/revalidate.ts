@@ -3,7 +3,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'paylo
 const locales = ['en', 'th']
 
 // Helper to safely revalidate paths
-const safeRevalidate = async (path: string) => {
+export const safeRevalidate = async (path: string) => {
   try {
     const { revalidatePath } = await import('next/cache')
     revalidatePath(path)
@@ -35,6 +35,7 @@ export const revalidateProject: CollectionAfterChangeHook = async ({ doc, previo
       await safeRevalidate(`/${locale}/events/projects/${previousDoc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }
@@ -48,6 +49,7 @@ export const revalidateDeleteProject: CollectionAfterDeleteHook = async ({ doc }
       await safeRevalidate(`/${locale}/events/projects/${doc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }
@@ -65,6 +67,7 @@ export const revalidateEvent: CollectionAfterChangeHook = async ({ doc, previous
       await safeRevalidate(`/${locale}/events/${previousDoc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }
@@ -78,6 +81,7 @@ export const revalidateDeleteEvent: CollectionAfterDeleteHook = async ({ doc }) 
       await safeRevalidate(`/${locale}/events/${doc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }
@@ -95,6 +99,7 @@ export const revalidateArticle: CollectionAfterChangeHook = async ({ doc, previo
       await safeRevalidate(`/${locale}/events/updates/${previousDoc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }
@@ -108,6 +113,7 @@ export const revalidateDeleteArticle: CollectionAfterDeleteHook = async ({ doc }
       await safeRevalidate(`/${locale}/events/updates/${doc.slug}`)
     }
   }
+  await safeRevalidate('/sitemap.xml')
   await safeRevalidate('/')
   return doc
 }

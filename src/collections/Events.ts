@@ -1,17 +1,23 @@
+import { validateSingleSlug } from '@/lib/seo-model'
+import { editorialTabs } from '@/fields/seo'
+import { canEditContent, canReadContent } from './hooks/editorial'
 import type { CollectionConfig } from 'payload'
 import { revalidateEvent, revalidateDeleteEvent } from './hooks/revalidate'
 
 export const Events: CollectionConfig = {
   slug: 'events',
+  versions: { maxPerDoc: 25 },
+  access: { read: canReadContent({ status: { not_equals: 'draft' } }), create: canEditContent, update: canEditContent, delete: canEditContent },
   admin: {
     useAsTitle: 'title',
+    group: 'Website content',
     defaultColumns: ['title', 'eventDate', 'eventType', 'status'],
   },
   hooks: {
     afterChange: [revalidateEvent],
     afterDelete: [revalidateDeleteEvent],
   },
-  fields: [
+  fields: editorialTabs([
     {
       name: 'title',
       type: 'text',
@@ -21,6 +27,7 @@ export const Events: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      validate: validateSingleSlug,
       required: true,
       unique: true,
       admin: {
@@ -71,6 +78,15 @@ export const Events: CollectionConfig = {
       required: true,
       localized: true,
     },
+    { name: 'venueAddress', label: 'Venue postal address', type: 'group', admin: { description: 'Provide an accurate address for event structured data. No address is inferred from the venue name.' }, fields: [
+      { name: 'streetAddress', type: 'text', localized: true },
+      { name: 'addressLocality', label: 'City / locality', type: 'text', localized: true },
+      { name: 'addressRegion', label: 'Region / province', type: 'text', localized: true },
+      { name: 'postalCode', type: 'text' },
+      { name: 'addressCountry', label: 'Country code', type: 'text', maxLength: 2, admin: { description: 'Two-letter country code, for example TH.' }, validate: (value: unknown) => !value || /^[A-Z]{2}$/.test(String(value)) ? true : 'Use a two-letter uppercase country code.' },
+    ] },
+    { name: 'offerPrice', label: 'Structured ticket price', type: 'number', min: 0, admin: { description: 'Optional numeric price for search engines. Enter 0 only when registration is truly free. The existing Price field remains the visitor-facing text.' } },
+    { name: 'offerCurrency', label: 'Ticket currency', type: 'text', defaultValue: 'THB', maxLength: 3, validate: (value: unknown) => !value || /^[A-Z]{3}$/.test(String(value)) ? true : 'Use a three-letter uppercase currency code.' },
     {
       name: 'googleMapsLink',
       type: 'text',
@@ -175,5 +191,5 @@ export const Events: CollectionConfig = {
         position: 'sidebar',
       },
     },
-  ],
+  ]),
 }
