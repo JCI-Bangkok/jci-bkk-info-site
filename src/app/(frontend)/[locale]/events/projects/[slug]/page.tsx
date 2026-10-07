@@ -1,5 +1,6 @@
-import { getPublicContent } from '@/lib/public-content'
-import { absoluteUrl, pageMetadata } from '@/lib/seo'
+import { contentMetadata } from '@/lib/cms-seo'
+import { publishedProjects, getPublicContent } from '@/lib/public-content'
+import { absoluteUrl } from '@/lib/seo'
 import { Breadcrumbs, StructuredData, breadcrumbData } from '@/components/structured-data'
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -36,7 +37,8 @@ export async function generateStaticParams() {
     const payload = await getPayload({ config: configPromise })
     const result = await payload.find({
       collection: 'projects',
-      limit: 100,
+      where: publishedProjects,
+      pagination: false,
     })
     
     const params: { locale: string; slug: string }[] = []
@@ -58,7 +60,7 @@ export async function generateMetadata({ params }: ProjectDetailPageProps) {
 
   if (!project) notFound();
 
-  return pageMetadata(locale, `/events/projects/${encodeURIComponent(slug)}`, project.title, project.problemStatement, mediaUrl(project.gallery?.[0]?.image) || undefined);
+  return contentMetadata(locale, `/events/projects/${encodeURIComponent(slug)}`, project, { title: project.title, description: project.problemStatement, image: mediaUrl(project.gallery?.[0]?.image) });
 }
 
 export default async function ProjectDetailPage({

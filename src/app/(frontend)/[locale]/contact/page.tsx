@@ -1,4 +1,4 @@
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { ContactForm } from './contact-form'
@@ -7,7 +7,7 @@ import { getDictionary, type Locale } from '@/lib/i18n'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'contact')
+  return cmsStaticMetadata(locale, 'contact')
 }
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {

@@ -91,3 +91,7 @@ This performs static pre-rendering, type checking, and creates optimized JavaScr
 ## SEO release checks
 
 Set `NEXT_PUBLIC_SERVER_URL=https://www.jcibangkok.org` to keep canonical URLs, social previews and sitemap URLs consistent. After deployment, run `npm run check:seo -- https://www.jcibangkok.org`, submit `/sitemap.xml` in Google Search Console, and validate representative detail pages in the Rich Results Test. See [the SEO assessment](docs/SEO-ASSESSMENT.md) for the baseline and remaining content/performance work.
+
+## CMS SEO editor release
+
+The SEO editor upgrade adds database fields and revision tables. Automatic schema push is disabled. Review [the CMS SEO upgrade guide](docs/CMS-SEO-UPGRADE.md), apply `npm run cms:migrate` to a verified staging database first, then use a controlled production migration and release. Do not run CMS fixture tests against production.

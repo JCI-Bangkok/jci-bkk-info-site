@@ -1,4 +1,4 @@
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import { MembershipForm } from "./membership-form";
 import { CtaBanner } from "@/components/cta-banner";
 import { getDictionary, Locale } from "@/lib/i18n";
@@ -217,5 +217,5 @@ export default async function MembershipPage({ params }: PageProps) {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'membership')
+  return cmsStaticMetadata(locale, 'membership')
 }

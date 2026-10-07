@@ -1,17 +1,24 @@
+import { validateSingleSlug } from '@/lib/seo-model'
+import { editorialTabs } from '@/fields/seo'
+import { canEditContent, canReadPublishedArticles } from './hooks/editorial'
 import type { CollectionConfig } from 'payload'
 import { revalidateArticle, revalidateDeleteArticle } from './hooks/revalidate'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
+  versions: { maxPerDoc: 25 },
+  access: { read: canReadPublishedArticles, create: canEditContent, update: canEditContent, delete: canEditContent },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'category', 'publishDate'],
+    group: 'Website content',
+    defaultColumns: ['title', 'status', 'category', 'publishDate'],
   },
   hooks: {
     afterChange: [revalidateArticle],
     afterDelete: [revalidateDeleteArticle],
   },
-  fields: [
+  fields: editorialTabs([
+    { name: 'status', label: 'Publication status', type: 'select', defaultValue: 'draft', required: true, options: [{ label: 'Draft', value: 'draft' }, { label: 'Published', value: 'published' }], admin: { position: 'sidebar', description: 'Draft content is visible only to signed-in editors.' } },
     {
       name: 'title',
       type: 'text',
@@ -21,6 +28,7 @@ export const Articles: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      validate: validateSingleSlug,
       required: true,
       unique: true,
       admin: {
@@ -33,6 +41,7 @@ export const Articles: CollectionConfig = {
       relationTo: 'users',
       required: true,
     },
+    { name: 'authorDisplayName', label: 'Public author name', type: 'text', localized: true, admin: { description: 'Approved public byline. Falls back to JCI Bangkok Team; administrative email addresses are never displayed.' } },
     {
       name: 'category',
       type: 'select',
@@ -89,16 +98,6 @@ export const Articles: CollectionConfig = {
       },
     },
     {
-      name: 'seoTitle',
-      type: 'text',
-      localized: true,
-    },
-    {
-      name: 'seoDescription',
-      type: 'textarea',
-      localized: true,
-    },
-    {
       name: 'relatedEvent',
       type: 'relationship',
       relationTo: 'events',
@@ -108,5 +107,5 @@ export const Articles: CollectionConfig = {
       type: 'relationship',
       relationTo: 'projects',
     },
-  ],
+  ]),
 }

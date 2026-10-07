@@ -1,4 +1,4 @@
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getPayload } from 'payload'
@@ -8,7 +8,7 @@ import { getDictionary, type Locale } from '@/lib/i18n'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'members')
+  return cmsStaticMetadata(locale, 'members')
 }
 
 export default async function MembersPage({ params, searchParams }: {

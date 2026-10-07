@@ -1,4 +1,4 @@
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Link from 'next/link'
 import { getActivities } from '@/lib/activity-data'
 import { PaginatedGrid } from '@/components/paginated-grid'
@@ -9,7 +9,7 @@ export const revalidate = 300
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'events')
+  return cmsStaticMetadata(locale, 'events')
 }
 
 export default async function EventsPage({ params }: { params: Promise<{ locale: Locale }> }) {

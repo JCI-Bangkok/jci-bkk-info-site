@@ -1,6 +1,6 @@
 import { absoluteUrl } from '@/lib/seo'
 import { StructuredData } from '@/components/structured-data'
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
@@ -286,5 +286,5 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'home')
+  return cmsStaticMetadata(locale, 'home')
 }

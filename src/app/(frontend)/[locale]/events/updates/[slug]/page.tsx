@@ -1,6 +1,7 @@
+import { contentMetadata } from '@/lib/cms-seo'
 import { mediaUrl } from '@/lib/media'
-import { getPublicContent } from '@/lib/public-content'
-import { absoluteUrl, pageMetadata } from '@/lib/seo'
+import { publishedArticles, getPublicContent } from '@/lib/public-content'
+import { absoluteUrl } from '@/lib/seo'
 import { Breadcrumbs, StructuredData, breadcrumbData } from '@/components/structured-data'
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -44,7 +45,7 @@ export async function generateStaticParams() {
     const payload = await getPayload({ config: configPromise })
     const result = await payload.find({
       collection: 'articles',
-      where: { publishDate: { less_than_equal: new Date().toISOString() } },
+      where: publishedArticles(),
       pagination: false,
     })
 
@@ -67,7 +68,7 @@ export async function generateMetadata({ params }: ArticleDetailPageProps) {
 
   if (!article) notFound();
 
-  return pageMetadata(locale, `/events/updates/${encodeURIComponent(slug)}`, article.seoTitle || article.title, article.seoDescription || article.summary, mediaUrl(article.coverImage) || undefined, { publishedTime: article.publishDate, modifiedTime: article.updatedAt });
+  return contentMetadata(locale, `/events/updates/${encodeURIComponent(slug)}`, article, { title: article.title, description: article.summary, image: mediaUrl(article.coverImage) }, { publishedTime: article.publishDate, modifiedTime: article.updatedAt });
 }
 
 export default async function ArticleDetailPage({
@@ -81,7 +82,7 @@ export default async function ArticleDetailPage({
   }
 
   const defaultAuthor = locale === 'th' ? 'ทีมงาน JCI Bangkok' : 'JCI Bangkok Team'
-  const authorName = defaultAuthor;
+  const authorName = article.authorDisplayName || defaultAuthor;
 
   // Get cover image details if populated
   const coverImage = article.coverImage && typeof article.coverImage === 'object'
@@ -95,7 +96,7 @@ export default async function ArticleDetailPage({
     <>
       <Breadcrumbs locale={locale} title={article.title} />
       <StructuredData data={breadcrumbData(locale, `/events/updates/${encodeURIComponent(slug)}`, article.title)} />
-      <StructuredData data={{ '@type': 'Article', headline: article.title, description: article.summary, url: absoluteUrl(path), mainEntityOfPage: absoluteUrl(path), datePublished: article.publishDate, dateModified: article.updatedAt, inLanguage: locale, image: mediaUrl(article.coverImage) ? [absoluteUrl(mediaUrl(article.coverImage)!)] : undefined, author: { '@type': 'Organization', name: defaultAuthor }, publisher: { '@type': 'Organization', name: 'JCI Bangkok', logo: { '@type': 'ImageObject', url: absoluteUrl('/brand/footer-logo.png') } } }} />
+      <StructuredData data={{ '@type': 'Article', headline: article.title, description: article.summary, url: absoluteUrl(path), mainEntityOfPage: absoluteUrl(path), datePublished: article.publishDate, dateModified: article.updatedAt, inLanguage: locale, image: mediaUrl(article.coverImage) ? [absoluteUrl(mediaUrl(article.coverImage)!)] : undefined, author: article.authorDisplayName ? { '@type': 'Person', name: article.authorDisplayName } : { '@type': 'Organization', name: defaultAuthor }, publisher: { '@type': 'Organization', name: 'JCI Bangkok', logo: { '@type': 'ImageObject', url: absoluteUrl('/brand/footer-logo.png') } } }} />
       <PageIntro
         title={article.title}
         lead={article.summary}

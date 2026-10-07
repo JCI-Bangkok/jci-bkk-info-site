@@ -1,4 +1,4 @@
-import { staticMetadata } from '@/lib/seo'
+import { cmsStaticMetadata } from '@/lib/cms-seo'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getGalleryPhotos } from '@/lib/activity-data'
@@ -123,5 +123,5 @@ export default async function PhotoBombPage({ params }: { params: Promise<{ loca
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
-  return staticMetadata(locale, 'photobomb')
+  return cmsStaticMetadata(locale, 'photobomb')
 }

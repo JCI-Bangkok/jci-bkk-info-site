@@ -1,8 +1,12 @@
+import { canEditContent, revalidateSettings } from '@/collections/hooks/editorial'
 import type { GlobalConfig } from 'payload'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
+  access: { read: () => true, update: canEditContent },
+  hooks: { afterChange: [revalidateSettings] },
   fields: [
+    { name: 'defaultSocialImage', label: 'Default social sharing image', type: 'upload', relationTo: 'media', localized: true, admin: { description: 'Fallback image for SEO/social cards when content has no image. Recommended 1200 × 630.' } },
     {
       name: 'siteName',
       type: 'text',

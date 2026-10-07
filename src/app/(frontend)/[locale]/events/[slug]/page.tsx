@@ -1,5 +1,6 @@
+import { contentMetadata } from '@/lib/cms-seo'
 import { getPublicContent } from '@/lib/public-content'
-import { absoluteUrl, pageMetadata } from '@/lib/seo'
+import { absoluteUrl } from '@/lib/seo'
 import { Breadcrumbs, StructuredData, breadcrumbData } from '@/components/structured-data'
 import Image from 'next/image';
 import { mediaUrl } from '@/lib/activity-data';
@@ -80,7 +81,7 @@ export async function generateMetadata({ params }: EventDetailPageProps) {
 
   if (!event) notFound();
 
-  return pageMetadata(locale, `/events/${encodeURIComponent(slug)}`, event.title, event.shortDescription, mediaUrl(event.coverImage) || undefined);
+  return contentMetadata(locale, `/events/${encodeURIComponent(slug)}`, event, { title: event.title, description: event.shortDescription, image: mediaUrl(event.coverImage) });
 }
 
 export default async function EventDetailPage({
@@ -101,7 +102,7 @@ export default async function EventDetailPage({
     <>
       <Breadcrumbs locale={locale} title={event.title} />
       <StructuredData data={breadcrumbData(locale, `/events/${encodeURIComponent(slug)}`, event.title)} />
-      <StructuredData data={{ '@type': 'Event', name: event.title, description: event.shortDescription, url: absoluteUrl(path), startDate: event.eventDate, ...(event.endDate ? { endDate: event.endDate } : {}), eventStatus: event.status === 'cancelled' ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: event.venue }, image: mediaUrl(event.coverImage) ? [absoluteUrl(mediaUrl(event.coverImage)!)] : undefined, organizer: { '@type': 'Organization', name: 'JCI Bangkok', url: absoluteUrl(`/${locale}`) } }} />
+      <StructuredData data={{ '@type': 'Event', name: event.title, description: event.shortDescription, url: absoluteUrl(path), startDate: event.eventDate, ...(event.endDate ? { endDate: event.endDate } : {}), eventStatus: event.status === 'cancelled' ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled', location: { '@type': 'Place', name: event.venue, ...(event.venueAddress?.streetAddress && event.venueAddress?.addressLocality && event.venueAddress?.addressCountry ? { address: { '@type': 'PostalAddress', ...event.venueAddress } } : {}) }, ...(typeof event.offerPrice === 'number' && event.offerCurrency && event.registrationLink && event.status === 'upcoming' && bangkokDay(event.endDate || event.eventDate) >= bangkokDay(new Date()) ? { offers: { '@type': 'Offer', price: event.offerPrice, priceCurrency: event.offerCurrency, url: event.registrationLink } } : {}), image: mediaUrl(event.coverImage) ? [absoluteUrl(mediaUrl(event.coverImage)!)] : undefined, organizer: { '@type': 'Organization', name: 'JCI Bangkok', url: absoluteUrl(`/${locale}`) } }} />
             <div className="relative w-full bg-[#0a1526] text-white overflow-hidden pb-10 min-h-[70vh] flex items-center">
         {event.coverImage && mediaUrl(event.coverImage) && (
           <div className="absolute inset-0 opacity-20 blur-2xl scale-110 pointer-events-none">

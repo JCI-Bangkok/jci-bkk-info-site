@@ -1,4 +1,4 @@
-import { pageMetadata } from '@/lib/seo'
+import { contentMetadata, getCmsPage } from '@/lib/cms-seo'
 import { notFound } from "next/navigation";
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
@@ -58,7 +58,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: BoardYearPageProps) {
   const { locale, year } = await params;
-  return pageMetadata(locale, `/members/board/${year}`, locale === 'th' ? `คณะกรรมการบริหารปี ${year}` : `Board of Directors ${year}`, locale === 'th' ? `รู้จักคณะกรรมการบริหาร JCI Bangkok ประจำปี ${year} และทีมงานผู้ขับเคลื่อนกิจกรรมพัฒนาผู้นำและโครงการเพื่อสังคม` : `Meet the JCI Bangkok board of directors for ${year}, the team supporting our chapter leadership programs, events and community projects.`);
+  const source = await getCmsPage(locale, `members/board/${year}`)
+  return contentMetadata(locale, `/members/board/${year}`, source || {}, { title: locale === 'th' ? `คณะกรรมการบริหารปี ${year}` : `Board of Directors ${year}`, description: locale === 'th' ? `รู้จักคณะกรรมการบริหาร JCI Bangkok ประจำปี ${year} และทีมงานผู้ขับเคลื่อนกิจกรรมพัฒนาผู้นำและโครงการเพื่อสังคม` : `Meet the JCI Bangkok board of directors for ${year}, the team supporting our chapter leadership programs, events and community projects.` });
 }
 
 export default async function BoardYearPage({ params }: BoardYearPageProps) {

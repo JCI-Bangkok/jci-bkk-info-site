@@ -2,6 +2,8 @@
 
 Assessment date: 7 October 2026 (Bangkok). Preferred production origin: **https://www.jcibangkok.org**.
 
+> Follow-up: the CMS SEO editor upgrade now requires an explicit database migration. See [CMS SEO upgrade and release guide](CMS-SEO-UPGRADE.md). The snapshots and validation counts below describe the initial technical SEO patch.
+
 ## Outcome and scope
 
 The codebase now provides a stronger technical SEO foundation for the English and Thai site. Changes are implemented locally and have not been deployed. The live baseline was captured before these changes; it remains the reference for the existing production site.
@@ -59,7 +61,7 @@ To check a deployment, run `npm run check:seo -- https://www.jcibangkok.org` and
 ### Before and immediately after deployment
 
 1. Set **NEXT_PUBLIC_SERVER_URL=https://www.jcibangkok.org** in the hosting environment. This is the canonical production origin, including when testing previews. The repository fallback uses this value, but an existing environment override can change it.
-2. Deploy the verified code through the site's normal release process. These changes require no new CMS fields or schema migration.
+2. Deploy the verified code through the site's normal release process. The initial technical SEO patch required no schema changes; the subsequent CMS SEO editor upgrade requires the migrations documented in the CMS release guide.
 3. Re-run the checks against production. Verify crawl files, a Thai page, event/article/project pages, response headers and image accessibility.
 4. Verify a Search Console domain property, submit **https://www.jcibangkok.org/sitemap.xml**, and inspect representative English and Thai URLs. Check actual indexed canonical choices and language versions after recrawling.
 5. Test representative pages in Google's Rich Results Test. Event records currently store a venue name and map link, but no structured postal-address fields. Supply a verified venue address before expecting full event rich-result eligibility. Offers, prices and availability should be added only when supported by accurate source data; they were not invented here. [Google event markup requirements](https://developers.google.com/search/docs/appearance/structured-data/event).
