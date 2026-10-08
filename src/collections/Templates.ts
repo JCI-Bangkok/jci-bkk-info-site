@@ -1,12 +1,22 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, CollectionBeforeChangeHook } from 'payload'
 import { canEditContent } from './hooks/editorial'
 import { validatePuckLayout, revalidateBuilderTemplates } from './hooks/builder'
+
+const syncVersionStatus: CollectionBeforeChangeHook = async ({ data }) => {
+  if (data._status) {
+    data.status = data._status
+  } else if (data.status) {
+    data._status = data.status
+  }
+  return data
+}
 
 export const Templates: CollectionConfig = {
   slug: 'templates',
   admin: {
     useAsTitle: 'title',
     group: 'Design',
+    defaultColumns: ['title', 'type', '_status', 'updatedAt'],
   },
   access: {
     read: () => true,
@@ -17,7 +27,7 @@ export const Templates: CollectionConfig = {
   versions: {
     drafts: true,
   },
-  hooks: { beforeChange: [validatePuckLayout], afterChange: [revalidateBuilderTemplates], afterDelete: [revalidateBuilderTemplates] },
+  hooks: { beforeChange: [syncVersionStatus, validatePuckLayout], afterChange: [revalidateBuilderTemplates], afterDelete: [revalidateBuilderTemplates] },
   fields: [
     {
       name: 'title',
@@ -60,7 +70,7 @@ export const Templates: CollectionConfig = {
         { label: 'Published', value: 'published' },
       ],
       admin: {
-        position: 'sidebar',
+        hidden: true,
       },
     },
     {

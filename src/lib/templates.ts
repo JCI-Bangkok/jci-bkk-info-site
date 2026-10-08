@@ -1,4 +1,4 @@
-import { getPayload } from 'payload'
+import { getPayload, type Where } from 'payload'
 import configPromise from '@/payload.config'
 
 export type TemplateType =
@@ -25,7 +25,12 @@ export async function getPublishedTemplate(type: TemplateType) {
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
     collection: 'templates',
-    where: { type: { equals: type }, status: { equals: 'published' } },
+    where: {
+      and: [
+        { type: { equals: type } },
+        { or: [{ _status: { equals: 'published' } }, { status: { equals: 'published' } }] },
+      ],
+    } as Where,
     limit: 1,
     sort: '-updatedAt',
   })

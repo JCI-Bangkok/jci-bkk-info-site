@@ -173,6 +173,7 @@ export default async function BuilderPage({
       initialData={initialData}
       previewData={previewData}
       enabledPlugins={builderSettings.enabledPlugins}
+      initialStatus={(page as any)?._status || (page as any)?.status || 'draft'}
     />
   );
 }

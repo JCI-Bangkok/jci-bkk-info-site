@@ -20,17 +20,31 @@ const preservePageRoute: CollectionBeforeChangeHook = async ({ data, originalDoc
   return data
 }
 
+const syncVersionStatus: CollectionBeforeChangeHook = async ({ data }) => {
+  if (data._status) {
+    data.status = data._status
+  } else if (data.status) {
+    data._status = data.status
+  }
+  return data
+}
+
 export const Pages: CollectionConfig = {
   slug: 'pages',
   versions: { maxPerDoc: 25, drafts: true },
-  access: { read: canReadContent({ status: { equals: 'published' } }), create: canEditContent, update: canEditContent, delete: canEditContent },
+  access: {
+    read: canReadContent({ or: [{ _status: { equals: 'published' } }, { status: { equals: 'published' } }] }),
+    create: canEditContent,
+    update: canEditContent,
+    delete: canEditContent,
+  },
   admin: {
     useAsTitle: 'title',
     group: 'Website content',
     description: 'Manage every website page, its URL, SEO, publication status and visual layout here. Changing a URL keeps the previous address as a permanent redirect.',
-    defaultColumns: ['title', 'pageType', 'slug', 'status'],
+    defaultColumns: ['title', 'pageType', 'slug', '_status'],
   },
-  hooks: { beforeChange: [preservePageRoute, validatePuckLayout], afterChange: [revalidatePage], afterDelete: [revalidateDeletedPage] },
+  hooks: { beforeChange: [syncVersionStatus, preservePageRoute, validatePuckLayout], afterChange: [revalidatePage], afterDelete: [revalidateDeletedPage] },
   fields: editorialTabs([
     {
       name: 'title',
@@ -76,7 +90,7 @@ export const Pages: CollectionConfig = {
         { label: 'Published', value: 'published' },
       ],
       admin: {
-        position: 'sidebar',
+        hidden: true,
       },
     },
     {

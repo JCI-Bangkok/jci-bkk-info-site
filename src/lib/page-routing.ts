@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { getPayload } from 'payload'
+import { getPayload, type Where } from 'payload'
 import configPromise from '@/payload.config'
 import { validLocale } from './seo'
 import { permanentRedirect } from 'next/navigation'
@@ -19,16 +19,17 @@ export function localizedPagePath(locale: string, slug: string) {
 
 export const getManagedPageByType = cache(async (locale: string, pageType: BuiltinPageType) => {
   const payload = await getPayload({ config: configPromise })
+  const publishedFilter: Where = { or: [{ _status: { equals: 'published' } }, { status: { equals: 'published' } }] } as Where
   const result = await payload.find({
     collection: 'pages', locale: validLocale(locale), depth: 1, limit: 1,
-    where: { and: [{ pageType: { equals: pageType } }, { status: { equals: 'published' } }] },
+    where: { and: [{ pageType: { equals: pageType } }, publishedFilter] },
   })
   // Backward compatibility before the migration/seed has run.
   if (result.docs[0]) return result.docs[0]
   const legacy = legacyPagePaths[pageType] || 'home'
   const fallback = await payload.find({
     collection: 'pages', locale: validLocale(locale), depth: 1, limit: 1,
-    where: { and: [{ slug: { equals: legacy || 'home' } }, { status: { equals: 'published' } }] },
+    where: { and: [{ slug: { equals: legacy || 'home' } }, publishedFilter] },
   })
   return fallback.docs[0]
 })
@@ -37,7 +38,7 @@ export const resolveManagedPage = cache(async (locale: string, slug: string) => 
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
     collection: 'pages', locale: validLocale(locale), depth: 1, pagination: false,
-    where: { status: { equals: 'published' } },
+    where: { or: [{ _status: { equals: 'published' } }, { status: { equals: 'published' } }] } as Where,
   })
   const current = result.docs.find(page => page.slug === slug)
   if (current) return { page: current, redirect: false }

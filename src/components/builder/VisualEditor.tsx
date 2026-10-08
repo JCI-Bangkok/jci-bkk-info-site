@@ -19,9 +19,18 @@ type Props = {
   initialData: Data;
   previewData?: any;
   enabledPlugins?: string[];
+  initialStatus?: 'draft' | 'published';
 };
 
-type Actions = { saveDraft: (data: Data) => Promise<void>; publishLive: (data: Data) => Promise<void>; isPublishing: boolean; onPluginsChange: (ids: string[]) => void };
+type Actions = {
+  saveDraft: (data: Data) => Promise<void>;
+  publishLive: (data: Data) => Promise<void>;
+  isPublishing: boolean;
+  onPluginsChange: (ids: string[]) => void;
+  versionStatus: 'draft' | 'published';
+  collectionSlug: string;
+  pageId: string;
+};
 const EditorActionsContext = createContext<Actions | null>(null);
 function HeaderActionsFromContext() {
   const actions = useContext(EditorActionsContext);
@@ -29,8 +38,9 @@ function HeaderActionsFromContext() {
 }
 const editorOverrides = { headerActions: () => <HeaderActionsFromContext /> };
 
-export default function VisualEditor({ pageId, collectionSlug, initialData, previewData, enabledPlugins }: Props) {
+export default function VisualEditor({ pageId, collectionSlug, initialData, previewData, enabledPlugins, initialStatus }: Props) {
   const [isPublishing, setIsPublishing] = useState(false);
+  const [versionStatus, setVersionStatus] = useState<'draft' | 'published'>(initialStatus || 'draft');
   const [activePlugins, setActivePlugins] = useState(enabledPlugins || enabledPluginIds());
   const initialTypes = [...new Set([...initialData.content, ...Object.values(initialData.zones || {}).flat()].map(block => block.type))].sort().join('|');
   const [observedTypes, setObservedTypes] = useState(initialTypes);
@@ -43,7 +53,7 @@ export default function VisualEditor({ pageId, collectionSlug, initialData, prev
     return { ...data, root: { ...data.root, props: { ...data.root.props, pluginVersions: { ...previous, ...Object.fromEntries(builderPlugins.filter(plugin => activePlugins.includes(plugin.id)).map(plugin => [plugin.id, plugin.version])) } } } };
   }
 
-  // Saves a safe draft (doesn't push to production if drafts are enabled)
+  // Saves a version in 'draft' state
   async function saveDraft(data: Data) {
     const response = await fetch(
       `/api/${encodeURIComponent(collectionSlug)}/${encodeURIComponent(pageId)}?draft=true`,
@@ -55,6 +65,8 @@ export default function VisualEditor({ pageId, collectionSlug, initialData, prev
         },
         body: JSON.stringify({
           puckLayout: versionedData(data),
+          _status: "draft",
+          status: "draft",
         }),
       }
     );
@@ -62,9 +74,10 @@ export default function VisualEditor({ pageId, collectionSlug, initialData, prev
     if (!response.ok) {
       throw new Error("Unable to save draft");
     }
+    setVersionStatus("draft");
   }
 
-  // Hard publish (pushes to production directly)
+  // Promotes/saves a version in 'published' state
   async function publishLive(data: Data) {
     setIsPublishing(true);
     try {
@@ -78,8 +91,8 @@ export default function VisualEditor({ pageId, collectionSlug, initialData, prev
           },
           body: JSON.stringify({
             puckLayout: versionedData(data),
-            _status: "published", // Force Payload to mark it as published
-            status: "published",  // Also update your custom status field
+            _status: "published",
+            status: "published",
           }),
         }
       );
@@ -87,13 +100,14 @@ export default function VisualEditor({ pageId, collectionSlug, initialData, prev
       if (!response.ok) {
         throw new Error("Unable to publish");
       }
+      setVersionStatus("published");
     } finally {
       setIsPublishing(false);
     }
   }
 
   return (
-    <BuilderRuntimeProvider enabledPlugins={activePlugins}><DocumentContext.Provider value={previewData || null}><EditorActionsContext.Provider value={{ saveDraft, publishLive, isPublishing, onPluginsChange: setActivePlugins }}>
+    <BuilderRuntimeProvider enabledPlugins={activePlugins}><DocumentContext.Provider value={previewData || null}><EditorActionsContext.Provider value={{ saveDraft, publishLive, isPublishing, onPluginsChange: setActivePlugins, versionStatus, collectionSlug, pageId }}>
       <Puck
         config={config}
         plugins={editorPlugins}
@@ -112,11 +126,17 @@ function CustomHeaderActions({
   publishLive,
   isPublishing,
   onPluginsChange,
+  versionStatus,
+  collectionSlug,
+  pageId,
 }: {
-  saveDraft: (data: Data) => void;
-  publishLive: (data: Data) => void;
+  saveDraft: (data: Data) => Promise<void>;
+  publishLive: (data: Data) => Promise<void>;
   isPublishing: boolean;
   onPluginsChange: (ids: string[]) => void;
+  versionStatus: 'draft' | 'published';
+  collectionSlug: string;
+  pageId: string;
 }) {
   const { appState } = usePuck();
   const [saving, setSaving] = useState(false);
@@ -137,6 +157,28 @@ function CustomHeaderActions({
     <>
       <BuilderTools onPluginsChange={onPluginsChange} />
       <LayoutCodeEditor />
+      <div className="flex items-center gap-2">
+        <span
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${
+            versionStatus === 'published'
+              ? 'bg-emerald-50 text-emerald-700 border-emerald-300'
+              : 'bg-amber-50 text-amber-700 border-amber-300'
+          }`}
+          title={`Current version state: ${versionStatus}`}
+        >
+          <span className={`w-1.5 h-1.5 rounded-full ${versionStatus === 'published' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+          {versionStatus === 'published' ? 'Published' : 'Draft'}
+        </span>
+        <a
+          href={`/admin/collections/${encodeURIComponent(collectionSlug)}/${encodeURIComponent(pageId)}/versions`}
+          target="_blank"
+          rel="noreferrer"
+          title="View version history and restored revisions in Payload Admin"
+          className="text-xs font-medium text-slate-500 hover:text-slate-800 underline underline-offset-2"
+        >
+          Revisions
+        </a>
+      </div>
       <span role="status" className="text-xs text-slate-600">{message}</span>
       <button
         onClick={() => runSave(false)}
