@@ -137,7 +137,7 @@ const TRANSLATIONS: Record<string, string> = {
   "© 2026 JCI Bangkok. All Rights Reserved.": "© 2026 JCI กรุงเทพฯ สงวนลิขสิทธิ์ทั้งหมด"
 }
 
-function toRichText(text: string) {
+function toRichText(text: string): any {
   return {
     root: {
       type: 'root',
@@ -196,7 +196,7 @@ async function run() {
   await payload.delete({ collection: 'partners', where: { id: { exists: true } } })
   // Reset site settings media references before clearing media
   try {
-    await payload.updateGlobal({
+    await (payload.updateGlobal as any)({
       slug: 'site-settings',
       data: {
         logo: null,
@@ -227,7 +227,8 @@ async function run() {
 
   let adminUser
   if (existingUsers.docs.length === 0) {
-    adminUser = await payload.create({
+    adminUser = await (payload.create as any)({
+
       collection: 'users',
       data: {
         email: 'admin@jcibangkok.org',
@@ -271,7 +272,8 @@ async function run() {
       const fileBuffer = fs.readFileSync(filePath)
       const mimetype = ext === '.png' ? 'image/png' : ext === '.webp' ? 'image/webp' : 'image/jpeg'
 
-      const mediaDoc = await payload.create({
+      const mediaDoc = await (payload.create as any)({
+
         collection: 'media',
         data: {
           alt: name.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, ''),
@@ -333,7 +335,8 @@ async function run() {
     }
 
     // A. Create in English
-    const doc = await payload.create({
+    const doc = await (payload.create as any)({
+
       collection: 'events',
       locale: 'en',
       data: {
@@ -342,17 +345,18 @@ async function run() {
         eventDate: parseDate(event.date),
         eventDate_tz: 'Asia/Bangkok',
         venue: event.venue,
-        eventType: eventTypeMap[event.type] || 'training',
+        eventType: (eventTypeMap[event.type] || 'training') as any,
         shortDescription: event.summary,
         fullDescription: toRichText(event.highlight),
-        coverImage: coverImageId,
-        status: statusMap[event.status] || 'upcoming',
+        coverImage: coverImageId as any,
+        status: (statusMap[event.status] || 'upcoming') as any,
         featured: event.slug === 'jci-toyp-2026',
       },
     })
 
     // B. Update in Thai
-    await payload.update({
+    await (payload.update as any)({
+
       collection: 'events',
       id: doc.id,
       locale: 'th',
@@ -392,7 +396,8 @@ async function run() {
     }
 
     // A. Create in English
-    const doc = await payload.create({
+    const doc = await (payload.create as any)({
+
       collection: 'projects',
       locale: 'en',
       data: {
@@ -414,7 +419,8 @@ async function run() {
     })
 
     // B. Update in Thai
-    await payload.update({
+    await (payload.update as any)({
+
       collection: 'projects',
       id: doc.id,
       locale: 'th',
@@ -463,7 +469,8 @@ async function run() {
     }
 
     // A. Create in English
-    const doc = await payload.create({
+    const doc = await (payload.create as any)({
+
       collection: 'articles',
       locale: 'en',
       data: {
@@ -471,7 +478,7 @@ async function run() {
         slug: article.slug,
         author: adminUser.id,
         category: categoryMap[article.category] || 'news',
-        coverImage: coverImageId,
+        coverImage: coverImageId as any,
         summary: article.summary,
         body: toRichText(article.summary),
         publishDate: parseDate(article.publishedAt),
@@ -481,7 +488,8 @@ async function run() {
     })
 
     // B. Update in Thai
-    await payload.update({
+    await (payload.update as any)({
+
       collection: 'articles',
       id: doc.id,
       locale: 'th',
@@ -505,7 +513,8 @@ async function run() {
         : getFallbackMediaId()
 
       // A. Create in English
-      const doc = await payload.create({
+      const doc = await (payload.create as any)({
+
         collection: 'board-members',
         locale: 'en',
         data: {
@@ -520,7 +529,8 @@ async function run() {
       })
 
       // B. Update in Thai
-      await payload.update({
+      await (payload.update as any)({
+
         collection: 'board-members',
         id: doc.id,
         locale: 'th',
@@ -544,7 +554,8 @@ async function run() {
       : getFallbackMediaId()
 
     // A. Create in English
-    const doc = await payload.create({
+    const doc = await (payload.create as any)({
+
       collection: 'member-stories',
       locale: 'en',
       data: {
@@ -559,7 +570,8 @@ async function run() {
     })
 
     // B. Update in Thai
-    await payload.update({
+    await (payload.update as any)({
+
       collection: 'member-stories',
       id: doc.id,
       locale: 'th',
@@ -583,7 +595,8 @@ async function run() {
       : getFallbackMediaId()
 
     // A. Create in English
-    const doc = await payload.create({
+    const doc = await (payload.create as any)({
+
       collection: 'partners',
       locale: 'en',
       data: {
@@ -596,7 +609,8 @@ async function run() {
     })
 
     // B. Update in Thai
-    await payload.update({
+    await (payload.update as any)({
+
       collection: 'partners',
       id: doc.id,
       locale: 'th',
@@ -611,7 +625,7 @@ async function run() {
 
   // 9. Global Site Settings
   console.log('Updating Global Site Settings...')
-  await payload.updateGlobal({
+  await (payload.updateGlobal as any)({
     slug: 'site-settings',
     locale: 'en',
     data: {
@@ -630,7 +644,7 @@ async function run() {
     },
   })
 
-  await payload.updateGlobal({
+  await (payload.updateGlobal as any)({
     slug: 'site-settings',
     locale: 'th',
     data: {

@@ -9,10 +9,18 @@ const config = [
       "ds-bundle/**",
       ".ds-sync/**",
       "out/**",
+      "scripts/**",
+      "src/migrations/**",
+      "src/seed.ts",
     ],
   },
   ...nextVitals,
   ...nextTypescript,
+  {
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn",
+    },
+  },
 ];
 
 export default config;

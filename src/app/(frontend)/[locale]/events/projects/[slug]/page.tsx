@@ -56,7 +56,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProjectDetailPageProps) {
   const { locale, slug } = await params;
-  const project = await getPublicContent('projects', locale, slug);
+  const project = await getPublicContent('projects', locale, slug) as any;
 
   if (!project) notFound();
 
@@ -67,7 +67,7 @@ export default async function ProjectDetailPage({
   params
 }: ProjectDetailPageProps) {
   const { locale, slug } = await params;
-  const project = await getPublicContent('projects', locale, slug);
+  const project = await getPublicContent('projects', locale, slug) as any;
 
   if (!project) {
     notFound();

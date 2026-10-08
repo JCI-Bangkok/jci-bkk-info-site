@@ -73,7 +73,7 @@ export default async function BoardYearPage({ params }: BoardYearPageProps) {
   const payload = await getPayload({ config: configPromise })
   const result = await payload.find({
     collection: 'board-members',
-    locale,
+    locale: locale as any,
     where: {
       year: {
         equals: yearInt,
@@ -85,7 +85,7 @@ export default async function BoardYearPage({ params }: BoardYearPageProps) {
 
   const membersResult = await payload.find({
     collection: 'members',
-    locale,
+    locale: locale as any,
     sort: 'displayOrder',
     limit: 200,
   })

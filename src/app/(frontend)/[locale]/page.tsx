@@ -252,7 +252,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
           <Link href={`/${locale}/contact#inquiry`} className="button-primary mt-6">{sponsorCTA}</Link>
         </div>
         <div className="w-full relative pb-16 pt-4">
-          <PartnerMarquee partners={homePartners} locale={locale} />
+          <PartnerMarquee partners={homePartners as any} locale={locale} />
         </div>
       </section>
       

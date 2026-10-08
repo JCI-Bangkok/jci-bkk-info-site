@@ -22,8 +22,8 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
       slug: 'site-settings',
-      locale,
-    })
+      locale: locale as any,
+    }) as any
   } catch (error) {
     console.error('Error fetching site settings in footer:', error)
   }

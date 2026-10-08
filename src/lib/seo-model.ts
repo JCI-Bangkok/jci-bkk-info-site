@@ -14,7 +14,6 @@ export type SeoOverrides = {
   excludeFromSitemap?: boolean | null
 }
 export type SeoSource = {
-  [key: string]: unknown
   seo?: SeoOverrides | null
   title?: string | null
   summary?: string | null

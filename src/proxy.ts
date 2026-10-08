@@ -1,4 +1,4 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 const locales = ['en', 'th']
@@ -27,6 +27,11 @@ function getPreferredLocale(request: NextRequest): string {
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Skip /builder paths so the visual editor stays on unlocalized URLs
+  if (pathname.startsWith('/builder')) {
+    return NextResponse.next()
+  }
+
   // Check if pathname starts with a supported locale
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
@@ -45,8 +50,8 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip internal paths (_next), API routes (/api), Payload admin (/admin)
+    // Skip internal paths (_next), API routes (/api), Payload admin (/admin), builder (/builder)
     // and all static files with an extension (containing a dot)
-    '/((?!api|admin|_next/static|_next/image|.*\\..*$).*)',
+    '/((?!api|admin|builder|_next/static|_next/image|.*\\..*$).*)',
   ],
 }

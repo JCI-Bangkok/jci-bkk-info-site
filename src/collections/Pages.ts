@@ -5,7 +5,7 @@ import type { CollectionConfig } from 'payload'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
-  versions: { maxPerDoc: 25 },
+  versions: { maxPerDoc: 25, drafts: true },
   access: { read: canReadContent({ status: { equals: 'published' } }), create: canEditContent, update: canEditContent, delete: canEditContent },
   admin: {
     useAsTitle: 'title',
@@ -42,6 +42,25 @@ export const Pages: CollectionConfig = {
       admin: {
         position: 'sidebar',
       },
+    },
+    {
+      name: 'visualEditorLink',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '@/components/builder/VisualEditorLink',
+        },
+        condition: data => !staticPageKeys.some(key => key === data.slug) && !/^members\/board\/\d{4}$/.test(data.slug || ''),
+      }
+    },
+    {
+      name: 'puckLayout',
+      type: 'json',
+      admin: {
+        condition: data => !staticPageKeys.some(key => key === data.slug) && !/^members\/board\/\d{4}$/.test(data.slug || ''),
+        description: 'Visual layout data managed by the Puck Editor.',
+      }
     },
     {
       name: 'content',
