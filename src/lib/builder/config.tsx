@@ -119,7 +119,7 @@ function LegacyPagePreview({
           <div className="relative w-full">
             <iframe
               title={`Custom ${pageType} design`}
-              sandbox="allow-scripts"
+              sandbox="allow-scripts allow-top-navigation-by-user-activation allow-forms"
               referrerPolicy="no-referrer"
               srcDoc={srcDoc}
               className="w-full border-0 bg-white pointer-events-none"
@@ -138,7 +138,7 @@ function LegacyPagePreview({
     return (
       <iframe
         title={`Custom ${pageType} design`}
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-top-navigation-by-user-activation allow-forms"
         referrerPolicy="no-referrer"
         srcDoc={srcDoc}
         className="w-full border-0 bg-transparent min-h-[80vh]"

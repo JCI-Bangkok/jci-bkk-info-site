@@ -28,7 +28,7 @@ export function DynamicCodePreview({
         title="Dynamic code live preview"
         // Cybersecurity: allow-scripts ONLY. Without allow-same-origin, the iframe is treated as an opaque origin (null),
         // blocking access to parent window, cookies, and local/session storage.
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-top-navigation-by-user-activation allow-forms"
         referrerPolicy="no-referrer"
         srcDoc={codeDocument(normalized, data)}
         style={{ width: '100%', height, border: 0, display: 'block' }}

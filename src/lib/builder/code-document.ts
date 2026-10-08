@@ -90,6 +90,7 @@ export function codeDocument(source: CodeSource, documentData: unknown) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <base target="_top">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com; style-src 'unsafe-inline'; img-src https: data:; font-src https: data:; connect-src 'none'; form-action 'none';">
   <!-- Tailwind CSS & React UMD Runtime -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -112,6 +113,24 @@ export function codeDocument(source: CodeSource, documentData: unknown) {
       background-color: transparent;
     }
     * { box-sizing: border-box; }
+    img { max-width: 100%; display: block; }
+    .aspect-square { aspect-ratio: 1 / 1; }
+    .w-\[7rem\] { width: 7rem; }
+    .w-\[6rem\] { width: 6rem; }
+    .w-\[5rem\] { width: 5rem; }
+    .w-\[4rem\] { width: 4rem; }
+    @media (min-width: 640px) {
+      .sm\:w-\[9rem\] { width: 9rem; }
+      .sm\:w-\[8rem\] { width: 8rem; }
+      .sm\:w-\[7rem\] { width: 7rem; }
+      .sm\:w-\[6rem\] { width: 6rem; }
+    }
+    @media (min-width: 768px) {
+      .md\:w-\[10rem\] { width: 10rem; }
+      .md\:w-\[9rem\] { width: 9rem; }
+      .md\:w-\[8rem\] { width: 8rem; }
+      .md\:w-\[7rem\] { width: 7rem; }
+    }
     ${styles}
   </style>
 </head>
@@ -192,12 +211,37 @@ export function codeDocument(source: CodeSource, documentData: unknown) {
       'react-dom/client': window.ReactDOM,
       'next/link': createSafeModule({}, function Link(props) {
         var p = Object.assign({}, props);
-        return React.createElement('a', Object.assign({ href: p.href || '#' }, p), p.children);
+        var href = p.href || '#';
+        var isAnchor = typeof href === 'string' && href.startsWith('#');
+        var target = isAnchor ? undefined : (p.target || '_top');
+        return React.createElement('a', Object.assign({ target: target }, p, { href: href }), p.children);
       }),
       'next/image': createSafeModule({}, function Image(props) {
         var p = Object.assign({}, props);
         var src = (p.src && (p.src.src || p.src.url)) || p.src || '';
-        return React.createElement('img', Object.assign({}, p, { src: src, alt: p.alt || '' }));
+        var isFill = Boolean(p.fill);
+        delete p.fill;
+        delete p.priority;
+        delete p.sizes;
+        var style = Object.assign({}, p.style);
+        if (isFill) {
+          Object.assign(style, {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: style.objectFit || 'cover'
+          });
+        } else if (!p.width && !p.height) {
+          Object.assign(style, {
+            maxWidth: '100%',
+            height: 'auto'
+          });
+        }
+        return React.createElement('img', Object.assign({}, p, { src: src, alt: p.alt || '', style: style }));
       }),
       'next/navigation': createSafeModule({
         notFound: function() { console.warn('[Preview] notFound called'); },
@@ -232,7 +276,17 @@ export function codeDocument(source: CodeSource, documentData: unknown) {
       }
       if (name.indexOf('activity-data') !== -1 || name.indexOf('media') !== -1) {
         var acts = (window.documentData && (window.documentData.activities || window.documentData.events)) || [];
-        var photos = (window.documentData && window.documentData.photos) || [];
+        var defaultPhotos = [
+          { src: '/images/home/hero-cover.jpg', alt: 'JCI Bangkok' },
+          { src: '/images/home/pathway-leadership.jpg', alt: 'Leadership' },
+          { src: '/images/home/pathway-business.jpg', alt: 'Business' },
+          { src: '/images/home/pathway-international.jpg', alt: 'International' },
+          { src: '/images/home/pathway-community.jpg', alt: 'Community' },
+          { src: '/images/home/member-story.png', alt: 'Members' }
+        ];
+        var photos = (window.documentData && Array.isArray(window.documentData.photos) && window.documentData.photos.length)
+          ? window.documentData.photos
+          : defaultPhotos;
         return createSafeModule({
           getActivities: function() { return Promise.resolve({ activities: acts, today: new Date().toISOString() }); },
           getGalleryPhotos: function() { return Promise.resolve(photos); },
@@ -357,8 +411,19 @@ export function codeDocument(source: CodeSource, documentData: unknown) {
       var d = document.createElement("div");
       d.style.cssText = "background:#fef2f2;border:1px solid #fca5a5;color:#991b1b;padding:12px;margin:12px;border-radius:6px;font-family:monospace;font-size:12px;white-space:pre-wrap;";
       d.textContent = "[Custom Code Error] " + (err && err.message ? err.message : err);
-      document.body.prepend(d);
     }
+
+    // Intercept clicks on links so navigation opens in top window rather than trapped in iframe
+    document.addEventListener('click', function(e) {
+      var el = e.target;
+      while (el && el.tagName !== 'A') el = el.parentElement;
+      if (el && el.tagName === 'A') {
+        var href = el.getAttribute('href');
+        if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+          el.target = '_top';
+        }
+      }
+    }, true);
   </script>
 </body>
 </html>`;
