@@ -20,7 +20,10 @@ export function validateBuilderLayout(value: unknown): asserts value is Data {
       }
       if (block.type === 'DynamicCode') {
         const source = block.props.source;
-        if (!source || ['html', 'css', 'javascript'].some(key => typeof source[key] !== 'string')) throw new Error('DynamicCode needs HTML, CSS, and JavaScript strings in props.source.');
+        if (!source || typeof source !== 'object') throw new Error('DynamicCode needs a props.source object.');
+        for (const key of ['html', 'css', 'javascript', 'typescript'] as const) {
+          if (source[key] !== undefined && typeof source[key] !== 'string') throw new Error(`DynamicCode ${key} source must be a string.`);
+        }
         if (typeof block.props.height !== 'number' || block.props.height < 100 || block.props.height > 2400) throw new Error('DynamicCode height must be between 100 and 2400 pixels.');
       }
     }

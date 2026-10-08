@@ -9,7 +9,7 @@ import React from "react";
 import { DynamicCodeField, DynamicCodePreview } from '@/components/builder/DynamicCode';
 import { CodeEditor } from '@/components/builder/CodeEditor';
 import { LegacyPageField } from '@/components/builder/LegacyPageField';
-import type { CodeSource } from './code-document';
+import { codeDocument, type CodeSource } from './code-document';
 import { StyleControls } from '@/components/builder/StyleControls';
 import { StyledBlock } from '@/components/builder/StyledBlock';
 import { BindingControls } from '@/components/builder/BindingControls';
@@ -82,39 +82,114 @@ function DynamicTitleRenderer({ align }: { align: 'left' | 'center' | 'right' })
   return <h1 style={{ textAlign: align }} className="text-4xl font-bold">{doc?.title || 'Dynamic Title Placeholder'}</h1>;
 }
 
-function LegacyPagePreview({ pageType, visible }: { pageType: string; visible: boolean }) {
+function LegacyPagePreview({
+  pageType,
+  visible,
+  customCode,
+  isEditor = false,
+}: {
+  pageType: string;
+  visible: boolean;
+  customCode?: string;
+  isEditor?: boolean;
+}) {
   const data = useDocumentData();
   if (!visible) return null;
-  if (data?.legacyPages?.[pageType]) return data.legacyPages[pageType];
+
+  const hasCustomCode = Boolean(customCode && typeof customCode === 'string' && customCode.trim());
+
+  if (hasCustomCode) {
+    const srcDoc = codeDocument(
+      { html: '', css: '', javascript: '', typescript: customCode },
+      data
+    );
+
+    if (isEditor) {
+      return (
+        <div className="relative w-full rounded-xl overflow-hidden border border-emerald-300 bg-white shadow-sm my-4">
+          <div className="flex items-center justify-between bg-slate-900 text-white px-4 py-2 text-xs border-b border-slate-800">
+            <span className="font-medium flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Custom TSX Override: <span className="font-mono text-sky-300">{pageType}.tsx</span>
+            </span>
+            <span className="text-slate-400 text-[11px] font-sans">
+              Click to select & configure in Right Menu →
+            </span>
+          </div>
+          <div className="relative w-full">
+            <iframe
+              title={`Custom ${pageType} design`}
+              sandbox="allow-scripts"
+              referrerPolicy="no-referrer"
+              srcDoc={srcDoc}
+              className="w-full border-0 bg-white pointer-events-none"
+              style={{ height: '80vh', minHeight: '600px' }}
+            />
+            {/* Click capture overlay: allows clicks to select the Puck block and open the Right Menu */}
+            <div
+              className="absolute inset-0 cursor-pointer pointer-events-auto"
+              title="Click to select block and open TypeScript editor in Right Menu"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <iframe
+        title={`Custom ${pageType} design`}
+        sandbox="allow-scripts"
+        referrerPolicy="no-referrer"
+        srcDoc={srcDoc}
+        className="w-full border-0 bg-transparent min-h-[80vh]"
+        style={{ width: '100%', minHeight: '80vh', border: 0, display: 'block' }}
+      />
+    );
+  }
+
+  if (!isEditor && data?.legacyPages?.[pageType]) return data.legacyPages[pageType];
+
   const query = new URLSearchParams({ locale: data?.currentLocale === 'th' ? 'th' : 'en' });
   if (data?.slug) query.set('slug', data.slug);
   if (data?.year || data?.activeYear) query.set('year', String(data.year || data.activeYear));
   const previewUrl = `/builder-preview/legacy/${encodeURIComponent(pageType)}?${query}`;
+
+  if (isEditor) {
+    return (
+      <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm my-4">
+        <div className="flex items-center justify-between bg-slate-100 px-4 py-2 text-xs text-slate-600 border-b border-slate-200">
+          <span className="font-medium flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+            Original Page: <span className="font-mono text-blue-700">{pageType}.tsx</span>
+          </span>
+          <span className="text-slate-500 text-[11px] font-sans">
+            Click anywhere to select & configure in Right Menu →
+          </span>
+        </div>
+        <div className="relative w-full">
+          <iframe
+            title={`Original ${pageType} design`}
+            src={previewUrl}
+            className="w-full border-0 bg-white pointer-events-none"
+            style={{ height: '80vh', minHeight: '600px' }}
+          />
+          {/* Click capture overlay: allows clicks to select the Puck block and open the Right Menu */}
+          <div
+            className="absolute inset-0 cursor-pointer pointer-events-auto"
+            title="Click to select block and open TypeScript editor in Right Menu"
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm my-4">
-      <div className="flex items-center justify-between bg-slate-100 px-4 py-2 text-xs text-slate-600 border-b border-slate-200">
-        <span className="font-medium flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-          Original Page: <span className="font-mono text-blue-700">{pageType}.tsx</span>
-        </span>
-        <span className="text-slate-500 text-[11px] font-sans">
-          Click anywhere to select & configure in Right Menu →
-        </span>
-      </div>
-      <div className="relative w-full">
-        <iframe
-          title={`Original ${pageType} design`}
-          src={previewUrl}
-          className="w-full border-0 bg-white pointer-events-none"
-          style={{ height: '80vh', minHeight: '600px' }}
-        />
-        {/* Click capture overlay: allows clicks to select the Puck block and open the Right Menu */}
-        <div
-          className="absolute inset-0 cursor-pointer pointer-events-auto"
-          title="Click to select block and open TypeScript editor in Right Menu"
-        />
-      </div>
-    </div>
+    <iframe
+      title={`Original ${pageType} design`}
+      src={previewUrl}
+      className="w-full border-0 bg-white min-h-[80vh]"
+      style={{ width: '100%', minHeight: '80vh', border: 0, display: 'block' }}
+    />
   );
 }
 
@@ -134,7 +209,7 @@ const coreConfig: Config<Props> = {
         height: { type: 'number', label: 'Preview height (px)', min: 100, max: 2400 },
       },
       defaultProps: { source: { html: '<section><h1>{{title}}</h1><p>Build your dynamic block here.</p></section>', css: 'section { padding: 32px; background: #0c2340; color: white; }', javascript: '' }, height: 480 },
-      render: ({ source, height }) => <DynamicCodePreview source={source} height={height} />,
+      render: ({ source, height, ...rest }: any) => <DynamicCodePreview source={source} height={height} isEditor={rest.isEditor} />,
     },
     Section: {
       fields: {
@@ -473,9 +548,9 @@ export const builderPlugins = [contentPlugin, interactivePlugin, embedsPlugin, c
 
 const bindings: Record<string, string[]> = { Hero: ['title', 'description'], Text: ['content'], Heading: ['text'], Card: ['title', 'description', 'linkLabel', 'href'], Button: ['label', 'href'], Image: ['url', 'alt', 'caption'] };
 
-function EnhancedBlock({ component, props }: { component: ComponentConfig<any>; props: any }) {
+function EnhancedBlock({ component, props, isEditor = false }: { component: ComponentConfig<any>; props: any; isEditor?: boolean }) {
   const data = useDocumentData();
-  const values = { ...props };
+  const values = { ...props, isEditor };
   for (const key of bindings[props._blockType] || []) {
     const path = props.cmsBindings?.[key];
     if (path) values[key] = readBinding(data, path) ?? props[key];
@@ -506,7 +581,7 @@ export function buildBuilderConfig(enabled = enabledPluginIds(), layout?: Data, 
       ...component,
       defaultProps: { ...component.defaultProps, appearance: {}, cmsBindings: {} },
       fields: { ...component.fields, ...(bindings[key] ? { cmsBindings: { type: 'custom', label: 'CMS bindings', render: ({ value, onChange, readOnly }: any) => <BindingControls value={value || {}} onChange={onChange} keys={bindings[key]} readOnly={readOnly} /> } } : {}), appearance: { type: 'custom', label: 'Appearance', render: ({ value, onChange, readOnly }: any) => <StyleControls value={value || {}} onChange={onChange} readOnly={readOnly} /> } },
-      render: props => <BlockBoundary label={component.label || key} editor={editor}><EnhancedBlock component={component} props={{ ...component.defaultProps, ...props, _blockType: key }} /></BlockBoundary>,
+      render: props => <BlockBoundary label={component.label || key} editor={editor}><EnhancedBlock component={component} isEditor={editor} props={{ ...component.defaultProps, ...props, _blockType: key }} /></BlockBoundary>,
     };
   }
   for (const block of [ ...(layout?.content || []), ...Object.values(layout?.zones || {}).flat() ]) {

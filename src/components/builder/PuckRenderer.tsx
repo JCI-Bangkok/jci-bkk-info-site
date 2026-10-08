@@ -11,7 +11,10 @@ export async function PuckRenderer({ data, documentData }: { data: Data, documen
   for (const block of [...(data.content || []), ...Object.values(data.zones || {}).flat()]) {
     if (block.type === 'LegacyPage' && block.props.visible !== false) {
       const pageType = String(block.props.pageType);
-      if (!(pageType in legacyPages)) legacyPages[pageType] = await renderLegacyPage(pageType, documentData);
+      const customCode = block.props.customCode;
+      if (!customCode || typeof customCode !== 'string' || !customCode.trim()) {
+        if (!(pageType in legacyPages)) legacyPages[pageType] = await renderLegacyPage(pageType, documentData);
+      }
     }
   }
   return <ClientPuckRenderer data={data} documentData={{ ...documentData, legacyPages }} />;

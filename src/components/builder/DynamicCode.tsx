@@ -5,7 +5,15 @@ import { useDocumentData } from './DocumentContext';
 import { CodeEditor } from './CodeEditor';
 import { codeDocument, type CodeSource } from '@/lib/builder/code-document';
 
-export function DynamicCodePreview({ source, height = 480 }: { source: CodeSource; height?: number }) {
+export function DynamicCodePreview({
+  source,
+  height = 480,
+  isEditor = false,
+}: {
+  source: CodeSource;
+  height?: number;
+  isEditor?: boolean;
+}) {
   const data = useDocumentData();
   const normalized: CodeSource = {
     html: source?.html || '',
@@ -24,13 +32,15 @@ export function DynamicCodePreview({ source, height = 480 }: { source: CodeSourc
         referrerPolicy="no-referrer"
         srcDoc={codeDocument(normalized, data)}
         style={{ width: '100%', height, border: 0, display: 'block' }}
-        className="pointer-events-none"
+        className={isEditor ? "pointer-events-none" : "w-full"}
       />
       {/* Click capture overlay: ensures clicking on the canvas block selects it in Puck so right menu opens */}
-      <div
-        className="absolute inset-0 cursor-pointer pointer-events-auto"
-        title="Click to select and edit code in Right Menu"
-      />
+      {isEditor && (
+        <div
+          className="absolute inset-0 cursor-pointer pointer-events-auto"
+          title="Click to select and edit code in Right Menu"
+        />
+      )}
     </div>
   );
 }
