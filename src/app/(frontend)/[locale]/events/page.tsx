@@ -4,6 +4,9 @@ import { getActivities } from '@/lib/activity-data'
 import { PaginatedGrid } from '@/components/paginated-grid'
 import { EventCalendar } from '@/components/event-calendar'
 import { getDictionary, type Locale } from '@/lib/i18n'
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
+import { getPublishedTemplate } from '@/lib/templates'
 
 export const revalidate = 300
 
@@ -16,6 +19,28 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
   const { locale } = await params
   const dict = getDictionary(locale)
   const { activities, today } = await getActivities(locale)
+
+  const template = await getPublishedTemplate('events-listing').catch(() => null)
+  if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ activities, today, currentLocale: locale }} />
+  }
+
+  const payload = await getPayload({ config: configPromise })
+  const pageResult = await payload.find({
+    collection: 'pages',
+    where: {
+      slug: { equals: 'events' },
+      status: { equals: 'published' },
+    },
+    limit: 1,
+  })
+  const pageDoc = pageResult.docs[0]
+  if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ activities, today, currentLocale: locale }} />
+  }
+
   const groups = [
     { id: 'upcoming', title: dict.events.upcoming, items: activities.filter(item => item.upcoming) },
     { id: 'past', title: locale === 'th' ? 'กิจกรรมและโครงการที่ผ่านมา' : 'Past Events & Projects', items: activities.filter(item => !item.upcoming && item.kind !== 'update').sort((a, b) => (b.date || String(b.year)).localeCompare(a.date || String(a.year))) },

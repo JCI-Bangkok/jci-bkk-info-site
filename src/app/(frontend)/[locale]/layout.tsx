@@ -6,6 +6,12 @@ import { Kanit } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getDictionary, Locale } from "@/lib/i18n";
+import { getPayload } from "payload";
+import config from "@/payload.config";
+import { PuckRenderer } from "@/components/builder/PuckRenderer";
+import type { Data } from "@puckeditor/core";
+import { getBuilderSettings } from '@/lib/builder/settings';
+import { BuilderRuntimeProvider } from '@/components/builder/RuntimeProvider';
 
 import "../globals.css";
 
@@ -65,6 +71,42 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   validLocale(locale);
+
+  const payload = await getPayload({ config });
+
+  const builderSettings = await getBuilderSettings();
+
+  // Try to find a global header template
+  const headerTemplates = await payload.find({
+    collection: "templates",
+    where: {
+      type: {
+        equals: "header",
+      },
+      status: {
+        equals: "published",
+      },
+    },
+    limit: 1,
+  });
+
+  const headerTemplate = headerTemplates.docs[0];
+
+  // Try to find a global footer template
+  const footerTemplates = await payload.find({
+    collection: "templates",
+    where: {
+      type: {
+        equals: "footer",
+      },
+      status: {
+        equals: "published",
+      },
+    },
+    limit: 1,
+  });
+
+  const footerTemplate = footerTemplates.docs[0];
   
   return (
     <html
@@ -73,11 +115,20 @@ export default async function RootLayout({
       className={`${plusJakartaSans.variable} ${arvo.variable} ${kanit.variable}`}
     >
       <body>
-        <SiteHeader locale={locale as Locale} />
+        <BuilderRuntimeProvider enabledPlugins={builderSettings.enabledPlugins}>
+        {headerTemplate && headerTemplate.puckLayout ? (
+          <PuckRenderer data={headerTemplate.puckLayout as Data} />
+        ) : (
+          <SiteHeader locale={locale as Locale} />
+        )}
         <main>{children}</main>
-        <SiteFooter locale={locale as Locale} />
+        {footerTemplate && footerTemplate.puckLayout ? (
+          <PuckRenderer data={footerTemplate.puckLayout as Data} />
+        ) : (
+          <SiteFooter locale={locale as Locale} />
+        )}
+        </BuilderRuntimeProvider>
       </body>
     </html>
   );
 }
-

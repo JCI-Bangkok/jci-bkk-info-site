@@ -5,15 +5,19 @@ import Link from "next/link";
 import React from "react";
 
 export default function VisualEditorLink() {
-  const { id } = useDocumentInfo();
+  const { id, collectionSlug } = useDocumentInfo();
 
   if (!id) {
     return (
       <div style={{ padding: '1rem', background: 'rgba(255, 165, 0, 0.1)', border: '1px solid orange', borderRadius: '4px', marginBottom: '2rem' }}>
-        <em>Save this page first to access the Visual Editor.</em>
+        <em>Save this document first to access the Visual Editor.</em>
       </div>
     );
   }
+
+  // Use the collection slug if available, fallback to 'pages' if it's undefined
+  // Globals don't have a collection slug, so we might need globalSlug, but for now we're using a Templates collection.
+  const collection = collectionSlug || 'pages';
 
   return (
     <div style={{ marginBottom: '2rem' }}>
@@ -21,7 +25,7 @@ export default function VisualEditorLink() {
         <strong>Visual Page Builder</strong>
       </div>
       <Link
-        href={`/builder/${id}`}
+        href={`/builder/${collection}/${id}`}
         target="_blank"
         rel="noopener noreferrer"
         style={{

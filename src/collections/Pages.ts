@@ -2,6 +2,7 @@ import { staticPageKeys, validatePageSlug } from '@/lib/seo-model'
 import { editorialTabs } from '@/fields/seo'
 import { canEditContent, canReadContent, revalidatePage, revalidateDeletedPage } from './hooks/editorial'
 import type { CollectionConfig } from 'payload'
+import { validatePuckLayout } from './hooks/builder'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -13,7 +14,7 @@ export const Pages: CollectionConfig = {
     description: 'The seven built-in page records control SEO for the existing layouts. Other published paths render their rich text as new website pages. For board-year SEO, use members/board/YYYY.',
     defaultColumns: ['title', 'slug', 'status'],
   },
-  hooks: { afterChange: [revalidatePage], afterDelete: [revalidateDeletedPage] },
+  hooks: { beforeChange: [validatePuckLayout], afterChange: [revalidatePage], afterDelete: [revalidateDeletedPage] },
   fields: editorialTabs([
     {
       name: 'title',
@@ -51,21 +52,18 @@ export const Pages: CollectionConfig = {
         components: {
           Field: '@/components/builder/VisualEditorLink',
         },
-        condition: data => !staticPageKeys.some(key => key === data.slug) && !/^members\/board\/\d{4}$/.test(data.slug || ''),
       }
     },
     {
       name: 'puckLayout',
       type: 'json',
       admin: {
-        condition: data => !staticPageKeys.some(key => key === data.slug) && !/^members\/board\/\d{4}$/.test(data.slug || ''),
         description: 'Visual layout data managed by the Puck Editor.',
       }
     },
     {
       name: 'content',
       type: 'richText',
-      admin: { condition: data => !staticPageKeys.some(key => key === data.slug) && !/^members\/board\/\d{4}$/.test(data.slug || '') },
       localized: true,
     },
   ]),

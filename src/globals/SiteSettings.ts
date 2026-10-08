@@ -20,6 +20,28 @@ export const SiteSettings: GlobalConfig = {
       relationTo: 'media',
     },
     {
+      name: 'mainNav',
+      type: 'array',
+      label: 'Main Navigation Menu',
+      labels: {
+        singular: 'Menu Item',
+        plural: 'Menu Items',
+      },
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+          localized: true,
+        },
+        {
+          name: 'href',
+          type: 'text',
+          required: true,
+        },
+      ],
+    },
+    {
       name: 'socialLinks',
       type: 'group',
       fields: [

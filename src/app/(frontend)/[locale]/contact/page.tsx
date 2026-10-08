@@ -4,6 +4,7 @@ import config from '@/payload.config'
 import { ContactForm } from './contact-form'
 import { SocialLinks } from '@/components/social-links'
 import { getDictionary, type Locale } from '@/lib/i18n'
+import { getPublishedTemplate } from '@/lib/templates'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -16,6 +17,26 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
   const payload = await getPayload({ config })
   const settings = await payload.findGlobal({ slug: 'site-settings', locale })
   const email = settings.contactEmail || 'hello@jcibangkok.org'
+
+  const template = await getPublishedTemplate('contact').catch(() => null)
+  if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ settings, email, currentLocale: locale }} />
+  }
+
+  const pageResult = await payload.find({
+    collection: 'pages',
+    where: {
+      slug: { equals: 'contact' },
+      status: { equals: 'published' },
+    },
+    limit: 1,
+  })
+  const pageDoc = pageResult.docs[0]
+  if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ settings, email, currentLocale: locale }} />
+  }
   
   return (
     <>

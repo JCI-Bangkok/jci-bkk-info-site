@@ -6,6 +6,8 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import Image from "next/image";
 import { mediaUrl } from "@/lib/media";
+import { getPublishedTemplate } from '@/lib/templates'
+import { PuckRenderer } from '@/components/builder/PuckRenderer'
 
 
 const benefitsEn = [
@@ -62,15 +64,33 @@ export default async function MembershipPage({ params }: PageProps) {
   const benefits = locale === 'th' ? benefitsTh : benefitsEn
   const faq = locale === 'th' ? faqTh : faqEn
 
+  const template = await getPublishedTemplate('membership').catch(() => null)
+
   let settings: { membershipCoverImage?: unknown; membershipFormLink?: string } | null = null
+  let pageDoc: any = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
       slug: 'site-settings',
       locale: locale as any,
     }) as any
+
+    const pageResult = await payload.find({
+      collection: 'pages',
+      where: {
+        slug: { equals: 'membership' },
+        status: { equals: 'published' },
+      },
+      limit: 1,
+    })
+    pageDoc = pageResult.docs[0]
   } catch (error) {
     console.error('Error fetching site settings on membership page:', error)
+  }
+
+  const layout = template?.puckLayout || pageDoc?.puckLayout
+  if (layout && (layout as any).content?.length > 0) {
+    return <PuckRenderer data={layout as any} documentData={{ settings, benefits, faq, currentLocale: locale }} />
   }
 
   return (

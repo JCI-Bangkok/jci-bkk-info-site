@@ -1,7 +1,25 @@
 "use client";
 
-import type { Config } from "@puckeditor/core";
+import { useDocumentData } from "@/components/builder/DocumentContext";
+import { RichText } from "@/components/rich-text";
+import { DynamicEventHeader, DynamicEventGallery, DynamicProjectHeader, DynamicProjectImpact, DynamicBoardMembers, DynamicArticleLayout, DynamicEventsList, DynamicProjectsList, DynamicMemberGrid, DynamicContactForm, DynamicHero } from "./dynamic-blocks";
+
+import type { Config, Data, ComponentConfig } from "@puckeditor/core";
 import React from "react";
+import { DynamicCodeField, DynamicCodePreview } from '@/components/builder/DynamicCode';
+import { CodeEditor } from '@/components/builder/CodeEditor';
+import type { CodeSource } from './code-document';
+import { StyleControls } from '@/components/builder/StyleControls';
+import { StyledBlock } from '@/components/builder/StyledBlock';
+import { BindingControls } from '@/components/builder/BindingControls';
+import { readBinding, safeBuilderHref } from './bindings';
+import { enabledPluginIds } from './plugin-catalog';
+import { defineBuilderPlugin } from './plugin-types';
+import { createPluginRegistry } from './plugin-registry';
+import { contentPlugin } from './plugins/content';
+import { interactivePlugin } from './plugins/interactive';
+import { embedsPlugin } from './plugins/embeds';
+import { BlockBoundary } from '@/components/builder/BlockBoundary';
 
 type Props = {
   Section: {
@@ -33,10 +51,48 @@ type Props = {
     alt: string;
     caption?: string;
   };
+  DynamicTitle: {
+    align: "left" | "center" | "right";
+  };
+  DynamicContent: Record<string, never>;
+  DynamicEventHeader: Record<string, never>;
+  DynamicEventGallery: Record<string, never>;
+  DynamicProjectHeader: Record<string, never>;
+  DynamicProjectImpact: Record<string, never>;
+  DynamicBoardMembers: Record<string, never>;
+  DynamicArticleLayout: Record<string, never>;
+  DynamicEventsList: Record<string, never>;
+  DynamicProjectsList: Record<string, never>;
+  DynamicMemberGrid: Record<string, never>;
+  DynamicContactForm: Record<string, never>;
+  DynamicHero: Record<string, never>;
+  CodeBlock: { code: string; language: "html" | "css" | "javascript" | "json" | "text"; title?: string };
+  DynamicCode: { source: CodeSource; height: number };
 };
 
-export const builderConfig: Config<Props> = {
+function DynamicTitleRenderer({ align }: { align: 'left' | 'center' | 'right' }) {
+  const doc = useDocumentData();
+  return <h1 style={{ textAlign: align }} className="text-4xl font-bold">{doc?.title || 'Dynamic Title Placeholder'}</h1>;
+}
+
+function DynamicContentRenderer() {
+  const doc = useDocumentData();
+  if (!doc || (!doc.body && !doc.fullDescription)) return <div className="p-4 bg-gray-100 italic">[Dynamic Content Placeholder]</div>;
+  if (doc.eventDate && doc.fullDescription) return <section className="mx-auto w-full max-w-7xl px-5 pt-5 pb-12 lg:px-8 lg:pt-8 lg:pb-16"><article className="paper-frame p-7"><h2 className="font-display text-3xl leading-none text-[var(--ink)] mb-6">{doc.currentLocale === 'th' ? 'รายละเอียดกิจกรรม' : 'Event Details'}</h2><RichText content={doc.fullDescription} /></article></section>;
+  return <RichText content={doc.body || doc.fullDescription} />;
+}
+
+const coreConfig: Config<Props> = {
   components: {
+    DynamicCode: {
+      label: 'Dynamic Code — HTML / CSS / JS',
+      fields: {
+        source: { type: 'custom', label: 'Code & Live Preview', render: ({ value, onChange, readOnly }) => <DynamicCodeField value={value} onChange={onChange} readOnly={readOnly} /> },
+        height: { type: 'number', label: 'Preview height (px)', min: 100, max: 2400 },
+      },
+      defaultProps: { source: { html: '<section><h1>{{title}}</h1><p>Build your dynamic block here.</p></section>', css: 'section { padding: 32px; background: #0c2340; color: white; }', javascript: '' }, height: 480 },
+      render: ({ source, height }) => <DynamicCodePreview source={source} height={height} />,
+    },
     Section: {
       fields: {
         background: {
@@ -254,12 +310,121 @@ export const builderConfig: Config<Props> = {
         };
         return (
           <div style={{ textAlign: align }} className="mb-6">
-            <a href={href} className={`${baseStyle} ${variants[variant]}`}>
+            <a href={safeBuilderHref(href)} className={`${baseStyle} ${variants[variant]}`}>
               {label}
             </a>
           </div>
         );
       },
     },
+
+    DynamicTitle: {
+      fields: {
+        align: {
+          type: "radio",
+          options: [
+            { label: "Left", value: "left" },
+            { label: "Center", value: "center" },
+            { label: "Right", value: "right" },
+          ],
+        },
+      },
+      defaultProps: { align: "left" },
+      render: ({ align }) => <DynamicTitleRenderer align={align} />
+    },
+
+    DynamicContent: {
+      fields: {},
+      defaultProps: {},
+      render: () => <DynamicContentRenderer />
+    },
+
+    DynamicEventHeader: { fields: {}, defaultProps: {}, render: () => <DynamicEventHeader /> },
+    DynamicEventGallery: { fields: {}, defaultProps: {}, render: () => <DynamicEventGallery /> },
+    DynamicProjectHeader: { fields: {}, defaultProps: {}, render: () => <DynamicProjectHeader /> },
+    DynamicProjectImpact: { fields: {}, defaultProps: {}, render: () => <DynamicProjectImpact /> },
+    DynamicBoardMembers: { fields: {}, defaultProps: {}, render: () => <DynamicBoardMembers /> },
+    DynamicArticleLayout: { fields: {}, defaultProps: {}, render: () => <DynamicArticleLayout /> },
+    DynamicEventsList: { fields: {}, defaultProps: {}, render: () => <DynamicEventsList /> },
+    DynamicProjectsList: { fields: {}, defaultProps: {}, render: () => <DynamicProjectsList /> },
+    DynamicMemberGrid: { fields: {}, defaultProps: {}, render: () => <DynamicMemberGrid /> },
+    DynamicContactForm: { fields: {}, defaultProps: {}, render: () => <DynamicContactForm /> },
+    DynamicHero: { fields: {}, defaultProps: {}, render: () => <DynamicHero /> },
+    CodeBlock: {
+      fields: {
+        title: { type: 'text' },
+        language: { type: 'select', options: [
+          { label: 'HTML', value: 'html' }, { label: 'CSS', value: 'css' },
+          { label: 'JavaScript', value: 'javascript' }, { label: 'JSON', value: 'json' }, { label: 'Plain text', value: 'text' },
+        ] },
+        code: { type: 'custom', render: ({ value, onChange, readOnly }) => <CodeEditor value={value || ''} onChange={onChange} readOnly={readOnly} language="text" /> },
+      },
+      defaultProps: { title: 'Code example', language: 'html', code: '<section>Editable code sample</section>' },
+      render: ({ title, language, code }) => (
+        <figure className="my-8 overflow-hidden rounded-xl border border-slate-800 bg-slate-950 text-slate-100 shadow-lg">
+          <figcaption className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-slate-300">
+            <span>{title || 'Code'}</span><span className="text-sky-300">{language}</span>
+          </figcaption>
+          <pre className="overflow-x-auto p-5 text-sm leading-6"><code>{code}</code></pre>
+        </figure>
+      ),
+    },
   },
 };
+
+const { DynamicCode, CodeBlock, ...coreComponents } = coreConfig.components;
+const codePlugin = defineBuilderPlugin({ id: 'jci.code', name: 'Dynamic Code', version: '1.0.0', apiVersion: 1, category: 'Code & Custom Blocks', description: 'Sandboxed custom code with live preview.', components: { DynamicCode, CodeBlock } });
+export const builderPlugins = [contentPlugin, interactivePlugin, embedsPlugin, codePlugin];
+
+const bindings: Record<string, string[]> = { Hero: ['title', 'description'], Text: ['content'], Heading: ['text'], Card: ['title', 'description', 'linkLabel', 'href'], Button: ['label', 'href'], Image: ['url', 'alt', 'caption'] };
+
+function EnhancedBlock({ component, props }: { component: ComponentConfig<any>; props: any }) {
+  const data = useDocumentData();
+  const values = { ...props };
+  for (const key of bindings[props._blockType] || []) {
+    const path = props.cmsBindings?.[key];
+    if (path) values[key] = readBinding(data, path) ?? props[key];
+  }
+  const Component = component.render;
+  return <StyledBlock id={props.id} style={props.appearance}><Component {...values} /></StyledBlock>;
+}
+
+/** One registry builds both editor and public rendering configs. Old names stay stable. */
+export function buildBuilderConfig(enabled = enabledPluginIds(), layout?: Data, editor = true): Config {
+  const registry = createPluginRegistry(coreComponents, builderPlugins, enabled);
+  const all = { ...coreComponents, ...Object.assign({}, ...builderPlugins.map(plugin => plugin.components)) } as Config['components'];
+  const components: Config['components'] = {};
+  const categories: NonNullable<Config['categories']> = {
+    layout: { title: 'Layout', components: ['Section', 'Columns'] },
+    basics: { title: 'Basic Content', components: ['Hero', 'Text', 'Image', 'Button'] },
+    dynamic: { title: 'CMS & Dynamic Content', components: Object.keys(coreComponents).filter(key => key.startsWith('Dynamic')) },
+    other: { visible: false },
+  };
+  for (const plugin of builderPlugins) categories[plugin.id] = { title: plugin.category, components: enabled.includes(plugin.id) ? Object.keys(plugin.components) : [] };
+  for (const [key, component] of Object.entries(all)) {
+    const owner = registry.owners.get(key)!;
+    if (owner !== 'core' && !registry.enabled.has(owner)) {
+      components[key] = { label: `${component.label || key} (disabled)`, permissions: { insert: false, edit: false }, fields: {}, render: () => editor ? <div className="rounded border border-amber-300 bg-amber-50 p-5 text-sm">{component.label || key} is disabled. Enable {owner} in Builder Settings to restore it. Saved content is retained.</div> : <></> };
+      continue;
+    }
+    components[key] = {
+      ...component,
+      defaultProps: { ...component.defaultProps, appearance: {}, cmsBindings: {} },
+      fields: { ...component.fields, ...(bindings[key] ? { cmsBindings: { type: 'custom', label: 'CMS bindings', render: ({ value, onChange, readOnly }: any) => <BindingControls value={value || {}} onChange={onChange} keys={bindings[key]} readOnly={readOnly} /> } } : {}), appearance: { type: 'custom', label: 'Appearance', render: ({ value, onChange, readOnly }: any) => <StyleControls value={value || {}} onChange={onChange} readOnly={readOnly} /> } },
+      render: props => <BlockBoundary label={component.label || key} editor={editor}><EnhancedBlock component={component} props={{ ...component.defaultProps, ...props, _blockType: key }} /></BlockBoundary>,
+    };
+  }
+  for (const block of [ ...(layout?.content || []), ...Object.values(layout?.zones || {}).flat() ]) {
+    if (Object.hasOwn(components, block.type)) continue;
+    components[block.type] = { fields: {}, permissions: { insert: false, edit: false }, render: () => editor ? <div className="rounded border border-amber-300 p-5">Missing block: {block.type}. Install its plugin to restore it. Content is retained.</div> : <></> };
+  }
+  return { components, categories, root: {
+    fields: {
+      accentColor: { type: 'text', label: 'Page accent color (hex)' },
+      surfaceColor: { type: 'text', label: 'Page background (hex)' },
+    },
+    render: ({ children, accentColor, surfaceColor }: any) => <div style={{ ...(typeof accentColor === 'string' && /^#[a-f0-9]{3,8}$/i.test(accentColor) ? { '--jci-blue': accentColor } : {}), ...(typeof surfaceColor === 'string' && /^#[a-f0-9]{3,8}$/i.test(surfaceColor) ? { backgroundColor: surfaceColor } : {}) } as React.CSSProperties}>{children}</div>,
+  } };
+}
+
+export const builderConfig = buildBuilderConfig();

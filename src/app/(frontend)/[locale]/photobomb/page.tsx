@@ -3,6 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getGalleryPhotos } from '@/lib/activity-data'
 import type { Locale } from '@/lib/i18n'
+import { getPayload } from 'payload'
+import configPromise from '@/payload.config'
+import { getPublishedTemplate } from '@/lib/templates'
 
 export const revalidate = 300
 
@@ -15,6 +18,27 @@ function seededRandom(seed: number) {
 export default async function PhotoBombPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params
   const photos = await getGalleryPhotos(locale)
+
+  const template = await getPublishedTemplate('photobomb').catch(() => null)
+  if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ photos, currentLocale: locale }} />
+  }
+
+  const payload = await getPayload({ config: configPromise })
+  const pageResult = await payload.find({
+    collection: 'pages',
+    where: {
+      slug: { equals: 'photobomb' },
+      status: { equals: 'published' },
+    },
+    limit: 1,
+  })
+  const pageDoc = pageResult.docs[0]
+  if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ photos, currentLocale: locale }} />
+  }
   
   // Generate scattered positions in concentric rings
   const photoPositions = photos.map((photo, index) => {

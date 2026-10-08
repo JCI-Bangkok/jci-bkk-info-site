@@ -78,6 +78,8 @@ export interface Config {
     'member-stories': MemberStory;
     partners: Partner;
     forms: Form;
+    templates: Template;
+    'builder-presets': BuilderPreset;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +98,8 @@ export interface Config {
     'member-stories': MemberStoriesSelect<false> | MemberStoriesSelect<true>;
     partners: PartnersSelect<false> | PartnersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
+    templates: TemplatesSelect<false> | TemplatesSelect<true>;
+    'builder-presets': BuilderPresetsSelect<false> | BuilderPresetsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -107,9 +111,13 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'th') | ('en' | 'th')[];
   globals: {
     'site-settings': SiteSetting;
+    navigation: Navigation;
+    'builder-settings': BuilderSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    navigation: NavigationSelect<false> | NavigationSelect<true>;
+    'builder-settings': BuilderSettingsSelect<false> | BuilderSettingsSelect<true>;
   };
   locale: 'en' | 'th';
   widgets: {
@@ -763,6 +771,66 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates".
+ */
+export interface Template {
+  id: number;
+  title: string;
+  /**
+   * What part of the site this template controls.
+   */
+  type:
+    | 'header'
+    | 'footer'
+    | 'event-single'
+    | 'news-single'
+    | 'project-single'
+    | 'member-board-year'
+    | 'home'
+    | 'events-listing'
+    | 'members-listing'
+    | 'about'
+    | 'contact'
+    | 'membership'
+    | 'photobomb'
+    | 'archive';
+  status?: ('draft' | 'published') | null;
+  puckLayout?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Reusable copies of sections or layouts. Insertions are independent copies, not linked global components.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "builder-presets".
+ */
+export interface BuilderPreset {
+  id: number;
+  title: string;
+  puckLayout:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -828,6 +896,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'forms';
         value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'templates';
+        value: number | Template;
+      } | null)
+    | ({
+        relationTo: 'builder-presets';
+        value: number | BuilderPreset;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -1208,6 +1284,29 @@ export interface FormsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "templates_select".
+ */
+export interface TemplatesSelect<T extends boolean = true> {
+  title?: T;
+  type?: T;
+  status?: T;
+  puckLayout?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "builder-presets_select".
+ */
+export interface BuilderPresetsSelect<T extends boolean = true> {
+  title?: T;
+  puckLayout?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv_select".
  */
 export interface PayloadKvSelect<T extends boolean = true> {
@@ -1258,6 +1357,13 @@ export interface SiteSetting {
   defaultSocialImage?: (number | null) | Media;
   siteName: string;
   logo?: (number | null) | Media;
+  mainNav?:
+    | {
+        label: string;
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
   socialLinks?: {
     facebook?: string | null;
     linkedin?: string | null;
@@ -1280,12 +1386,58 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation".
+ */
+export interface Navigation {
+  id: number;
+  items: {
+    label: string;
+    labelTh?: string | null;
+    /**
+     * Use a relative path, for example /events.
+     */
+    href: string;
+    id?: string | null;
+  }[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Manage installed builder plugins. Changes affect the editor and website; existing block data is retained.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "builder-settings".
+ */
+export interface BuilderSetting {
+  id: number;
+  plugins?:
+    | {
+        /**
+         * jci.content: Content Essentials; jci.interactive: Interactive Content; jci.embeds: Video Embeds; jci.code: Dynamic Code
+         */
+        pluginId: string;
+        enabled?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   defaultSocialImage?: T;
   siteName?: T;
   logo?: T;
+  mainNav?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        id?: T;
+      };
   socialLinks?:
     | T
     | {
@@ -1305,6 +1457,39 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   homePathway3?: T;
   homePathway4?: T;
   memberStoryFallback?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "navigation_select".
+ */
+export interface NavigationSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        label?: T;
+        labelTh?: T;
+        href?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "builder-settings_select".
+ */
+export interface BuilderSettingsSelect<T extends boolean = true> {
+  plugins?:
+    | T
+    | {
+        pluginId?: T;
+        enabled?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

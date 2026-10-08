@@ -3,7 +3,6 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 
 import { BrandMark } from "@/components/brand-mark";
-import { navigation } from "@/lib/site-data";
 import { getDictionary, Locale } from "@/lib/i18n";
 
 export async function SiteFooter({ locale }: { locale: Locale }) {
@@ -12,24 +11,37 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
   let settings: {
     contactEmail?: string
     footerText?: string
+    mainNav?: { label: string; href: string }[]
     socialLinks?: {
       facebook?: string
       instagram?: string
       linkedin?: string
     }
   } | null = null
+  let navigationGlobal: { items?: { label: string; labelTh?: string; href: string }[] } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
       slug: 'site-settings',
       locale: locale as any,
     }) as any
+    navigationGlobal = await payload.findGlobal({ slug: 'navigation' }) as any
   } catch (error) {
     console.error('Error fetching site settings in footer:', error)
   }
 
   const contactEmail = settings?.contactEmail || 'hello@jcibangkok.org'
   const footerText = settings?.footerText || '© 2026 JCI Bangkok. All Rights Reserved.'
+
+  const navItems = navigationGlobal?.items?.length
+    ? navigationGlobal.items.map((item) => ({ label: locale === 'th' ? item.labelTh || item.label : item.label, href: item.href }))
+    : settings?.mainNav?.length
+      ? settings.mainNav
+      : [
+          { href: '/', label: dict.nav.home }, { href: '/events', label: dict.nav.events },
+          { href: '/members', label: dict.nav.members }, { href: '/photobomb', label: 'PhotoBomb' },
+          { href: '/about', label: dict.nav.about }, { href: '/contact', label: dict.nav.contact },
+        ]
 
   return (
     <footer className="border-t border-[var(--line)] bg-[var(--jci-black)] text-white">
@@ -48,17 +60,15 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
             {dict.footer.explore}
           </h2>
           <div className="mt-5 grid gap-3 text-sm">
-            {navigation.map((item) => {
-              const navKey = item.label.toLowerCase() as keyof typeof dict.nav;
-              const label = dict.nav[navKey] || item.label;
-              const href = item.href === "/" ? `/${locale}` : `/${locale}${item.href}`;
+            {navItems.map((item) => {
+              const href = item.href === "/" ? `/${locale}` : item.href.startsWith(`/${locale}`) ? item.href : `/${locale}${item.href.startsWith('/') ? '' : '/'}${item.href}`;
               return (
                 <Link
                   key={item.href}
                   href={href}
                   className="text-white/75 transition hover:text-white"
                 >
-                  {label}
+                  {item.label}
                 </Link>
               );
             })}
@@ -111,4 +121,3 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
     </footer>
   );
 }
-

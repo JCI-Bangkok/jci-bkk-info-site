@@ -110,6 +110,32 @@ export default async function BoardYearPage({ params }: BoardYearPageProps) {
     ? (boardYearMetadataTh[year] || { theme: "รับใช้ JCI Bangkok", summary: `คณะกรรมการบริหารประจำปี ${year}` })
     : (boardYearMetadataEn[year] || { theme: "Serving JCI Bangkok", summary: `The board of directors for the year ${year}.` })
 
+  const templates = await payload.find({
+    collection: "templates",
+    where: {
+      type: {
+        equals: "member-board-year",
+      },
+      status: {
+        equals: "published",
+      },
+    },
+    limit: 1,
+  });
+  const template = templates.docs[0];
+
+  if (template && template.puckLayout) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer');
+    const combinedData = {
+      year,
+      members,
+      regularMembers,
+      presidentName,
+      metadata,
+    };
+    return <PuckRenderer data={template.puckLayout as any} documentData={combinedData as any} />;
+  }
+
   return (
     <>
       <PageIntro

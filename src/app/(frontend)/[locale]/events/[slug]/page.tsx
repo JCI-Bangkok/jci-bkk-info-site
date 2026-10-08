@@ -94,6 +94,18 @@ export default async function EventDetailPage({
     notFound();
   }
 
+  const payload = await getPayload({ config: configPromise })
+  const templates = await payload.find({
+    collection: 'templates',
+    where: { type: { equals: 'event-single' }, status: { equals: 'published' } },
+    limit: 1,
+  })
+  const template = templates.docs[0]
+  if (template?.puckLayout) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ ...event, currentLocale: locale }} />
+  }
+
   const eventTypeLabels = locale === 'th' ? eventTypeLabelsTh : eventTypeLabelsEn
   const statusLabels = locale === 'th' ? statusLabelsTh : statusLabelsEn
 

@@ -17,7 +17,11 @@ import { Members } from './collections/Members'
 import { MemberStories } from './collections/MemberStories'
 import { Partners } from './collections/Partners'
 import { Forms } from './collections/Forms'
+import { Templates } from "./collections/Templates"
 import { SiteSettings } from './globals/SiteSettings'
+import { Navigation } from './globals/Navigation'
+import { BuilderSettings } from './globals/BuilderSettings'
+import { BuilderPresets } from './collections/BuilderPresets'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -96,9 +100,13 @@ export default buildConfig({
     MemberStories,
     Partners,
     Forms,
+    Templates,
+    BuilderPresets,
   ],
   globals: [
     SiteSettings,
+    Navigation,
+    BuilderSettings,
   ],
   editor: lexicalEditor({}),
   secret: requiredPayloadSecret(),

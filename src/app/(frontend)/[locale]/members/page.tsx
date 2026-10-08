@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { mediaUrl } from '@/lib/activity-data'
 import { getDictionary, type Locale } from '@/lib/i18n'
+import { getPublishedTemplate } from '@/lib/templates'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -26,6 +27,26 @@ export default async function MembersPage({ params, searchParams }: {
   const years: number[] = [...new Set<number>(board.docs.map(member => member.year))].sort((a, b) => b - a)
   const activeYear = years.includes(Number(year)) ? Number(year) : years[0]
   const members = board.docs.filter(member => member.year === activeYear)
+
+  const template = await getPublishedTemplate('members-listing').catch(() => null)
+  if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ board, stories, years, activeYear, members, currentLocale: locale }} />
+  }
+
+  const pageResult = await payload.find({
+    collection: 'pages',
+    where: {
+      slug: { equals: 'members' },
+      status: { equals: 'published' },
+    },
+    limit: 1,
+  })
+  const pageDoc = pageResult.docs[0]
+  if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ board, stories, activeYear, members, currentLocale: locale }} />
+  }
 
   return <>
     <section className="border-b border-[var(--line)] bg-[var(--paper-soft)]">

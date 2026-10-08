@@ -12,6 +12,7 @@ import { getActivities, mediaUrl } from '@/lib/activity-data'
 import { EventCalendar } from '@/components/event-calendar'
 import { SocialLinks } from '@/components/social-links'
 import { PartnerMarquee } from '@/components/partner-marquee'
+import { getPublishedTemplate } from '@/lib/templates'
 
 export const revalidate = 300
 
@@ -42,6 +43,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
     payload.find({ collection: 'member-stories', locale, limit: 2 }),
     payload.find({ collection: 'partners', locale, limit: 20, sort: '-partnershipYear' }),
   ])
+
+  const template = await getPublishedTemplate('home').catch(() => null)
+  if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={template.puckLayout as any} documentData={{ activities, today, settings, storiesResult, partnersResult, currentLocale: locale }} />
+  }
+
+  const pageResult = await payload.find({
+    collection: 'pages',
+    where: {
+      slug: { equals: 'home' },
+      status: { equals: 'published' },
+    },
+    limit: 1,
+  })
+  const pageDoc = pageResult.docs[0]
+  if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
+    const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
+    return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ activities, today, settings, storiesResult, partnersResult, currentLocale: locale }} />
+  }
+
   const homePartners = [...partnersResult.docs]
   const dindeepromIndex = homePartners.findIndex(p => p.organizationName === 'ดินดีพร้อม')
   if (dindeepromIndex > -1) {
