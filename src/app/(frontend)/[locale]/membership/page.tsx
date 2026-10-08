@@ -68,7 +68,7 @@ export default async function MembershipPage({ params }: PageProps) {
   const template = await getPublishedTemplate('membership').catch(() => null)
 
   let settings: { membershipCoverImage?: unknown; membershipFormLink?: string } | null = null
-  let pageDoc: any = await enforceManagedPagePath(locale, 'membership', __cmsRoute)
+  const pageDoc: any = await enforceManagedPagePath(locale, 'membership', __cmsRoute)
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({

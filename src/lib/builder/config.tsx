@@ -8,6 +8,7 @@ import type { Config, Data, ComponentConfig } from "@puckeditor/core";
 import React from "react";
 import { DynamicCodeField, DynamicCodePreview } from '@/components/builder/DynamicCode';
 import { CodeEditor } from '@/components/builder/CodeEditor';
+import { LegacyPageField } from '@/components/builder/LegacyPageField';
 import type { CodeSource } from './code-document';
 import { StyleControls } from '@/components/builder/StyleControls';
 import { StyledBlock } from '@/components/builder/StyledBlock';
@@ -69,7 +70,7 @@ type Props = {
   DynamicContactForm: Record<string, never>;
   DynamicHero: Record<string, never>;
   LegacyDynamic: { functionName: string; sectionTitle: string; intro: string; visible: boolean };
-  LegacyPage: { pageType: string; visible: boolean };
+  LegacyPage: { pageType: string; visible: boolean; customCode?: string };
   GlobalHeader: { showNavigation: boolean; showLanguageSwitch: boolean; ctaLabel: string; ctaHref: string; style: 'floating' | 'solid' | 'minimal' };
   GlobalFooter: { showNavigation: boolean; showSocialLinks: boolean; heading: string; copyright: string };
   CodeBlock: { code: string; language: "html" | "css" | "javascript" | "json" | "text"; title?: string };
@@ -88,7 +89,33 @@ function LegacyPagePreview({ pageType, visible }: { pageType: string; visible: b
   const query = new URLSearchParams({ locale: data?.currentLocale === 'th' ? 'th' : 'en' });
   if (data?.slug) query.set('slug', data.slug);
   if (data?.year || data?.activeYear) query.set('year', String(data.year || data.activeYear));
-  return <iframe title={`Original ${pageType} design`} src={`/builder-preview/legacy/${encodeURIComponent(pageType)}?${query}`} className="w-full border-0" style={{ height: '80vh', minHeight: 600 }} />;
+  const previewUrl = `/builder-preview/legacy/${encodeURIComponent(pageType)}?${query}`;
+  return (
+    <div className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm my-4">
+      <div className="flex items-center justify-between bg-slate-100 px-4 py-2 text-xs text-slate-600 border-b border-slate-200">
+        <span className="font-medium flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+          Original Page: <span className="font-mono text-blue-700">{pageType}.tsx</span>
+        </span>
+        <span className="text-slate-500 text-[11px] font-sans">
+          Click anywhere to select & configure in Right Menu →
+        </span>
+      </div>
+      <div className="relative w-full">
+        <iframe
+          title={`Original ${pageType} design`}
+          src={previewUrl}
+          className="w-full border-0 bg-white pointer-events-none"
+          style={{ height: '80vh', minHeight: '600px' }}
+        />
+        {/* Click capture overlay: allows clicks to select the Puck block and open the Right Menu */}
+        <div
+          className="absolute inset-0 cursor-pointer pointer-events-auto"
+          title="Click to select block and open TypeScript editor in Right Menu"
+        />
+      </div>
+    </div>
+  );
 }
 
 function DynamicContentRenderer() {
@@ -371,8 +398,15 @@ const coreConfig: Config<Props> = {
       fields: {
         pageType: { type: 'select', label: 'Original page', options: legacyPageTypes.map(value => ({ label: value, value })) },
         visible: { type: 'radio', options: [{ label: 'Visible', value: true }, { label: 'Hidden', value: false }] },
+        customCode: {
+          type: 'custom',
+          label: 'TypeScript / TSX Code',
+          render: ({ value, onChange, readOnly }) => (
+            <LegacyPageField value={value} onChange={onChange} readOnly={readOnly} />
+          ),
+        },
       },
-      defaultProps: { pageType: 'home', visible: true },
+      defaultProps: { pageType: 'home', visible: true, customCode: '' },
       render: props => <LegacyPagePreview {...props} />,
     },
     LegacyDynamic: {

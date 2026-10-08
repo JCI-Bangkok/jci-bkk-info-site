@@ -7,15 +7,41 @@ import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
 
 const CodeMirror = dynamic(() => import('@uiw/react-codemirror'), { ssr: false });
-const languages = { html, css, javascript, json, text: () => [] };
 
-export function CodeEditor({ value, onChange, language = 'json', readOnly = false }: {
+const languages = {
+  html,
+  css,
+  javascript,
+  typescript: () => javascript({ typescript: true, jsx: true }),
+  tsx: () => javascript({ typescript: true, jsx: true }),
+  json,
+  text: () => []
+};
+
+export function CodeEditor({ value, onChange, language = 'json', readOnly = false, height = '360px' }: {
   value: string;
   onChange: (value: string) => void;
   language?: keyof typeof languages;
   readOnly?: boolean;
+  height?: string;
 }) {
-  return <CodeMirror value={value} onChange={onChange} extensions={[languages[language]()]} theme="dark" height="360px" editable={!readOnly}
-    basicSetup={{ lineNumbers: true, foldGutter: true, autocompletion: true, highlightActiveLine: true, bracketMatching: true, closeBrackets: true }}
-    aria-label={`${language} code editor`} />;
+  const getLanguageSupport = languages[language] || languages.javascript;
+  return <CodeMirror
+    value={value}
+    onChange={onChange}
+    extensions={[getLanguageSupport()]}
+    theme="dark"
+    height={height}
+    editable={!readOnly}
+    basicSetup={{
+      lineNumbers: true,
+      foldGutter: true,
+      autocompletion: true,
+      highlightActiveLine: true,
+      bracketMatching: true,
+      closeBrackets: true,
+      indentOnInput: true,
+    }}
+    aria-label={`${language} code editor`}
+  />;
 }
