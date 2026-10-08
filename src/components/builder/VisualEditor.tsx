@@ -4,7 +4,7 @@ import { Puck, usePuck, type Data } from "@puckeditor/core";
 import "@puckeditor/core/puck.css";
 import "@/app/(frontend)/globals.css"; // Ensure Tailwind works in the editor
 import { buildBuilderConfig, builderPlugins } from "@/lib/builder/config";
-import { DocumentContext } from "@/components/builder/PuckRenderer";
+import { DocumentContext } from "@/components/builder/DocumentContext";
 import { createContext, useContext, useMemo, useState } from "react";
 import { LayoutCodeEditor } from './LayoutCodeEditor';
 import { BuilderTools } from './BuilderTools';

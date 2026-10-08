@@ -7,6 +7,7 @@ import { getDictionary, type Locale } from '@/lib/i18n'
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import { getPublishedTemplate } from '@/lib/templates'
+import { enforceManagedPagePath } from '@/lib/page-routing'
 
 export const revalidate = 300
 
@@ -15,10 +16,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return cmsStaticMetadata(locale, 'events')
 }
 
-export default async function EventsPage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
+export default async function EventsPage({ params }: { params: Promise<{ locale: Locale; __cmsRoute?: boolean }> }) {
+  const { locale, __cmsRoute } = await params
   const dict = getDictionary(locale)
   const { activities, today } = await getActivities(locale)
+  const pageDoc = await enforceManagedPagePath(locale, 'events', __cmsRoute)
 
   const template = await getPublishedTemplate('events-listing').catch(() => null)
   if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
@@ -26,16 +28,6 @@ export default async function EventsPage({ params }: { params: Promise<{ locale:
     return <PuckRenderer data={template.puckLayout as any} documentData={{ activities, today, currentLocale: locale }} />
   }
 
-  const payload = await getPayload({ config: configPromise })
-  const pageResult = await payload.find({
-    collection: 'pages',
-    where: {
-      slug: { equals: 'events' },
-      status: { equals: 'published' },
-    },
-    limit: 1,
-  })
-  const pageDoc = pageResult.docs[0]
   if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
     const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
     return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ activities, today, currentLocale: locale }} />

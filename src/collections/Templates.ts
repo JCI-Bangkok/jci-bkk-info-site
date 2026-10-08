@@ -42,6 +42,9 @@ export const Templates: CollectionConfig = {
         { label: 'Contact Page', value: 'contact' },
         { label: 'Membership Page', value: 'membership' },
         { label: 'PhotoBomb Gallery', value: 'photobomb' },
+        { label: 'News Listing', value: 'news-listing' },
+        { label: 'Projects Listing', value: 'projects-listing' },
+        { label: 'Board Listing', value: 'board-listing' },
         { label: 'Custom Archive', value: 'archive' },
       ],
       admin: {

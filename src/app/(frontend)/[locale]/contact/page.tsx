@@ -5,16 +5,18 @@ import { ContactForm } from './contact-form'
 import { SocialLinks } from '@/components/social-links'
 import { getDictionary, type Locale } from '@/lib/i18n'
 import { getPublishedTemplate } from '@/lib/templates'
+import { enforceManagedPagePath } from '@/lib/page-routing'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   return cmsStaticMetadata(locale, 'contact')
 }
 
-export default async function ContactPage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
+export default async function ContactPage({ params }: { params: Promise<{ locale: Locale; __cmsRoute?: boolean }> }) {
+  const { locale, __cmsRoute } = await params
   const dict = getDictionary(locale)
   const payload = await getPayload({ config })
+  const pageDoc = await enforceManagedPagePath(locale, 'contact', __cmsRoute)
   const settings = await payload.findGlobal({ slug: 'site-settings', locale })
   const email = settings.contactEmail || 'hello@jcibangkok.org'
 
@@ -24,15 +26,6 @@ export default async function ContactPage({ params }: { params: Promise<{ locale
     return <PuckRenderer data={template.puckLayout as any} documentData={{ settings, email, currentLocale: locale }} />
   }
 
-  const pageResult = await payload.find({
-    collection: 'pages',
-    where: {
-      slug: { equals: 'contact' },
-      status: { equals: 'published' },
-    },
-    limit: 1,
-  })
-  const pageDoc = pageResult.docs[0]
   if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
     const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
     return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ settings, email, currentLocale: locale }} />

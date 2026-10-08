@@ -37,7 +37,19 @@ export default async function BuilderPage({
 
   if (!page) notFound();
 
-  const rawData: Data = (page.puckLayout as Data | null) ?? {
+  let sourceLayout = page.puckLayout as Data | null
+  if (collection === 'pages' && (!(sourceLayout as any)?.content?.length)) {
+    const pageType = (page as any).pageType
+    if (pageType && pageType !== 'custom') {
+      const matchingTemplate = await payload.find({
+        collection: 'templates', draft: true, overrideAccess: true, limit: 1, sort: '-updatedAt',
+        where: { type: { equals: pageType === 'events' ? 'events-listing' : pageType === 'members' ? 'members-listing' : pageType === 'board' ? 'board-listing' : pageType === 'news' ? 'news-listing' : pageType === 'projects' ? 'projects-listing' : pageType } },
+      })
+      sourceLayout = (matchingTemplate.docs[0]?.puckLayout as Data | null) || null
+    }
+  }
+
+  const rawData: Data = sourceLayout ?? {
     root: { props: {} },
     content: [],
   };
@@ -114,13 +126,14 @@ export default async function BuilderPage({
       const board = await payload.find({ collection: 'board-members', locale: 'en' as any, pagination: false, sort: 'displayOrder' })
       const years = [...new Set(board.docs.map((member: any) => member.year))].sort((a, b) => b - a)
       previewData = { members: board.docs.filter((member: any) => member.year === years[0]), activeYear: years[0], years, currentLocale: 'en' }
-    } else if (['about', 'contact', 'membership', 'photobomb'].includes(templateType)) {
+    } else if (['about', 'contact', 'membership', 'photobomb', 'header', 'footer'].includes(templateType)) {
       const settings = await payload.findGlobal({ slug: 'site-settings', locale: 'en' })
-      previewData = { settings, currentLocale: 'en' }
+      const navigation = await payload.findGlobal({ slug: 'navigation', depth: 1 })
+      previewData = { settings, navigation, currentLocale: 'en' }
     }
   } else if (collection === "pages") {
-    const slug = (page as any).slug;
-    if (slug === "events") {
+    const pageType = (page as any).pageType;
+    if (pageType === "events" || pageType === 'news') {
       const { activities, today } = await getActivities("en");
       previewData = {
         ...page,
@@ -128,7 +141,7 @@ export default async function BuilderPage({
         today,
         currentLocale: "en",
       };
-    } else if (slug === "members") {
+    } else if (pageType === "members" || pageType === 'board') {
       const [board, stories] = await Promise.all([
         payload.find({ collection: 'board-members', locale: 'en' as any, depth: 1, pagination: false, sort: 'displayOrder' }),
         payload.find({ collection: 'member-stories', locale: 'en' as any, depth: 1, limit: 6 }),

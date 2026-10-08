@@ -4,6 +4,7 @@ import config from '@/payload.config'
 import { mediaUrl } from './media'
 import { pageMetadata, staticMetadata, validLocale } from './seo'
 import { resolveSeo, type SeoSource, type StaticPageKey } from './seo-model'
+import { getManagedPageByType } from './page-routing'
 
 export const getSiteSeo = cache(async (locale: string) => {
   const payload = await getPayload({ config })
@@ -24,6 +25,7 @@ export async function contentMetadata(locale: string, path: string, source: SeoS
 }
 export async function cmsStaticMetadata(locale: string, page: StaticPageKey) {
   const fallback = staticMetadata(locale, page)
-  const source = await getCmsPage(locale, page)
-  return contentMetadata(locale, page === 'home' ? '' : `/${page}`, source || {}, { title: (fallback.title as { absolute: string }).absolute, description: fallback.description || '' })
+  const source = await getManagedPageByType(locale, page)
+  const path = source?.slug === 'home' ? '' : `/${source?.slug || page}`
+  return contentMetadata(locale, path, source || {}, { title: (fallback.title as { absolute: string }).absolute, description: fallback.description || '' })
 }

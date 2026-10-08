@@ -1,5 +1,7 @@
 # Builder plugin development standard
 
+For page ownership, editable URLs, SEO and the division between Pages and Templates, see [CMS-PAGE-MANAGEMENT.md](./CMS-PAGE-MANAGEMENT.md).
+
 Builder API **1**, initial plugin version **1.0.0**. This is the application's API on top of Puck, not the WordPress plugin API. Optional widgets belong in registered plugins; core layout and current CMS detail blocks remain stable.
 
 ## Installed packages

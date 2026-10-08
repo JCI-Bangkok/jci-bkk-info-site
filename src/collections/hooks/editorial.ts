@@ -11,6 +11,9 @@ export const revalidatePage: CollectionAfterChangeHook = async ({ doc, previousD
       await revalidatePath(slug === 'home' ? `/${locale}` : `/${locale}/${slug}`)
     }
   }
+  for (const legacy of [...(doc.legacySlugs || []), ...(previousDoc?.legacySlugs || [])]) {
+    for (const locale of ['en', 'th']) await revalidatePath(`/${locale}/${legacy}`)
+  }
   await revalidatePath('/sitemap.xml')
   return doc
 }

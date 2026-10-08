@@ -1,21 +1,18 @@
-"use client";
-
-import React from 'react';
-import { Render, type Data } from "@puckeditor/core";
-import { buildBuilderConfig, builderPlugins } from "@/lib/builder/config";
-import { migrateBuilderPlugins } from '@/lib/builder/plugin-migrations';
-import { DocumentContext } from './DocumentContext';
-import { useBuilderRuntime } from './RuntimeProvider';
+import 'server-only';
+import type { Data } from '@puckeditor/core';
+import type { ReactNode } from 'react';
+import { ClientPuckRenderer } from './ClientPuckRenderer';
+import { renderLegacyPage } from '@/components/legacy-pages/render';
 
 export { DocumentContext, useDocumentData } from './DocumentContext';
 
-export function PuckRenderer({ data, documentData }: { data: Data, documentData?: any }) {
-  const runtime = useBuilderRuntime();
-  const preparedData = migrateBuilderPlugins(data, builderPlugins, runtime.enabledPlugins);
-  const config = buildBuilderConfig(runtime.enabledPlugins, preparedData, false);
-  return (
-    <DocumentContext.Provider value={documentData || null}>
-      <Render config={config} data={preparedData} />
-    </DocumentContext.Provider>
-  );
+export async function PuckRenderer({ data, documentData }: { data: Data, documentData?: any }) {
+  const legacyPages: Record<string, ReactNode> = {};
+  for (const block of [...(data.content || []), ...Object.values(data.zones || {}).flat()]) {
+    if (block.type === 'LegacyPage' && block.props.visible !== false) {
+      const pageType = String(block.props.pageType);
+      if (!(pageType in legacyPages)) legacyPages[pageType] = await renderLegacyPage(pageType, documentData);
+    }
+  }
+  return <ClientPuckRenderer data={data} documentData={{ ...documentData, legacyPages }} />;
 }

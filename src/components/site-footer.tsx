@@ -4,6 +4,7 @@ import configPromise from '@/payload.config'
 
 import { BrandMark } from "@/components/brand-mark";
 import { getDictionary, Locale } from "@/lib/i18n";
+import { resolveNavigationItems } from '@/lib/navigation'
 
 export async function SiteFooter({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
@@ -18,7 +19,7 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
       linkedin?: string
     }
   } | null = null
-  let navigationGlobal: { items?: { label: string; labelTh?: string; href: string }[] } | null = null
+  let navigationGlobal: { items?: any[] } | null = null
   try {
     const payload = await getPayload({ config: configPromise })
     settings = await payload.findGlobal({
@@ -33,15 +34,16 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
   const contactEmail = settings?.contactEmail || 'hello@jcibangkok.org'
   const footerText = settings?.footerText || '© 2026 JCI Bangkok. All Rights Reserved.'
 
-  const navItems = navigationGlobal?.items?.length
-    ? navigationGlobal.items.map((item) => ({ label: locale === 'th' ? item.labelTh || item.label : item.label, href: item.href }))
+  const navSource = navigationGlobal?.items?.length
+    ? navigationGlobal.items
     : settings?.mainNav?.length
-      ? settings.mainNav
+      ? settings.mainNav.map(item => ({ ...item, linkType: 'custom' as const }))
       : [
           { href: '/', label: dict.nav.home }, { href: '/events', label: dict.nav.events },
           { href: '/members', label: dict.nav.members }, { href: '/photobomb', label: 'PhotoBomb' },
           { href: '/about', label: dict.nav.about }, { href: '/contact', label: dict.nav.contact },
-        ]
+        ].map(item => ({ ...item, linkType: 'custom' as const }))
+  const navItems = resolveNavigationItems(navSource, locale)
 
   return (
     <footer className="border-t border-[var(--line)] bg-[var(--jci-black)] text-white">
@@ -61,11 +63,12 @@ export async function SiteFooter({ locale }: { locale: Locale }) {
           </h2>
           <div className="mt-5 grid gap-3 text-sm">
             {navItems.map((item) => {
-              const href = item.href === "/" ? `/${locale}` : item.href.startsWith(`/${locale}`) ? item.href : `/${locale}${item.href.startsWith('/') ? '' : '/'}${item.href}`;
               return (
                 <Link
                   key={item.href}
-                  href={href}
+                  href={item.href}
+                  target={'newTab' in item && item.newTab ? '_blank' : undefined}
+                  rel={'newTab' in item && item.newTab ? 'noopener noreferrer' : undefined}
                   className="text-white/75 transition hover:text-white"
                 >
                   {item.label}

@@ -3,7 +3,7 @@ import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { absoluteUrl, locales } from '@/lib/seo'
 import { publicEvents, publishedArticles, publishedProjects } from '@/lib/public-content'
-import { contentPath, isSitemapEligible, staticPageKeys, validatePageSlug } from '@/lib/seo-model'
+import { contentPath, isSitemapEligible, validatePageSlug } from '@/lib/seo-model'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,7 +18,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       payload.find({ collection: 'board-members', locale, pagination: false, depth: 0 }),
     ])
     const paths = new Map<string, string | undefined>()
-    for (const page of staticPageKeys) paths.set(contentPath('pages', page), undefined)
     for (const year of new Set(board.docs.map(doc => doc.year))) paths.set(`/members/board/${year}`, undefined)
     for (const [collection, docs] of [['events', events.docs], ['projects', projects.docs], ['articles', articles.docs], ['pages', pages.docs]] as const) {
       for (const doc of docs) {

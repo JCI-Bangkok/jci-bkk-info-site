@@ -542,3 +542,29 @@ export function DynamicHero() {
     <div className="mx-auto max-w-7xl"><p className="text-sm font-semibold uppercase tracking-[0.24em] text-white/65">{locale === 'th' ? 'เจซีไอ กรุงเทพฯ' : 'JCI Bangkok'}</p><h1 className="mt-4 max-w-3xl text-5xl font-semibold tracking-tight lg:text-7xl">{title}</h1><p className="mt-6 max-w-2xl text-lg leading-8 text-white/80">{subtitle}</p></div>
   </section>;
 }
+
+/**
+ * Compatibility wrapper for legacy page functions. The implementation remains
+ * reviewed application code, while editors can choose the function, heading,
+ * intro and visibility from the visual builder.
+ */
+export function LegacyDynamicBlock({ functionName, sectionTitle, intro, visible }: { functionName: string; sectionTitle?: string; intro?: string; visible: boolean }) {
+  const data = useDocumentData()
+  if (!visible) return null
+  const blocks: Record<string, React.ReactNode> = {
+    hero: <DynamicHero />,
+    eventsList: <DynamicEventsList />,
+    projectsList: <DynamicProjectsList />,
+    memberGrid: <DynamicMemberGrid />,
+    contactForm: <DynamicContactForm />,
+    content: <RichText content={data?.body || data?.content || data?.fullDescription} />,
+    articleLayout: <DynamicArticleLayout />,
+    eventHeader: <DynamicEventHeader />,
+    eventGallery: <DynamicEventGallery />,
+    projectHeader: <DynamicProjectHeader />,
+    projectImpact: <DynamicProjectImpact />,
+    boardMembers: <DynamicBoardMembers />,
+  }
+  const block = blocks[functionName] || <div className="rounded-xl border border-dashed border-amber-400 bg-amber-50 p-6 text-sm">Select a legacy dynamic function.</div>
+  return <section data-legacy-function={functionName} className="relative">{(sectionTitle || intro) && <div className="mx-auto max-w-7xl px-5 pb-6 pt-8 lg:px-8">{sectionTitle && <h2 className="text-2xl font-semibold text-[var(--ink)]">{sectionTitle}</h2>}{intro && <p className="mt-2 max-w-2xl leading-7 text-[var(--muted)]">{intro}</p>}</div>}{block}</section>
+}

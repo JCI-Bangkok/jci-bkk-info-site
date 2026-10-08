@@ -6,6 +6,7 @@ import type { Locale } from '@/lib/i18n'
 import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import { getPublishedTemplate } from '@/lib/templates'
+import { enforceManagedPagePath } from '@/lib/page-routing'
 
 export const revalidate = 300
 
@@ -15,9 +16,10 @@ function seededRandom(seed: number) {
   return x - Math.floor(x)
 }
 
-export default async function PhotoBombPage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
+export default async function PhotoBombPage({ params }: { params: Promise<{ locale: Locale; __cmsRoute?: boolean }> }) {
+  const { locale, __cmsRoute } = await params
   const photos = await getGalleryPhotos(locale)
+  const pageDoc = await enforceManagedPagePath(locale, 'photobomb', __cmsRoute)
 
   const template = await getPublishedTemplate('photobomb').catch(() => null)
   if (template?.puckLayout && (template.puckLayout as any).content?.length > 0) {
@@ -25,16 +27,6 @@ export default async function PhotoBombPage({ params }: { params: Promise<{ loca
     return <PuckRenderer data={template.puckLayout as any} documentData={{ photos, currentLocale: locale }} />
   }
 
-  const payload = await getPayload({ config: configPromise })
-  const pageResult = await payload.find({
-    collection: 'pages',
-    where: {
-      slug: { equals: 'photobomb' },
-      status: { equals: 'published' },
-    },
-    limit: 1,
-  })
-  const pageDoc = pageResult.docs[0]
   if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
     const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
     return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ photos, currentLocale: locale }} />

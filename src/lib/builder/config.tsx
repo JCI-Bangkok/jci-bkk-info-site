@@ -2,7 +2,7 @@
 
 import { useDocumentData } from "@/components/builder/DocumentContext";
 import { RichText } from "@/components/rich-text";
-import { DynamicEventHeader, DynamicEventGallery, DynamicProjectHeader, DynamicProjectImpact, DynamicBoardMembers, DynamicArticleLayout, DynamicEventsList, DynamicProjectsList, DynamicMemberGrid, DynamicContactForm, DynamicHero } from "./dynamic-blocks";
+import { DynamicEventHeader, DynamicEventGallery, DynamicProjectHeader, DynamicProjectImpact, DynamicBoardMembers, DynamicArticleLayout, DynamicEventsList, DynamicProjectsList, DynamicMemberGrid, DynamicContactForm, DynamicHero, LegacyDynamicBlock } from "./dynamic-blocks";
 
 import type { Config, Data, ComponentConfig } from "@puckeditor/core";
 import React from "react";
@@ -20,6 +20,8 @@ import { contentPlugin } from './plugins/content';
 import { interactivePlugin } from './plugins/interactive';
 import { embedsPlugin } from './plugins/embeds';
 import { BlockBoundary } from '@/components/builder/BlockBoundary';
+import { GlobalHeaderBlock, GlobalFooterBlock } from '@/components/builder/GlobalChromeBlocks';
+import { legacyPageTypes } from './legacy-page-types';
 
 type Props = {
   Section: {
@@ -66,6 +68,10 @@ type Props = {
   DynamicMemberGrid: Record<string, never>;
   DynamicContactForm: Record<string, never>;
   DynamicHero: Record<string, never>;
+  LegacyDynamic: { functionName: string; sectionTitle: string; intro: string; visible: boolean };
+  LegacyPage: { pageType: string; visible: boolean };
+  GlobalHeader: { showNavigation: boolean; showLanguageSwitch: boolean; ctaLabel: string; ctaHref: string; style: 'floating' | 'solid' | 'minimal' };
+  GlobalFooter: { showNavigation: boolean; showSocialLinks: boolean; heading: string; copyright: string };
   CodeBlock: { code: string; language: "html" | "css" | "javascript" | "json" | "text"; title?: string };
   DynamicCode: { source: CodeSource; height: number };
 };
@@ -73,6 +79,16 @@ type Props = {
 function DynamicTitleRenderer({ align }: { align: 'left' | 'center' | 'right' }) {
   const doc = useDocumentData();
   return <h1 style={{ textAlign: align }} className="text-4xl font-bold">{doc?.title || 'Dynamic Title Placeholder'}</h1>;
+}
+
+function LegacyPagePreview({ pageType, visible }: { pageType: string; visible: boolean }) {
+  const data = useDocumentData();
+  if (!visible) return null;
+  if (data?.legacyPages?.[pageType]) return data.legacyPages[pageType];
+  const query = new URLSearchParams({ locale: data?.currentLocale === 'th' ? 'th' : 'en' });
+  if (data?.slug) query.set('slug', data.slug);
+  if (data?.year || data?.activeYear) query.set('year', String(data.year || data.activeYear));
+  return <iframe title={`Original ${pageType} design`} src={`/builder-preview/legacy/${encodeURIComponent(pageType)}?${query}`} className="w-full border-0" style={{ height: '80vh', minHeight: 600 }} />;
 }
 
 function DynamicContentRenderer() {
@@ -350,6 +366,51 @@ const coreConfig: Config<Props> = {
     DynamicMemberGrid: { fields: {}, defaultProps: {}, render: () => <DynamicMemberGrid /> },
     DynamicContactForm: { fields: {}, defaultProps: {}, render: () => <DynamicContactForm /> },
     DynamicHero: { fields: {}, defaultProps: {}, render: () => <DynamicHero /> },
+    LegacyPage: {
+      label: 'Original Page Design',
+      fields: {
+        pageType: { type: 'select', label: 'Original page', options: legacyPageTypes.map(value => ({ label: value, value })) },
+        visible: { type: 'radio', options: [{ label: 'Visible', value: true }, { label: 'Hidden', value: false }] },
+      },
+      defaultProps: { pageType: 'home', visible: true },
+      render: props => <LegacyPagePreview {...props} />,
+    },
+    LegacyDynamic: {
+      label: 'Legacy Dynamic Function',
+      fields: {
+        functionName: { type: 'select', label: 'Function', options: [
+          { label: 'Hero', value: 'hero' }, { label: 'Events list', value: 'eventsList' }, { label: 'Projects list', value: 'projectsList' },
+          { label: 'Member grid', value: 'memberGrid' }, { label: 'Contact form', value: 'contactForm' }, { label: 'CMS content', value: 'content' },
+          { label: 'Article layout', value: 'articleLayout' }, { label: 'Event header', value: 'eventHeader' }, { label: 'Event gallery', value: 'eventGallery' },
+          { label: 'Project header', value: 'projectHeader' }, { label: 'Project impact', value: 'projectImpact' }, { label: 'Board members', value: 'boardMembers' },
+        ] },
+        sectionTitle: { type: 'text', label: 'Section title' }, intro: { type: 'textarea', label: 'Section introduction' },
+        visible: { type: 'radio', label: 'Visibility', options: [{ label: 'Visible', value: true }, { label: 'Hidden', value: false }] },
+      },
+      defaultProps: { functionName: 'content', sectionTitle: '', intro: '', visible: true },
+      render: props => <LegacyDynamicBlock {...props} />,
+    },
+    GlobalHeader: {
+      label: 'Site Header',
+      fields: {
+        style: { type: 'select', options: [{ label: 'Solid', value: 'solid' }, { label: 'Floating', value: 'floating' }, { label: 'Minimal', value: 'minimal' }] },
+        showNavigation: { type: 'radio', options: [{ label: 'Show navigation', value: true }, { label: 'Hide navigation', value: false }] },
+        showLanguageSwitch: { type: 'radio', options: [{ label: 'Show language switch', value: true }, { label: 'Hide language switch', value: false }] },
+        ctaLabel: { type: 'text', label: 'Action label' }, ctaHref: { type: 'text', label: 'Action URL' },
+      },
+      defaultProps: { style: 'solid', showNavigation: true, showLanguageSwitch: true, ctaLabel: 'Become a member', ctaHref: '/membership' },
+      render: props => <GlobalHeaderBlock {...props} />,
+    },
+    GlobalFooter: {
+      label: 'Site Footer',
+      fields: {
+        heading: { type: 'textarea', label: 'Introduction' }, copyright: { type: 'text' },
+        showNavigation: { type: 'radio', options: [{ label: 'Show navigation', value: true }, { label: 'Hide navigation', value: false }] },
+        showSocialLinks: { type: 'radio', options: [{ label: 'Show social links', value: true }, { label: 'Hide social links', value: false }] },
+      },
+      defaultProps: { heading: 'Developing leaders for a changing world.', copyright: '© 2026 JCI Bangkok. All Rights Reserved.', showNavigation: true, showSocialLinks: true },
+      render: props => <GlobalFooterBlock {...props} />,
+    },
     CodeBlock: {
       fields: {
         title: { type: 'text' },
@@ -397,7 +458,7 @@ export function buildBuilderConfig(enabled = enabledPluginIds(), layout?: Data, 
   const categories: NonNullable<Config['categories']> = {
     layout: { title: 'Layout', components: ['Section', 'Columns'] },
     basics: { title: 'Basic Content', components: ['Hero', 'Text', 'Image', 'Button'] },
-    dynamic: { title: 'CMS & Dynamic Content', components: Object.keys(coreComponents).filter(key => key.startsWith('Dynamic')) },
+    dynamic: { title: 'CMS & Dynamic Content', components: Object.keys(coreComponents).filter(key => key.startsWith('Dynamic') || key.startsWith('Legacy')) },
     other: { visible: false },
   };
   for (const plugin of builderPlugins) categories[plugin.id] = { title: plugin.category, components: enabled.includes(plugin.id) ? Object.keys(plugin.components) : [] };

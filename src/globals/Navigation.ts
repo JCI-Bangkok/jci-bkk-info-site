@@ -20,7 +20,10 @@ export const Navigation: GlobalConfig = {
       fields: [
         { name: 'label', type: 'text', required: true, label: 'English label' },
         { name: 'labelTh', type: 'text', label: 'Thai label' },
-        { name: 'href', type: 'text', required: true, admin: { description: 'Use a relative path, for example /events.' } },
+        { name: 'linkType', type: 'radio', defaultValue: 'page', options: [{ label: 'CMS page', value: 'page' }, { label: 'Custom URL', value: 'custom' }] },
+        { name: 'page', type: 'relationship', relationTo: 'pages', admin: { condition: (_, siblingData) => siblingData?.linkType !== 'custom', description: 'The link follows this page automatically when its URL changes.' } },
+        { name: 'href', type: 'text', admin: { condition: (_, siblingData) => siblingData?.linkType === 'custom', description: 'Relative URL, anchor, email, phone number or full external URL.' } },
+        { name: 'openInNewTab', type: 'checkbox', defaultValue: false, admin: { description: 'Recommended only for external websites.' } },
       ],
     },
   ],

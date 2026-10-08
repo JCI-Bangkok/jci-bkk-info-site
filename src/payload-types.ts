@@ -222,7 +222,7 @@ export interface Media {
   };
 }
 /**
- * The seven built-in page records control SEO for the existing layouts. Other published paths render their rich text as new website pages. For board-year SEO, use members/board/YYYY.
+ * Manage every website page, its URL, SEO, publication status and visual layout here. Changing a URL keeps the previous address as a permanent redirect.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -230,7 +230,34 @@ export interface Media {
 export interface Page {
   id: number;
   title: string;
+  /**
+   * Keeps dynamic behavior attached even when the URL changes.
+   */
+  pageType:
+    | 'home'
+    | 'about'
+    | 'events'
+    | 'members'
+    | 'membership'
+    | 'contact'
+    | 'photobomb'
+    | 'news'
+    | 'projects'
+    | 'board'
+    | 'custom';
+  /**
+   * Public URL without the language prefix, for example about-us. Use home for the homepage.
+   */
   slug: string;
+  legacySlugs?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   status?: ('draft' | 'published') | null;
   /**
    * Visual layout data managed by the Puck Editor.
@@ -793,6 +820,9 @@ export interface Template {
     | 'contact'
     | 'membership'
     | 'photobomb'
+    | 'news-listing'
+    | 'projects-listing'
+    | 'board-listing'
     | 'archive';
   status?: ('draft' | 'published') | null;
   puckLayout?:
@@ -1028,7 +1058,9 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  pageType?: T;
   slug?: T;
+  legacySlugs?: T;
   status?: T;
   puckLayout?: T;
   content?: T;
@@ -1393,10 +1425,19 @@ export interface Navigation {
   items: {
     label: string;
     labelTh?: string | null;
+    linkType?: ('page' | 'custom') | null;
     /**
-     * Use a relative path, for example /events.
+     * The link follows this page automatically when its URL changes.
      */
-    href: string;
+    page?: (number | null) | Page;
+    /**
+     * Relative URL, anchor, email, phone number or full external URL.
+     */
+    href?: string | null;
+    /**
+     * Recommended only for external websites.
+     */
+    openInNewTab?: boolean | null;
     id?: string | null;
   }[];
   updatedAt?: string | null;
@@ -1471,7 +1512,10 @@ export interface NavigationSelect<T extends boolean = true> {
     | {
         label?: T;
         labelTh?: T;
+        linkType?: T;
+        page?: T;
         href?: T;
+        openInNewTab?: T;
         id?: T;
       };
   updatedAt?: T;

@@ -7,16 +7,18 @@ import { getPayload } from 'payload'
 import configPromise from '@/payload.config'
 import { mediaUrl } from '@/lib/media'
 import { getPublishedTemplate } from '@/lib/templates'
+import { enforceManagedPagePath } from '@/lib/page-routing'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   return cmsStaticMetadata(locale, 'about')
 }
 
-export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
-  const { locale } = await params
+export default async function AboutPage({ params }: { params: Promise<{ locale: Locale; __cmsRoute?: boolean }> }) {
+  const { locale, __cmsRoute } = await params
   const dict = getDictionary(locale)
   const payload = await getPayload({ config: configPromise })
+  const pageDoc = await enforceManagedPagePath(locale, 'about', __cmsRoute)
   const settings = await payload.findGlobal({ slug: 'site-settings', locale }).catch(() => null)
 
   const template = await getPublishedTemplate('about').catch(() => null)
@@ -25,15 +27,6 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
     return <PuckRenderer data={template.puckLayout as any} documentData={{ settings, currentLocale: locale }} />
   }
 
-  const pageResult = await payload.find({
-    collection: 'pages',
-    where: {
-      slug: { equals: 'about' },
-      status: { equals: 'published' },
-    },
-    limit: 1,
-  })
-  const pageDoc = pageResult.docs[0]
   if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
     const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
     return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ settings, currentLocale: locale }} />

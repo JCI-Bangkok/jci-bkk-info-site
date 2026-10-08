@@ -75,6 +75,11 @@ export default async function RootLayout({
   const payload = await getPayload({ config });
 
   const builderSettings = await getBuilderSettings();
+  const [settings, navigation] = await Promise.all([
+    payload.findGlobal({ slug: 'site-settings', locale: locale as any, depth: 1 }),
+    payload.findGlobal({ slug: 'navigation', depth: 1 }),
+  ]);
+  const chromeData = { settings, navigation, currentLocale: locale };
 
   // Try to find a global header template
   const headerTemplates = await payload.find({
@@ -117,13 +122,13 @@ export default async function RootLayout({
       <body>
         <BuilderRuntimeProvider enabledPlugins={builderSettings.enabledPlugins}>
         {headerTemplate && headerTemplate.puckLayout ? (
-          <PuckRenderer data={headerTemplate.puckLayout as Data} />
+          <PuckRenderer data={headerTemplate.puckLayout as Data} documentData={chromeData} />
         ) : (
           <SiteHeader locale={locale as Locale} />
         )}
         <main>{children}</main>
         {footerTemplate && footerTemplate.puckLayout ? (
-          <PuckRenderer data={footerTemplate.puckLayout as Data} />
+          <PuckRenderer data={footerTemplate.puckLayout as Data} documentData={chromeData} />
         ) : (
           <SiteFooter locale={locale as Locale} />
         )}

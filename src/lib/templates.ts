@@ -15,6 +15,9 @@ export type TemplateType =
   | 'contact'
   | 'membership'
   | 'photobomb'
+  | 'news-listing'
+  | 'projects-listing'
+  | 'board-listing'
   | 'archive'
 
 /** Returns only a deliberately published template; callers retain their fallback. */

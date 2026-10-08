@@ -86,6 +86,8 @@ export function validatePageSlug(value: unknown): true | string {
   const valid = validateContentSlug(value)
   if (valid !== true) return valid
   const slug = String(value)
-  if (staticPageKeys.some(key => key === slug) || /^members\/board\/\d{4}$/.test(slug)) return true
-  return ['en', 'th', 'admin', 'api', 'news', 'projects', 'about', 'events', 'members', 'membership', 'contact', 'photobomb', 'home'].includes(slug.split('/')[0]) ? 'This path is reserved for an existing site route. Use its supported page key or choose a different path.' : true
+  if (/^members\/board\/\d{4}$/.test(slug)) return true
+  if (['en', 'th', 'admin', 'api'].includes(slug.split('/')[0])) return 'This path is reserved by the application. Choose a different path.'
+  if (/^(events|projects|news)\//.test(slug) || /^members\/board\//.test(slug)) return 'This path belongs to dynamic event, project, news or board records. Choose a page path outside that archive.'
+  return true
 }

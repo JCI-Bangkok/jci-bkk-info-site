@@ -6,6 +6,7 @@ import config from '@/payload.config'
 import { mediaUrl } from '@/lib/activity-data'
 import { getDictionary, type Locale } from '@/lib/i18n'
 import { getPublishedTemplate } from '@/lib/templates'
+import { enforceManagedPagePath } from '@/lib/page-routing'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
@@ -13,13 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 export default async function MembersPage({ params, searchParams }: {
-  params: Promise<{ locale: Locale }>
+  params: Promise<{ locale: Locale; __cmsRoute?: boolean }>
   searchParams: Promise<{ year?: string }>
 }) {
-  const { locale } = await params
+  const { locale, __cmsRoute } = await params
   const { year } = await searchParams
   const dict = getDictionary(locale)
   const payload = await getPayload({ config })
+  const pageDoc = await enforceManagedPagePath(locale, 'members', __cmsRoute)
   const [board, stories] = await Promise.all([
     payload.find({ collection: 'board-members', locale, depth: 1, pagination: false, sort: 'displayOrder' }),
     payload.find({ collection: 'member-stories', locale, depth: 1, limit: 6 }),
@@ -34,15 +36,6 @@ export default async function MembersPage({ params, searchParams }: {
     return <PuckRenderer data={template.puckLayout as any} documentData={{ board, stories, years, activeYear, members, currentLocale: locale }} />
   }
 
-  const pageResult = await payload.find({
-    collection: 'pages',
-    where: {
-      slug: { equals: 'members' },
-      status: { equals: 'published' },
-    },
-    limit: 1,
-  })
-  const pageDoc = pageResult.docs[0]
   if (pageDoc?.puckLayout && (pageDoc.puckLayout as any).content?.length > 0) {
     const { PuckRenderer } = await import('@/components/builder/PuckRenderer')
     return <PuckRenderer data={pageDoc.puckLayout as any} documentData={{ board, stories, activeYear, members, currentLocale: locale }} />
