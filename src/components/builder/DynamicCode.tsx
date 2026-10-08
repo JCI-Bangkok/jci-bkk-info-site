@@ -105,6 +105,8 @@ export function DynamicCodeField({
             language={language}
             readOnly={readOnly}
             height={view === 'split' ? '280px' : '360px'}
+            title={`Dynamic Code: ${language.toUpperCase()}`}
+            allowExpand={true}
             onChange={(code) => onChange({ ...source, [language]: code })}
           />
         </div>
